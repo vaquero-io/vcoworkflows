@@ -1,6 +1,10 @@
 require_relative 'constants'
 require_relative 'vcosession'
+require_relative 'workflow'
 require 'json'
+require 'erb'
+
+include ERB::Util
 
 module VcoWorkflows
 
@@ -8,22 +12,22 @@ module VcoWorkflows
 
     # Public
     # Initialize the object
-    def initialize(session: VcoSession)
+    def initialize(session)
       @session = session
     end
 
     # Public
     # Get a workflow by GUID
-    def getWorkflowForId(id: nil)
-      VcoWorkflows::Workflow.new(@session.get("/workflows/#{id}"))
+    def get_workflow_for_id(id)
+      VcoWorkflows::Workflow.new(@session.get("/workflows/#{id}"), workflow_service: self)
     end
 
     # Public
     # Get one workflow with a specified name. If we find none or more
     # than one workflow for the given name, it is an error condition and
     # we need to fail violently.
-    def getWorkflowForName(name: nil)
-      response = JSON.parse(@session.get("/workflows?conditions=name=#{name}"))
+    def get_workflow_for_name(name)
+      response = JSON.parse(@session.get("/workflows?conditions=name=#{url_encode(name)}"))
 
       # barf if we got anything other than a single workflow
       fail(IOError, ERR[:too_many_workflows]) if response['total'] > 1
@@ -42,10 +46,10 @@ module VcoWorkflows
       fail(IOError, ERR[:wrong_workflow_wtf]) unless workflow_name.eql?(name)
 
       # Get the workflow by GUID
-      getWorkflowForId(workflow_id)
+      get_workflow_for_id(workflow_id)
     end
 
-    def executeWorkflow(id: nil, parameter_json: nil)
+    def execute_workflow(id, parameter_json)
       response = JSON.parse(@session.post("/workflows/#{id}/executions/", parameter_json))
     end
 
