@@ -17,19 +17,21 @@ module VcoWorkflows
     attr_accessor :workflow_service
     attr_reader :source_json
 
-    def initialize(workflow_json, workflow_service: nil)
+    # Public
+    # @param [String] workflow_json
+    # @param [VcoWorkflows::WorkflowService] workflow_service
+    # @return [VcoWorkflows::Workflow]
+    def initialize(workflow_json, workflow_service)
 
-      @source_json = workflow_json
-
-      puts "Workflow.new(#{workflow_json}, #{workflow_service})"
       workflow_data = JSON.parse(workflow_json)
 
       @workflow_service = workflow_service
 
-      @id = workflow_data['id'] if workflow_data.key?('id')
-      @name = workflow_data['name'] if workflow_data.key?('name')
-      @version = workflow_data['version'] if workflow_data.key?('version')
-      @description = workflow_data['description'] if workflow_data.key?('description')
+      # Set up the attributes if they exist in the data json, otherwise nil them
+      @id          = workflow_data.key?('id')          ? workflow_data['id']          : nil
+      @name        = workflow_data.key?('name')        ? workflow_data['name']        : nil
+      @version     = workflow_data.key?('version')     ? workflow_data['version']     : nil
+      @description = workflow_data.key?('description') ? workflow_data['description'] : nil
 
       # Process the input parameters
       @input_parameters = {}
