@@ -86,6 +86,21 @@ module VcoWorkflows
       workflow_service.exececute_workflow(@id, self.get_input_parameter_json)
     end
 
+    # Public
+    # @return [String]
+    def to_s
+      puts "Workflow: " << @name
+      puts "ID: " << @id
+      puts "Description: " << @description
+      puts "Version: " << @version
+      puts "Input Parameters:"
+      @input_parameters.each do |name,wf_param|
+        puts " - name: '#{name}'; type: '#{wf_param.type}'; required: '#{wf_param.required}'; value: '#{wf_param.value}';"
+      end
+      puts "Output Parameters:"
+      @output_parameters.each do |name,wf_param|
+        puts " - name: '#{name}'; type: '#{wf_param.type}'; value: '#{wf_param.value}';"
+      end
     end
 
     # Private methods
