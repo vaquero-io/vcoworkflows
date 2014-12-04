@@ -36,6 +36,17 @@ module VcoWorkflows
 
     end
 
+
+    # Private methods
+    private
+
+    def get_input_parameter_json
+      tmp_params = []
+      @input_parameters.each {|p| tmp_params << p.as_struct}
+      param_struct = {:parameters => tmp_params}
+      param_struct.to_json
+    end
+
   end
 
 end
