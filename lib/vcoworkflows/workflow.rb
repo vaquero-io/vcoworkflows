@@ -17,21 +17,36 @@ module VcoWorkflows
     attr_accessor :workflow_service
     attr_reader :source_json
 
+    def initialize(workflow_json, workflow_service: nil)
+
+      @source_json = workflow_json
+
+      puts "Workflow.new(#{workflow_json}, #{workflow_service})"
       workflow_data = JSON.parse(workflow_json)
 
-      @id = workflow_data['id']
-      @name = workflow_data['name']
-      @version = workflow_data['version']
-      @description = workflow_data['description']
+      @workflow_service = workflow_service
+
+      @id = workflow_data['id'] if workflow_data.key?('id')
+      @name = workflow_data['name'] if workflow_data.key?('name')
+      @version = workflow_data['version'] if workflow_data.key?('version')
+      @description = workflow_data['description'] if workflow_data.key?('description')
 
       # Process the input parameters
-      workflow_data['input-parameters'].each do |paramhash|
-        @inParameters[paramhash['name']] = paramhash['type']
+      @input_parameters = {}
+      if workflow_data.key?('input-parameters')
+        workflow_data['input-parameters'].each do |params|
+          wfparam = VcoWorkflows::WorkflowParameter.new(type: params['type'], name: params['name'])
+          @input_parameters[params['name']] = wfparam
+        end
       end
 
       # Process the output parameters
-      workflow_data['output-parameters'].each do |paramhash|
-        @outParameters[paramhash['name']] = paramhash['type']
+      @output_parameters = {}
+      if workflow_data.key?('output-parameters')
+        workflow_data['output-parameters'].each do |params|
+          wfparam = VcoWorkflows::WorkflowParameter.new(type: params['type'], name: params['name'])
+          @output_parameters[params['name']] = wfparam
+        end
       end
 
     end
