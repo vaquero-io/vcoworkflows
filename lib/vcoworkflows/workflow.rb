@@ -56,8 +56,28 @@ module VcoWorkflows
 
     end
 
-    def execute(workflow_service: nil)
+    # Public
+    # @return [String]
+    def get_required_parameters
+      required = []
+      @input_parameters.each_value {|v| required << v.name if v.required}
+      return required
+    end
 
+    # Public
+    def verify_parameters
+      self.get_required_parameters.each do |param_name|
+        param = @input_parameters['param_name']
+        if param.required && (param.value.nil? || param.value.size == 0)
+          fail(IOError, ERR[:param_verify_failed] << "#{param_name} required but not present.")
+        end
+      end
+    end
+
+    # Public
+    # @param [VcoWorkflows::WorkflowService] workflow_service
+    # @return [VcoWorkflows::WorkflowToken]
+    def execute(workflow_service)
       # If we're not given an explicit workflow service for this execution
       # request, use the one defined when we were created.
       workflow_service = @workflow_service if workflow_service.nil?
