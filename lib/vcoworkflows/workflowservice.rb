@@ -23,13 +23,13 @@ module VcoWorkflows
     # than one workflow for the given name, it is an error condition and
     # we need to fail violently.
     def getWorkflowForName(name: nil)
-
       response = JSON.parse(@session.get("/workflows?conditions=name=#{name}"))
 
       # barf if we got anything other than a single workflow
       fail(IOError, ERR[:too_many_workflows]) if response['total'] > 1
       fail(IOError, ERR[:no_workflow_found]) if response['total'] == 0
 
+      # yank out the workflow id and name from the result attributes
       workflow_id = nil
       workflow_name = nil
       response['link'][0]['attributes'].each do |a|
@@ -41,7 +41,12 @@ module VcoWorkflows
       # name than what we went looking for.
       fail(IOError, ERR[:wrong_workflow_wtf]) unless workflow_name.eql?(name)
 
+      # Get the workflow by GUID
       getWorkflowForId(workflow_id)
+    end
+
+    def executeWorkflow(id: nil, parameter_json: nil)
+      response = JSON.parse(@session.post("/workflows/#{id}/executions/", parameter_json))
     end
 
   end
