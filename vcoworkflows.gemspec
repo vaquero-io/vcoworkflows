@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Vcoworkflows::VERSION
   spec.authors       = ["Gregory Ruiz-Ade"]
   spec.email         = ["gkra@unnerving.org"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{vCO Workflows REST API Wrapper.}
+  spec.description   = %q{vCO Workflows REST API Wrapper.}
   spec.homepage      = ""
   spec.license       = "MIT"
 
