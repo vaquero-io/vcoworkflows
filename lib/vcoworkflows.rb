@@ -1,9 +1,13 @@
-require "vcoworkflows/version"
-require "vcoworkflows/constants"
 require 'thor'
+require 'vcoworkflows/version'
+require 'vcoworkflows/constants'
+require 'vcoworkflows/vcosession'
+require 'vcoworkflows/workflowservice'
+require 'vcoworkflows/workflow'
+require 'vcoworkflows/workflowparameter'
+require 'vcoworkflows/workflowtoken'
 
 module VcoWorkflows
-  # Your code goes here...
 
   class CLI < Thor
 
