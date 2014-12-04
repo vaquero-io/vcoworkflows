@@ -4,12 +4,11 @@ module VcoWorkflows
 
   API_URL_BASE = '/vco/api'
 
-  API_URL_WORKFLOWS = API_URL_BASE << '/workflows'
-
   # error messages
   ERR = {
       no_workflow_found: 'vcoworkflows: no workflow found!',
-      too_many_workflows: 'vcoworkflows: more than one workflow found for given name!'
+      too_many_workflows: 'vcoworkflows: more than one workflow found for given name!',
+      wrong_workflow_wtf: 'vcoworkflows: search returned the wrong workflow! (?)'
   }
 
 
