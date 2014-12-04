@@ -8,7 +8,8 @@ module VcoWorkflows
   ERR = {
       no_workflow_found: 'vcoworkflows: no workflow found!',
       too_many_workflows: 'vcoworkflows: more than one workflow found for given name!',
-      wrong_workflow_wtf: 'vcoworkflows: search returned the wrong workflow! (?)'
+      wrong_workflow_wtf: 'vcoworkflows: search returned the wrong workflow! (?)',
+      no_workflow_service_defined: 'vcoworkflows: Attempted to execute a workflow with a nil workflow service!'
   }
 
 
