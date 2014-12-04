@@ -3,16 +3,16 @@ require 'json'
 
 module VcoWorkflows
 
-  attr_reader :id
-  attr_reader :name
-  attr_reader :version
-  attr_reader :description
-  attr_reader :inParameters
-  attr_reader :outParameters
-
   class Workflow
 
-    def initialize(workflow_json: nil)
+    attr_reader :id
+    attr_reader :name
+    attr_reader :version
+    attr_reader :description
+    attr_reader :input_parameters
+    attr_reader :output_parameters
+    attr_accessor :workflow_service
+    attr_reader :source_json
 
       workflow_data = JSON.parse(workflow_json)
 
