@@ -1,4 +1,7 @@
 require_relative 'constants'
+require_relative 'workflowservice'
+require_relative 'workflowtoken'
+require_relative 'workflowparameter'
 require 'json'
 
 module VcoWorkflows
