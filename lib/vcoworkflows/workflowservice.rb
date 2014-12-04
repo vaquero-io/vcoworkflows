@@ -23,6 +23,12 @@ module VcoWorkflows
     end
 
     # Public
+    # Get the presentation for the given workflow GUID
+    def get_presentation(id, workflow)
+      VcoWorkflows::WorkflowPresentation.new(@session.get("/workflows/#{id}/presentation/"), workflow)
+    end
+
+    # Public
     # Get one workflow with a specified name. If we find none or more
     # than one workflow for the given name, it is an error condition and
     # we need to fail violently.
