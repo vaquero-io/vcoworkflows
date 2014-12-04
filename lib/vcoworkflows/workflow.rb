@@ -117,4 +117,52 @@ module VcoWorkflows
 
   end
 
+  class WorkflowPresentation
+
+    attr_reader :source_json
+    attr_reader :presentation_data
+
+    # Public
+    # @param [String] presentation_json
+    # @param [VcoWorkflows::Workflow] workflow
+    # @return [VcoWorkflows::WorkflowPresentation]
+    def initialize(presentation_json, workflow)
+
+      @source_json = presentation_json
+
+      presentation_data = JSON.parse(presentation_json)
+
+      # We're parsing this because we specifically want to know if any of
+      # the input parameters are marked as required. This is very specifically
+      # in the array of hashes in:
+      # presentation_data[:steps][0][:step][:elements][0][:fields]
+      fields = presentation_data['steps'][0]['step']['elements'][0]['fields']
+
+      fields.each do |attribute|
+        if attribute.key?('constraints')
+          attribute['constraints'].each do |const|
+            if const.key?('@type') && const['@type'].eql?('mandatory')
+              workflow.input_parameters[attribute['id']].required = true
+            end
+          end
+        end
+
+      end
+
+    end
+
+    # Public
+    # @return [String]
+    def to_s
+      puts @source_json
+    end
+
+    # Public
+    # @return [String]
+    def to_json
+      @source_json
+    end
+
+  end
+
 end
