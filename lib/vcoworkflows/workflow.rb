@@ -36,6 +36,18 @@ module VcoWorkflows
 
     end
 
+    def execute(workflow_service: nil)
+
+      # If we're not given an explicit workflow service for this execution
+      # request, use the one defined when we were created.
+      workflow_service = @workflow_service if workflow_service.nil?
+
+      # If we still have a nil workflow_service, go home.
+      fail(IOError, ERR[:no_workflow_service_defined]) if workflow_service.nil?
+
+      workflow_service.exececute_workflow(id: @id, parameter_json: param_struct.to_json)
+
+    end
 
     # Private methods
     private
