@@ -19,7 +19,7 @@ module VcoWorkflows
     # Public
     # Get a workflow by GUID
     def get_workflow_for_id(id)
-      VcoWorkflows::Workflow.new(@session.get("/workflows/#{id}"), workflow_service: self)
+      VcoWorkflows::Workflow.new(@session.get("/workflows/#{id}"), self)
     end
 
     # Public
