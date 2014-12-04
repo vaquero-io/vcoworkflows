@@ -51,6 +51,9 @@ module VcoWorkflows
         end
       end
 
+      # Get the presentation data and set required flags on our parameters
+      @presentation = workflow_service.get_presentation(@id, self)
+
     end
 
     def execute(workflow_service: nil)
