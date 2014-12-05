@@ -52,7 +52,7 @@ module VcoWorkflows
       end
 
       # Get the presentation data and set required flags on our parameters
-      @presentation = workflow_service.get_presentation(@id, self)
+      @presentation = workflow_service.get_presentation(self)
 
     end
 

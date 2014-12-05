@@ -26,10 +26,10 @@ module VcoWorkflows
 
     # Public
     # Get the presentation for the given workflow GUID
-    def get_presentation(id, workflow)
-      VcoWorkflows::WorkflowPresentation.new(@session.get("/workflows/#{id}/presentation/"), workflow)
     # @param [VcoWorkflows::Workflow] workflow - workflow GUID who's presentation we want
     # @return [VcoWorkflows::WorkflowPresentation]
+    def get_presentation(workflow)
+      VcoWorkflows::WorkflowPresentation.new(@session.get("/workflows/#{workflow.id}/presentation/"), workflow)
     end
 
     # Public
