@@ -7,8 +7,9 @@ module VcoWorkflows
     attr_reader :name
     attr_reader :type
     attr_reader :subtype
-    attr_accessor :required
     attr_reader :value
+
+    attr_accessor :required
 
     # Public
     # @param [String] name - Name of the workflow parameter
