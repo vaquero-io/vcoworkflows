@@ -10,6 +10,12 @@ module VcoWorkflows
     attr_accessor :required
     attr_accessor :value
 
+    # Public
+    # @param [String] name - Name of the workflow parameter
+    # @param [String] type - Data type of the parameter (according to vCO)
+    # @param [Boolean] required - Whether or not the parameter is mandatory for the workflow
+    # @param [Object] value - the parameter value
+    # @return [VcoWorkflows::WorkflowParameter]
     def initialize(name: nil, type: nil, required: false, value: nil)
       @name = name
 
@@ -34,6 +40,9 @@ module VcoWorkflows
       end
     end
 
+    # Public
+    # Return a data structure version of this object
+    # @return [Hash]
     def as_struct
       attributes = {:type => @type, :name => @name, :scope => 'local'}
 
@@ -51,6 +60,9 @@ module VcoWorkflows
       return attributes
     end
 
+    # Public
+    # Return a JSON document representation of this object
+    # @return [String]
     def to_json
       self.as_struct.to_json
     end
