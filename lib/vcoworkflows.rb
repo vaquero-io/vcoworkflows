@@ -7,6 +7,7 @@ require 'vcoworkflows/workflow'
 require 'vcoworkflows/workflowparameter'
 require 'vcoworkflows/workflowtoken'
 require 'vcoworkflows/cli/execute'
+require 'vcoworkflows/cli/query'
 
 module VcoWorkflows
 
@@ -22,6 +23,7 @@ module VcoWorkflows
     end
 
     register(VcoWorkflows::Cli::Execute, 'execute', 'execute <WORKFLOW>', DESC_CLI_EXECUTE)
+    register(VcoWorkflows::Cli::Query, 'query', 'query <WORKFLOW>', DESC_CLI_QUERY)
 
   end
 
