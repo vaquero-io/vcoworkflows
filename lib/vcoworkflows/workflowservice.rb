@@ -53,7 +53,7 @@ module VcoWorkflows
 
       # Barf if we got this far and the workflow we found has a different
       # name than what we went looking for.
-      fail(IOError, ERR[:wrong_workflow_wtf]) unless workflow_name.eql?(name)
+      # fail(IOError, ERR[:wrong_workflow_wtf]) unless workflow_name.eql?(name)
 
       # Get the workflow by GUID
       get_workflow_for_id(workflow_id)
