@@ -91,10 +91,10 @@ module VcoWorkflows
     # Public
     # Verify that all mandatory input parameters have values
     def verify_parameters
-      self.get_required_parameters.each do |param_name|
-        param = @input_parameters['param_name']
+      self.get_required_parameter_names.each do |name|
+        param = @input_parameters[name]
         if param.required && (param.value.nil? || param.value.size == 0)
-          fail(IOError, ERR[:param_verify_failed] << "#{param_name} required but not present.")
+          fail(IOError, ERR[:param_verify_failed] << "#{name} required but not present.")
         end
       end
     end
@@ -103,13 +103,14 @@ module VcoWorkflows
     # Execute this workflow
     # @param [VcoWorkflows::WorkflowService] workflow_service
     # @return [VcoWorkflows::WorkflowToken]
-    def execute(workflow_service)
+    def execute(workflow_service = nil)
       # If we're not given an explicit workflow service for this execution
       # request, use the one defined when we were created.
       workflow_service = @workflow_service if workflow_service.nil?
       # If we still have a nil workflow_service, go home.
       fail(IOError, ERR[:no_workflow_service_defined]) if workflow_service.nil?
-      workflow_service.exececute_workflow(@id, self.get_input_parameter_json)
+      # Let's get this thing running!
+      workflow_service.execute_workflow(@id, get_input_parameter_json)
     end
 
     # Public
@@ -135,15 +136,12 @@ module VcoWorkflows
       nil
     end
 
-    # Private methods
-    private
-
-    # Private
+    # Public
     # Convert the input parameters to a JSON document
     # @return [String]
     def get_input_parameter_json
       tmp_params = []
-      @input_parameters.each {|p| tmp_params << p.as_struct}
+      @input_parameters.each {|_k,v| tmp_params << v.as_struct}
       param_struct = {:parameters => tmp_params}
       param_struct.to_json
     end
