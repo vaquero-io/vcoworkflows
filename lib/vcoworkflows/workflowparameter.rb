@@ -8,7 +8,7 @@ module VcoWorkflows
     attr_reader :type
     attr_reader :subtype
     attr_accessor :required
-    attr_accessor :value
+    attr_reader :value
 
     # Public
     # @param [String] name - Name of the workflow parameter
@@ -38,6 +38,21 @@ module VcoWorkflows
       else
         @value = value
       end
+    end
+
+    # Public
+    # Set the parameter value
+    # @param [Object] value - Value to set the parameter to
+    def set(value)
+      case @input_parameters[parameter].type
+        when 'Array'
+          fail(IOError, ERR[:param_verify_failed]) unless value.is_a?(Array)
+        when 'string'
+          fail(IOError, ERR[:param_verify_failed]) unless value.is_a?(Array)
+        when 'number'
+          fail(IOError, ERR[:param_verify_failed]) unless value.is_a?(Array)
+      end
+      @value = value
     end
 
     # Public
