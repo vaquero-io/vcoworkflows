@@ -73,7 +73,7 @@ module VcoWorkflows
         # Execute the workflow
         puts "Executing workflow..."
         puts JSON.pretty_generate(JSON.parse(wf.get_input_parameter_json))
-        # result = wf.execute
+        result = wf.execute
         # puts result
 
       end
