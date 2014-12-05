@@ -23,10 +23,9 @@ module VcoWorkflows
     # @param [String] endpoint - REST endpoint to use
     # @param [Hash] headers - Optional headers to use in request (see RestClient)
     # @return [String] - JSON response body
-    def get(endpoint, headers: {})
-      default_headers = {:accept => :json}
-      final_headers = default_headers.merge(headers)
-      response = @rest_resource[endpoint].get final_headers
+    def get(endpoint, headers = {})
+      headers = {:accept => :json}.merge(headers)
+      response = @rest_resource[endpoint].get headers
       return response.body
     end
 
@@ -38,10 +37,9 @@ module VcoWorkflows
     # @param [String] body - JSON data body to post
     # @param [Hash] headers - Optional headers to use in request (see RestClient)
     # @return [String] - JSON response body
-    def post(endpoint, body, headers: {})
-      default_headers = {:content_type => :json}
-      final_headers = default_headers.merge(headers)
-      response = @rest_resource[endpoint].post body, final_headers
+    def post(endpoint, body, headers = {})
+      headers = {:content_type => :json}.merge(headers)
+      response = @rest_resource[endpoint].post body, headers
       return response.body
     end
 
