@@ -67,8 +67,8 @@ module VcoWorkflows
       # it on the end of the hash.
       if @type.eql?('Array')
         fail(IOError, ERR[:wtf]) unless @value.is_a?(Array)
-        attributes[:value] = {@type => {:elements => []}}
-        @value.each { |val| attributes[:value][@type][:elements] << {@subtype => {:value => val}} }
+        attributes[:value] = {@type.downcase => {:elements => []}}
+        @value.each { |val| attributes[:value][@type.downcase][:elements] << {@subtype => {:value => val}} }
       else
         attributes[:value] = {@type => {:value => @value}}
       end
