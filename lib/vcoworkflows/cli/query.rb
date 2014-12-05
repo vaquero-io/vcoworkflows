@@ -45,7 +45,7 @@ module VcoWorkflows
           wf = wfs.get_workflow_for_name(workflow)
         end
 
-        puts "\nFound workflow: '#{wf.name}' (GUID=#{wf.id}):\n"
+        puts ""
         puts wf.to_s
 
       end
