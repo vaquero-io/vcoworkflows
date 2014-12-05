@@ -25,10 +25,57 @@ module VcoWorkflows
       end
 
       def execute
+
+        # Parse out the parameters
+        parameters = {}
+        options[:parameters].split(/,/).each { |p| k, v = p.split(/=/); parameters[k] = v }
+        if parameters.key?('runlist')
+          parameters['runlist'] = parameters['runlist'].split(/:/)
+        end
+
         puts "Executing against vCO REST endpoint: #{options[:server]}"
         puts "Requested execution of workflow: '#{workflow}'"
         puts "Will call workflow by GUID (#{options[:id]})" if options[:id]
-        options[:parameters].split(/,/).each {|p| puts "Parameter: #{p.gsub(/=.*$/,'')} = #{p.gsub(/^.*=/,'')}"}
+        if options[:verbose] || options[:dry_run]
+          puts "Parameters:"
+          parameters.each {|k,v| v = v.join(',') if v.is_a?(Array); puts " - #{k}: #{v}"}
+          puts ""
+        end
+
+        return if options[:dry_run]
+
+        # Create the session
+        session = VcoWorkflows::VcoSession.new(options[:server],
+                                               user: options[:username],
+                                               password: options[:password],
+                                               verify_ssl: options[:verify_ssl])
+
+        # Create the Workflow Service
+        wfs = VcoWorkflows::WorkflowService.new(session)
+
+        # Get the workflow
+        puts "Retrieving workflow '#{workflow}' ..."
+        wf = nil
+        if options.key?(:id)
+          wf = wfs.get_workflow_for_id(options[:id])
+        else
+          wf = wfs.get_workflow_for_name(workflow)
+        end
+
+        # Set the input parameters
+        puts "Setting workflow input parameters..." if options[:verbose]
+        parameters.each {|k,v| puts "setting #{k} to #{v}" if options[:verbose]; wf.set_parameter(k,v)}
+
+        # Verify parameters
+        puts "Verifying required parameters..." if options[:verbose]
+        wf.verify_parameters
+
+        # Execute the workflow
+        puts "Executing workflow..."
+        puts JSON.pretty_generate(JSON.parse(wf.get_input_parameter_json))
+        # result = wf.execute
+        # puts result
+
       end
 
     end
