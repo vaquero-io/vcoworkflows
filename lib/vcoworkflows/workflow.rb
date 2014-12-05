@@ -59,7 +59,7 @@ module VcoWorkflows
     # Public
     # Get an array of the names of all the required input parameters
     # @return [String[]]
-    def get_required_parameters
+    def get_required_parameter_names
       required = []
       @input_parameters.each_value {|v| required << v.name if v.required}
       return required
