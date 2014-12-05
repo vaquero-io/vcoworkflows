@@ -27,11 +27,13 @@ module VcoWorkflows
         puts "Will search for workflow: '#{workflow}'"
         puts "Will query workflow by GUID (#{options[:id]})" if options[:id]
 
+        return if options[:dry_run]
+        
         # Create the session
         session = VcoWorkflows::VcoSession.new(options[:server],
                                                user: options[:username],
                                                password: options[:password],
-                                               verify_ssl: options['verify-ssl'])
+                                               verify_ssl: options[:verify_ssl])
 
         # Create the Workflow Service
         wfs = VcoWorkflows::WorkflowService.new(session)

@@ -6,6 +6,7 @@ module VcoWorkflows
   DESC_CLI_WORKFLOW = 'Name of the workflow'
   DESC_CLI_WORKFLOW_ID = 'GUID of the workflow'
   DESC_CLI_DRY_RUN = 'Dry run; do not actually perform operations against vCO'
+  DESC_CLI_VERBOSE = 'Show extra information'
   DESC_CLI_NAME = 'Name of the workflow to execute'
   DESC_CLI_SERVER = 'VMware vCenter Orchestrator server URL'
   DESC_CLI_USERNAME = 'vCO user name'
