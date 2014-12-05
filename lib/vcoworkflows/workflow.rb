@@ -66,6 +66,29 @@ module VcoWorkflows
     end
 
     # Public
+    # Get an array of the full set of input parameters
+    # @return [String[]]
+    def get_parameter_names
+      @input_parameters.keys
+    end
+
+    # Public
+    # Get the value of a specific input parameter
+    # @param [String] parameter_name - Name of the parameter whose value to get
+    # @return [Object]
+    def get_parameter_value(parameter_name)
+      @input_parameters[parameter_name].value
+    end
+
+    # Public
+    # Set a parameter to a value
+    # @param [String] parameter - name of the parameter to set
+    # @param [Object] value - value to set
+    def set_parameter(parameter, value)
+      @input_parameters[parameter].set value
+    end
+
+    # Public
     # Verify that all mandatory input parameters have values
     def verify_parameters
       self.get_required_parameters.each do |param_name|
