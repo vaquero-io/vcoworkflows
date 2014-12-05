@@ -45,13 +45,13 @@ module VcoWorkflows
     # Set the parameter value
     # @param [Object] value - Value to set the parameter to
     def set(value)
-      case @input_parameters[parameter].type
+      case @type
         when 'Array'
           fail(IOError, ERR[:param_verify_failed]) unless value.is_a?(Array)
         when 'string'
-          fail(IOError, ERR[:param_verify_failed]) unless value.is_a?(Array)
+          fail(IOError, ERR[:param_verify_failed]) unless value.is_a?(String)
         when 'number'
-          fail(IOError, ERR[:param_verify_failed]) unless value.is_a?(Array)
+          fail(IOError, ERR[:param_verify_failed]) unless value.is_a?(Fixnum)
       end
       @value = value
     end
