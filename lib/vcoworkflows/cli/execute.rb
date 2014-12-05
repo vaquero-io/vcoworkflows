@@ -9,14 +9,15 @@ module VcoWorkflows
 
       include Thor::Actions
 
-      argument :workflow, type: :string, desc: DESC_CLI_EXECUTE
-      class_option :server, type: :string, aliases: '-s', required: true, desc: DESC_CLI_EXECUTE_SERVER
-      class_option :username, type: :string, aliases: '-u', desc: DESC_CLI_EXECUTE_USERNAME
-      class_option :password, type: :string, aliases: '-p', desc: DESC_CLI_EXECUTE_PASSWORD
-      class_option :id, type: :string, aliases: '-i', desc: DESC_CLI_EXECUTE_ID
-      class_option 'verify-ssl', type: :boolean, default: true, desc: DESC_CLI_EXECUTE_VERIFY_SSL
+      argument :workflow, type: :string, desc: DESC_CLI_WORKFLOW
+      class_option :server, type: :string, aliases: '-s', required: true, desc: DESC_CLI_SERVER
+      class_option :username, type: :string, aliases: '-u', desc: DESC_CLI_USERNAME
+      class_option :password, type: :string, aliases: '-p', desc: DESC_CLI_PASSWORD
+      class_option :id, type: :string, aliases: '-i', desc: DESC_CLI_WORKFLOW_ID
+      class_option 'verify-ssl', type: :boolean, default: true, desc: DESC_CLI_VERIFY_SSL
+      class_option 'dry-run', type: :boolean, desc: DESC_CLI_DRY_RUN
+
       class_option :parameters, type: :string, requires: true, desc: DESC_CLI_EXECUTE_PARAMETERS
-      class_option 'dry-run', type: :boolean, desc: DESC_CLI_EXECUTE_DRY_RUN
 
       def self.source_root
         File.dirname(__FILE__)
