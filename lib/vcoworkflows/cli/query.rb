@@ -23,7 +23,7 @@ module VcoWorkflows
 
       def query
 
-        puts "Querying against vCO REST endpoint: #{options[:server]}"
+        puts "\nQuerying against vCO REST endpoint:\n  #{options[:server]}"
         puts "Will search for workflow: '#{workflow}'"
         puts "Will query workflow by GUID (#{options[:id]})" if options[:id]
 
@@ -36,7 +36,7 @@ module VcoWorkflows
         # Create the Workflow Service
         wfs = VcoWorkflows::WorkflowService.new(session)
 
-        puts "Retrieving workflow '#{workflow}' ..."
+        puts "\nRetrieving workflow '#{workflow}' ..."
 
         wf = nil
         if options.key?(:id)
@@ -47,7 +47,6 @@ module VcoWorkflows
 
         puts "\nFound workflow: '#{wf.name}' (GUID=#{wf.id}):\n"
         puts wf.to_s
-        puts ""
 
       end
 
