@@ -26,8 +26,7 @@ module VcoWorkflows
     # @return [String] - JSON response body
     def get(endpoint, headers = {})
       headers = {:accept => :json}.merge(headers)
-      response = @rest_resource[endpoint].get headers
-      return response.body
+      return @rest_resource[endpoint].get headers
     end
 
     # Public
@@ -40,8 +39,7 @@ module VcoWorkflows
     # @return [String] - JSON response body
     def post(endpoint, body, headers = {})
       headers = {:accept => :json, :content_type => :json}.merge(headers)
-      response = @rest_resource[endpoint].post body, headers
-      return response.body
+      return @rest_resource[endpoint].post body, headers
     end
 
   end
