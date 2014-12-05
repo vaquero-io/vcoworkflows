@@ -6,6 +6,7 @@ require 'vcoworkflows/workflowservice'
 require 'vcoworkflows/workflow'
 require 'vcoworkflows/workflowparameter'
 require 'vcoworkflows/workflowtoken'
+require 'vcoworkflows/cli/execute'
 
 module VcoWorkflows
 
@@ -19,6 +20,8 @@ module VcoWorkflows
     def version
       puts VERSION
     end
+
+    register(VcoWorkflows::Cli::Execute, 'execute', 'execute <WORKFLOW>', DESC_CLI_EXECUTE)
 
   end
 

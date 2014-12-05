@@ -1,6 +1,15 @@
 module VcoWorkflows
 
   DESC_VERSION = 'Display the installed version of the VcoWorkflows gem'
+  DESC_CLI_EXECUTE = 'Execute the specified workflow'
+  DESC_CLI_EXECUTE_DRY_RUN = 'Dry run; do not actually execute the workflow.'
+  DESC_CLI_EXECUTE_NAME = 'Name of the workflow to execute'
+  DESC_CLI_EXECUTE_ID = 'GUID of the workflow to execute'
+  DESC_CLI_EXECUTE_SERVER = 'VMware vCenter Orchestrator server URL'
+  DESC_CLI_EXECUTE_USERNAME = 'vCO user name'
+  DESC_CLI_EXECUTE_PASSWORD = 'vCO password'
+  DESC_CLI_EXECUTE_VERIFY_SSL = 'Perform TSL Certificate verification'
+  DESC_CLI_EXECUTE_PARAMETERS = 'Comma-separated list of key=value parameters for workflow'
 
   API_URL_BASE = '/vco/api'
 
