@@ -119,14 +119,20 @@ module VcoWorkflows
       puts "ID: " << @id
       puts "Description: " << @description
       puts "Version: " << @version
+      puts ""
       puts "Input Parameters:"
       @input_parameters.each do |name,wf_param|
-        puts " - name: '#{name}'; type: '#{wf_param.type}'; required: '#{wf_param.required}'; value: '#{wf_param.value}';"
+        type = "#{wf_param.type}#{'/' << wf_param.subtype unless wf_param.subtype.nil?}"
+        puts " - name: '#{name}', type: '#{type}', required: '#{wf_param.required}', value: '#{wf_param.value}'"
       end
+      puts ""
+      puts "REQUIRED Input Parameters: \n#{self.get_required_parameter_names.join(', ')}"
+      puts ""
       puts "Output Parameters:"
       @output_parameters.each do |name,wf_param|
-        puts " - name: '#{name}'; type: '#{wf_param.type}'; value: '#{wf_param.value}';"
+        puts " - name: '#{name}', type: '#{wf_param.type}', value: '#{wf_param.value}'"
       end
+      nil
     end
 
     # Private methods
