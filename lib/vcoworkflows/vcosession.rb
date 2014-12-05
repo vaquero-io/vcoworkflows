@@ -10,13 +10,17 @@ module VcoWorkflows
       @rest_resource = RestClient::Resource.new(api_url, :user => user, :password => password, :verify_ssl => verify_ssl)
     end
 
-    def get(endpoint)
-      response = @rest_resource[endpoint].get :accept => :json
+    def get(endpoint, headers: {})
+      default_headers = {:accept => :json}
+      final_headers = default_headers.merge(headers)
+      response = @rest_resource[endpoint].get final_headers
       return response.body
     end
 
-    def post(endpoint, body)
-      response = @rest_resource[endpoint].post body, :content_type => :json
+    def post(endpoint, body, headers: {})
+      default_headers = {:content_type => :json}
+      final_headers = default_headers.merge(headers)
+      response = @rest_resource[endpoint].post body, final_headers
       return response.body
     end
 
