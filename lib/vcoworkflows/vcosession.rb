@@ -5,11 +5,24 @@ module VcoWorkflows
 
   class VcoSession
 
+    # Public
+    # Initialize the session
+    #
+    # @param [String] uri - URI for the vCenter Orchestrator API endpoint
+    # @param [String] user - User name for vCO
+    # @param [String] password - Password for vCO
+    # @param [Boolean] verify_ssl - Whether or not to verify SSL certificates
     def initialize(uri, user: nil, password: nil, verify_ssl: false)
       api_url = "#{uri}/vco/api"
       @rest_resource = RestClient::Resource.new(api_url, :user => user, :password => password, :verify_ssl => verify_ssl)
     end
 
+    # Public
+    # Perform a REST GET operation against the specified endpoint
+    #
+    # @param [String] endpoint - REST endpoint to use
+    # @param [Hash] headers - Optional headers to use in request (see RestClient)
+    # @return [String] - JSON response body
     def get(endpoint, headers: {})
       default_headers = {:accept => :json}
       final_headers = default_headers.merge(headers)
@@ -17,6 +30,14 @@ module VcoWorkflows
       return response.body
     end
 
+    # Public
+    # Perform a REST POST operation against the specified endpoint with the
+    # given data body
+    #
+    # @param [String] endpoint - REST endpoint to use
+    # @param [String] body - JSON data body to post
+    # @param [Hash] headers - Optional headers to use in request (see RestClient)
+    # @return [String] - JSON response body
     def post(endpoint, body, headers: {})
       default_headers = {:content_type => :json}
       final_headers = default_headers.merge(headers)

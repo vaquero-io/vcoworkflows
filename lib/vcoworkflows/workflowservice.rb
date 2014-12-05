@@ -18,6 +18,8 @@ module VcoWorkflows
 
     # Public
     # Get a workflow by GUID
+    # @param [String] id - Workflow GUID
+    # @return [VcoWorkflows::Workflow] - the requested workflow
     def get_workflow_for_id(id)
       VcoWorkflows::Workflow.new(@session.get("/workflows/#{id}"), self)
     end
@@ -26,12 +28,14 @@ module VcoWorkflows
     # Get the presentation for the given workflow GUID
     def get_presentation(id, workflow)
       VcoWorkflows::WorkflowPresentation.new(@session.get("/workflows/#{id}/presentation/"), workflow)
+    # @param [VcoWorkflows::Workflow] workflow - workflow GUID who's presentation we want
+    # @return [VcoWorkflows::WorkflowPresentation]
     end
 
     # Public
-    # Get one workflow with a specified name. If we find none or more
-    # than one workflow for the given name, it is an error condition and
-    # we need to fail violently.
+    # Get one workflow with a specified name.
+    # @param [String] name - Name of the workflow
+    # @return [VcoWorkflows::Workflow] - the requested workflow
     def get_workflow_for_name(name)
       response = JSON.parse(@session.get("/workflows?conditions=name=#{url_encode(name)}"))
 
@@ -55,6 +59,10 @@ module VcoWorkflows
       get_workflow_for_id(workflow_id)
     end
 
+    # Public
+    # Submit the given workflow for execution
+    # @param [String] id - Workflow GUID for the workflow we want to execute
+    # @param [String] parameter_json - Required workflow input parameters as JSON
     def execute_workflow(id, parameter_json)
       response = JSON.parse(@session.post("/workflows/#{id}/executions/", parameter_json))
     end

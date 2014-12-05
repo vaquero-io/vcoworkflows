@@ -57,7 +57,8 @@ module VcoWorkflows
     end
 
     # Public
-    # @return [String]
+    # Get an array of the names of all the required input parameters
+    # @return [String[]]
     def get_required_parameters
       required = []
       @input_parameters.each_value {|v| required << v.name if v.required}
@@ -65,6 +66,7 @@ module VcoWorkflows
     end
 
     # Public
+    # Verify that all mandatory input parameters have values
     def verify_parameters
       self.get_required_parameters.each do |param_name|
         param = @input_parameters['param_name']
@@ -75,6 +77,7 @@ module VcoWorkflows
     end
 
     # Public
+    # Execute this workflow
     # @param [VcoWorkflows::WorkflowService] workflow_service
     # @return [VcoWorkflows::WorkflowToken]
     def execute(workflow_service)
@@ -107,6 +110,7 @@ module VcoWorkflows
     private
 
     # Private
+    # Convert the input parameters to a JSON document
     # @return [String]
     def get_input_parameter_json
       tmp_params = []
