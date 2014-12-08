@@ -116,22 +116,22 @@ module VcoWorkflows
     # Public
     # @return [String]
     def to_s
-      my_string = "Workflow: " << @name
-      my_string <<  "ID: " << @id
-      my_string <<  "Description: " << @description
-      my_string <<  "Version: " << @version
-      my_string <<  ""
-      my_string <<  "Input Parameters:"
+      my_string = "Workflow: " << @name << "\n"
+      my_string << "ID: " << @id << "\n"
+      my_string << "Description: " << @description << "\n"
+      my_string << "Version: " << @version << "\n"
+      my_string << "\n"
+      my_string << "Input Parameters:" << "\n"
       @input_parameters.each do |name,wf_param|
         type = "#{wf_param.type}#{'/' << wf_param.subtype unless wf_param.subtype.nil?}"
-        my_string <<  " - name: '#{name}', type: '#{type}', required: '#{wf_param.required}', value: '#{wf_param.value}'"
+        my_string << " - name: '#{name}', type: '#{type}', required: '#{wf_param.required}', value: '#{wf_param.value}'" << "\n"
       end
-      my_string <<  ""
-      my_string <<  "REQUIRED Input Parameters: \n#{self.get_required_parameter_names.join(', ')}"
-      my_string <<  ""
-      my_string <<  "Output Parameters:"
+      my_string << "\n"
+      my_string << "REQUIRED Input Parameters: \n#{self.get_required_parameter_names.join(', ')}" << "\n"
+      my_string << "\n"
+      my_string << "Output Parameters:" << "\n"
       @output_parameters.each do |name,wf_param|
-        my_string <<  " - name: '#{name}', type: '#{wf_param.type}', value: '#{wf_param.value}'"
+        my_string << " - name: '#{name}', type: '#{wf_param.type}', value: '#{wf_param.value}'" << "\n"
       end
       return my_string
     end
