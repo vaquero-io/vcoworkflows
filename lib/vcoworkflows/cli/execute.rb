@@ -62,6 +62,9 @@ module VcoWorkflows
           wf = wfs.get_workflow_for_name(workflow)
         end
 
+        # List out mandatory parameters
+        puts "Required parameters:\n #{wf.get_required_parameter_names.join(', ')}"
+
         # Set the input parameters
         puts "Setting workflow input parameters..." if options[:verbose]
         parameters.each {|k,v| puts "setting #{k} to #{v}" if options[:verbose]; wf.set_parameter(k,v)}
@@ -73,16 +76,23 @@ module VcoWorkflows
         # Execute the workflow
         puts "Executing workflow..."
         # puts JSON.pretty_generate(JSON.parse(wf.get_input_parameter_json))
+
+        # Fetch the results
         wftoken = wf.execute
         puts "Execution of #{wf.name} started at #{Time.at(wftoken.start_date/1000)}"
         puts "Execution #{wftoken.id} state: #{wftoken.state}"
+
+        # Check for update results until we get one who's state
+        # is not "running"
         while wftoken.state.eql?('running') do
           sleep 5
           wftoken = wfs.get_execution(wf.id, wftoken.id)
           puts "Execution #{wftoken.id} state: #{wftoken.state}"
         end
 
-        puts JSON.parse(wfs.get_log(wf.id,wftoken.id))
+        # Print out the execution log
+        log = wfs.get_log(wf.id,wftoken.id)
+        puts "\n#{log}"
 
       end
 
