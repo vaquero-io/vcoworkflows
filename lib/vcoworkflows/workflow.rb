@@ -116,24 +116,24 @@ module VcoWorkflows
     # Public
     # @return [String]
     def to_s
-      puts "Workflow: " << @name
-      puts "ID: " << @id
-      puts "Description: " << @description
-      puts "Version: " << @version
-      puts ""
-      puts "Input Parameters:"
+      my_string = "Workflow: " << @name
+      my_string <<  "ID: " << @id
+      my_string <<  "Description: " << @description
+      my_string <<  "Version: " << @version
+      my_string <<  ""
+      my_string <<  "Input Parameters:"
       @input_parameters.each do |name,wf_param|
         type = "#{wf_param.type}#{'/' << wf_param.subtype unless wf_param.subtype.nil?}"
-        puts " - name: '#{name}', type: '#{type}', required: '#{wf_param.required}', value: '#{wf_param.value}'"
+        my_string <<  " - name: '#{name}', type: '#{type}', required: '#{wf_param.required}', value: '#{wf_param.value}'"
       end
-      puts ""
-      puts "REQUIRED Input Parameters: \n#{self.get_required_parameter_names.join(', ')}"
-      puts ""
-      puts "Output Parameters:"
+      my_string <<  ""
+      my_string <<  "REQUIRED Input Parameters: \n#{self.get_required_parameter_names.join(', ')}"
+      my_string <<  ""
+      my_string <<  "Output Parameters:"
       @output_parameters.each do |name,wf_param|
-        puts " - name: '#{name}', type: '#{wf_param.type}', value: '#{wf_param.value}'"
+        my_string <<  " - name: '#{name}', type: '#{wf_param.type}', value: '#{wf_param.value}'"
       end
-      nil
+      return my_string
     end
 
     # Public
@@ -185,7 +185,7 @@ module VcoWorkflows
     # Public
     # @return [String]
     def to_s
-      puts @source_json
+      return JSON.pretty_generate(JSON.parse(@source_json))
     end
 
     # Public

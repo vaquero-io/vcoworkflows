@@ -48,7 +48,7 @@ module VcoWorkflows
         end
 
         puts ""
-        puts wf.to_s
+        puts wf
 
       end
 
