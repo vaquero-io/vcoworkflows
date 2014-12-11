@@ -13,7 +13,7 @@ module VcoWorkflows
     # @param [String] password - Password for vCO
     # @param [Boolean] verify_ssl - Whether or not to verify SSL certificates
     def initialize(uri, user: nil, password: nil, verify_ssl: false)
-      api_url    = "#{uri.gsub(/\/$/,'')}/vco/api"
+      api_url = "#{uri.gsub(/\/$/,'')}/vco/api"
 
       RestClient.proxy = ENV['http_proxy'] # Set a proxy if present
       @rest_resource = RestClient::Resource.new(api_url,
