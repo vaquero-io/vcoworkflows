@@ -15,7 +15,7 @@ module VcoWorkflows
       class_option :password, type: :string, aliases: '-p', desc: DESC_CLI_PASSWORD
       class_option :id, type: :string, aliases: '-i', desc: DESC_CLI_WORKFLOW_ID
       class_option :verify_ssl, type: :boolean, default: true, desc: DESC_CLI_VERIFY_SSL
-      class_option :dry_run, type: :boolean, desc: DESC_CLI_DRY_RUN
+      class_option :dry_run, type: :boolean, default: false, desc: DESC_CLI_DRY_RUN
       class_option :verbose, type: :boolean, default: true, desc: DESC_CLI_VERBOSE
 
       class_option :parameters, type: :string, required: true, desc: DESC_CLI_EXECUTE_PARAMETERS

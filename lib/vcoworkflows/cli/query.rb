@@ -14,8 +14,8 @@ module VcoWorkflows
       class_option :username, type: :string, aliases: '-u', desc: DESC_CLI_USERNAME
       class_option :password, type: :string, aliases: '-p', desc: DESC_CLI_PASSWORD
       class_option :id, type: :string, aliases: '-i', desc: DESC_CLI_WORKFLOW_ID
-      class_option 'verify-ssl', type: :boolean, default: true, desc: DESC_CLI_VERIFY_SSL
-      class_option 'dry-run', type: :boolean, desc: DESC_CLI_DRY_RUN
+      class_option :verify_ssl, type: :boolean, default: true, desc: DESC_CLI_VERIFY_SSL
+      class_option :dry_run, type: :boolean, default: false, desc: DESC_CLI_DRY_RUN
 
       def self.source_root
         File.dirname(__FILE__)
@@ -23,12 +23,15 @@ module VcoWorkflows
 
       def query
 
-        puts "\nQuerying against vCO REST endpoint:\n  #{options[:server]}"
-        puts "Will search for workflow: '#{workflow}'"
-        puts "Will query workflow by GUID (#{options[:id]})" if options[:id]
+        # puts "#{JSON.pretty_generate({'options' => options})}"
 
-        return if options[:dry_run]
-        
+        if options[:dry_run]
+          puts "\nQuerying against vCO REST endpoint:\n  #{options[:server]}"
+          puts "Will search for workflow: '#{workflow}'"
+          puts "Will query workflow by GUID (#{options[:id]})" if options[:id]
+          return
+        end
+
         # Create the session
         session = VcoWorkflows::VcoSession.new(options[:server],
                                                user: options[:username],
@@ -41,7 +44,7 @@ module VcoWorkflows
         puts "\nRetrieving workflow '#{workflow}' ..."
 
         wf = nil
-        if options.key?(:id)
+        if options[:id]
           wf = wfs.get_workflow_for_id(options[:id])
         else
           wf = wfs.get_workflow_for_name(workflow)
