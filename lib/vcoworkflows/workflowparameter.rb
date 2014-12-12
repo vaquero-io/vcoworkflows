@@ -19,17 +19,14 @@ module VcoWorkflows
     # @return [VcoWorkflows::WorkflowParameter]
     def initialize(name: nil, type: nil, required: false, value: nil)
       @name = name
-
-      # set the type properly
       case type
-      when /\//
-        @type = type.gsub(/\/.*$/, '')
-        @subtype = type.gsub(/^.*\//, '')
-      else
-        @type = type
-        @subtype = nil
+        when /\//
+          @type = type.gsub(/\/.*$/, '')
+          @subtype = type.gsub(/^.*\//, '')
+        else
+          @type = type
+          @subtype = nil
       end
-
       @required = required
 
       # If value is supposed to be an array but we dont' have a value yet,
