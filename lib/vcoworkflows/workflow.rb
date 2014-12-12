@@ -95,9 +95,9 @@ module VcoWorkflows
     # Public
     # Get the value of a specific input parameter
     # @param [String] parameter_name - Name of the parameter whose value to get
-    # @return [Object]
-    def get_parameter_value(parameter_name)
-      @input_parameters[parameter_name].value
+    # @return [VcoWorkflows::WorkflowParameter]
+    def get_parameter(parameter_name)
+      @input_parameters[parameter_name]
     end
 
     # Public
