@@ -74,6 +74,28 @@ module VcoWorkflows
     end
 
     # Public
+    # Return a string representation of the parameter
+    # @return [String]
+    def to_s
+      string = "#{@name}"
+      if @value.nil? || value.size == 0
+        string << " (#{@type}"
+        string << "/#{@subtype}" if @subtype
+        string << ")"
+        string << " [required]" if @required
+      else
+        if @type.eql?('Array')
+          string << " ="
+          @value.each {|v| string << "\n  - #{v}"}
+        else
+          string << " = #{@value}"
+        end
+      end
+      string << "\n"
+      return string
+    end
+
+    # Public
     # Return a JSON document representation of this object
     # @return [String]
     def to_json

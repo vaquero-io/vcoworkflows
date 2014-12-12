@@ -23,9 +23,12 @@ module VcoWorkflows
       message = "Workflow execution log:\n"
       @messages.keys.sort.each do |timestamp|
         message << "#{Time.at(timestamp/1000)}"
-        message << " #{@messages[timestamp]['severity']} #{@messages[timestamp]['user']}"
-        message << " #{@messages[timestamp]['short-description']};"
-        message << " #{@messages[timestamp]['long-description']}\n"
+        message << " #{@messages[timestamp]['severity']}: #{@messages[timestamp]['user']}:"
+        message << " #{@messages[timestamp]['short-description']}"
+        unless @messages[timestamp]['short-description'].eql?(@messages[timestamp]['long-description'])
+          message << "; #{@messages[timestamp]['long-description']}"
+        end
+        message << "\n"
       end
       return message
     end
