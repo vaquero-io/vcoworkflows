@@ -136,10 +136,10 @@ module VcoWorkflows
     # Public
     # @return [String]
     def to_s
-      string = "Workflow: " << @name << "\n"
-      string << "ID: " << @id << "\n"
-      string << "Description: " << @description << "\n"
-      string << "Version: " << @version << "\n"
+      string =  "Workflow:    #{@name}\n"
+      string << "ID:          #{@id}\n"
+      string << "Description: #{@description}\n"
+      string << "Version:     #{@version}\n"
       string << "\nInput Parameters:\n"
       @input_parameters.each_value { |wf_param| string << " #{wf_param}" } if @input_parameters.size > 0
       # string << "\n"
