@@ -30,11 +30,12 @@ module VcoWorkflows
       @required = required
 
       # If value is supposed to be an array but we dont' have a value yet,
-      # create an empty array
+      # create an empty array. If it's not supposed to be an array, just
+      # set the value, even if it's still nil.
       if @type.eql?('Array') && value.nil?
         @value = []
       else
-        @value = value
+        @value = set(value)
       end
     end
 
@@ -42,15 +43,24 @@ module VcoWorkflows
     # Set the parameter value
     # @param [Object] value - Value to set the parameter to
     def set(value)
-      case @type
-        when 'Array'
-          fail(IOError, ERR[:param_verify_failed]) unless value.is_a?(Array)
-        when 'string'
-          fail(IOError, ERR[:param_verify_failed]) unless value.is_a?(String)
-        when 'number'
-          fail(IOError, ERR[:param_verify_failed]) unless value.is_a?(Fixnum)
+      if ! value.nil?
+        case @type
+          when 'Array'
+            fail(IOError, ERR[:param_verify_failed]) unless value.is_a?(Array)
+          when 'string'
+            fail(IOError, ERR[:param_verify_failed]) unless value.is_a?(String)
+          when 'number'
+            fail(IOError, ERR[:param_verify_failed]) unless value.is_a?(Fixnum)
+        end
+        @value = value
       end
-      @value = value
+    end
+
+    # Public
+    # Quickly determine if a value's been set
+    # @return [Boolean]
+    def is_set?
+      value.nil? || value.size == 0 ? false : true
     end
 
     # Public
