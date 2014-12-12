@@ -1,4 +1,5 @@
 # coding: utf-8
+# rubocop:disable all
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'vcoworkflows/version'
@@ -25,3 +26,4 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'rest-client'
 
 end
+# rubocop:enable all

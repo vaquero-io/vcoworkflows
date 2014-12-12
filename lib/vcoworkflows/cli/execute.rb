@@ -1,12 +1,14 @@
 require 'vcoworkflows/constants'
 require 'thor/group'
 
+# rubocop:disable MethodLength, LineLength
+
+# VcoWorkflows
 module VcoWorkflows
-
+  # Cli
   module Cli
-
+    # Execute
     class Execute < Thor::Group
-
       include Thor::Actions
 
       argument :workflow, type: :string, desc: DESC_CLI_WORKFLOW
@@ -24,11 +26,14 @@ module VcoWorkflows
         File.dirname(__FILE__)
       end
 
+      # rubocop:disable CyclomaticComplexity, PerceivedComplexity
       def execute
-
         # Parse out the parameters
         parameters = {}
-        options[:parameters].split(/,/).each { |p| k, v = p.split(/=/); parameters[k] = v }
+        options[:parameters].split(/,/).each do |p|
+          k, v = p.split(/=/)
+          parameters[k] = v
+        end
         if parameters.key?('runlist')
           parameters['runlist'] = parameters['runlist'].split(/:/)
         end
@@ -37,9 +42,12 @@ module VcoWorkflows
         puts "Requested execution of workflow: '#{workflow}'"
         puts "Will call workflow by GUID (#{options[:id]})" if options[:id]
         if options[:verbose] || options[:dry_run]
-          puts "Parameters:"
-          parameters.each {|k,v| v = v.join(',') if v.is_a?(Array); puts " - #{k}: #{v}"}
-          puts ""
+          puts 'Parameters:'
+          parameters.each do |k, v|
+            v = v.join(',') if v.is_a?(Array)
+            puts " - #{k}: #{v}"
+          end
+          puts ''
         end
 
         return if options[:dry_run]
@@ -63,41 +71,42 @@ module VcoWorkflows
         end
 
         # List out mandatory parameters
-        puts "Required parameters:\n #{wf.get_required_parameter_names.join(', ')}"
+        puts "Required parameters:\n #{wf.required_parameter_names.join(', ')}"
 
         # Set the input parameters
-        puts "Setting workflow input parameters..." if options[:verbose]
-        parameters.each {|k,v| puts "setting #{k} to #{v}" if options[:verbose]; wf.set_parameter(k,v)}
+        puts 'Setting workflow input parameters...' if options[:verbose]
+        parameters.each do |k, v|
+          puts "setting #{k} to #{v}" if options[:verbose]
+          wf.set_parameter(k, v)
+        end
 
         # Verify parameters
-        puts "Verifying required parameters..." if options[:verbose]
+        puts 'Verifying required parameters...' if options[:verbose]
         wf.verify_parameters
 
         # Execute the workflow
-        puts "Executing workflow..."
-        # puts JSON.pretty_generate(JSON.parse(wf.get_input_parameter_json))
+        puts 'Executing workflow...'
+        # puts JSON.pretty_generate(JSON.parse(wf.input_parameter_json))
 
         # Fetch the results
         wftoken = wf.execute
-        puts "Execution of #{wf.name} started at #{Time.at(wftoken.start_date/1000)}"
+        puts "Execution of #{wf.name} started at #{Time.at(wftoken.start_date / 1000)}"
         puts "Execution #{wftoken.id} state: #{wftoken.state}"
 
         # Check for update results until we get one who's state
         # is not "running"
-        while wftoken.state.eql?('running') do
+        while wftoken.state.eql?('running')
           sleep 5
           wftoken = wfs.get_execution(wf.id, wftoken.id)
           puts "Execution #{wftoken.id} state: #{wftoken.state}"
         end
 
         # Print out the execution log
-        log = wfs.get_log(wf.id,wftoken.id)
+        log = wfs.get_log(wf.id, wftoken.id)
         puts "\n#{log}"
-
       end
-
+      # rubocop:enable CyclomaticComplexity, PerceivedComplexity
     end
-
   end
-
 end
+# rubocop:enable MethodLength, LineLength

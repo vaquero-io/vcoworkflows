@@ -1,10 +1,10 @@
 require_relative 'workflowservice'
 require 'json'
 
+# VcoWorkflows
 module VcoWorkflows
-
+  # WorkflowExecutionLog
   class WorkflowExecutionLog
-
     attr_reader :messages
 
     # Public
@@ -19,10 +19,11 @@ module VcoWorkflows
 
     # Public
     # @return [String]
+    # rubocop:disable MethodLength, LineLength
     def to_s
       message = "Workflow execution log:\n"
       @messages.keys.sort.each do |timestamp|
-        message << "#{Time.at(timestamp/1000)}"
+        message << "#{Time.at(timestamp / 1000)}"
         message << " #{@messages[timestamp]['severity']}: #{@messages[timestamp]['user']}:"
         message << " #{@messages[timestamp]['short-description']}"
         unless @messages[timestamp]['short-description'].eql?(@messages[timestamp]['long-description'])
@@ -30,9 +31,10 @@ module VcoWorkflows
         end
         message << "\n"
       end
-      return message
+
+      # Assert
+      message
     end
-
+    # rubocop:enable MethodLength, LineLength
   end
-
 end

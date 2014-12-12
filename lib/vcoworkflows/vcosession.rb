@@ -1,10 +1,10 @@
 require_relative 'constants'
 require 'rest_client'
 
+# VcoWorkflows
 module VcoWorkflows
-
+  # VcoSession
   class VcoSession
-
     # Public
     # Initialize the session
     #
@@ -12,26 +12,29 @@ module VcoWorkflows
     # @param [String] user - User name for vCO
     # @param [String] password - Password for vCO
     # @param [Boolean] verify_ssl - Whether or not to verify SSL certificates
+    # rubocop:disable HashSyntax
     def initialize(uri, user: nil, password: nil, verify_ssl: false)
-      api_url = "#{uri.gsub(/\/$/,'')}/vco/api"
-
+      api_url = "#{uri.gsub(/\/$/, '')}/vco/api"
       RestClient.proxy = ENV['http_proxy'] # Set a proxy if present
       @rest_resource = RestClient::Resource.new(api_url,
                                                 :user => user,
                                                 :password => password,
                                                 :verify_ssl => verify_ssl)
     end
+    # rubocop:enable HashSyntax
 
     # Public
     # Perform a REST GET operation against the specified endpoint
     #
     # @param [String] endpoint - REST endpoint to use
-    # @param [Hash] headers - Optional headers to use in request (see RestClient)
+    # @param [Hash] headers - Optional headers to use in request
     # @return [String] - JSON response body
+    # rubocop:disable HashSyntax
     def get(endpoint, headers = {})
-      headers = {:accept => :json}.merge(headers)
-      return @rest_resource[endpoint].get headers
+      headers = { :accept => :json }.merge(headers)
+      @rest_resource[endpoint].get headers
     end
+    # rubocop:enable HashSyntax
 
     # Public
     # Perform a REST POST operation against the specified endpoint with the
@@ -39,13 +42,13 @@ module VcoWorkflows
     #
     # @param [String] endpoint - REST endpoint to use
     # @param [String] body - JSON data body to post
-    # @param [Hash] headers - Optional headers to use in request (see RestClient)
+    # @param [Hash] headers - Optional headers to use in request
     # @return [String] - JSON response body
+    # rubocop:disable HashSyntax
     def post(endpoint, body, headers = {})
-      headers = {:accept => :json, :content_type => :json}.merge(headers)
-      return @rest_resource[endpoint].post body, headers
+      headers = { :accept => :json, :content_type => :json }.merge(headers)
+      @rest_resource[endpoint].post body, headers
     end
-
+    # rubocop:enable HashSyntax
   end
-
 end

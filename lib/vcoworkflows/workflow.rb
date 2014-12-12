@@ -4,10 +4,10 @@ require_relative 'workflowtoken'
 require_relative 'workflowparameter'
 require 'json'
 
+# VcoWorkflows
 module VcoWorkflows
-
+  # Workflow
   class Workflow
-
     attr_reader :id
     attr_reader :name
     attr_reader :version
@@ -15,15 +15,16 @@ module VcoWorkflows
     attr_reader :input_parameters
     attr_reader :output_parameters
     attr_accessor :workflow_service
+
     attr_reader :source_json
+    alias_method :source_json, :to_json
 
     # @param [String] workflow_json
     # @param [VcoWorkflows::WorkflowService] workflow_service
     # @return [VcoWorkflows::Workflow]
+    # rubocop:disable CyclomaticComplexity, PerceivedComplexity, MethodLength, LineLength
     def initialize(workflow_json, workflow_service)
-
       workflow_data = JSON.parse(workflow_json)
-
       @workflow_service = workflow_service
 
       # Set up the attributes if they exist in the data json, otherwise nil them
@@ -48,17 +49,19 @@ module VcoWorkflows
 
       # Get the presentation data and set required flags on our parameters
       @presentation = workflow_service.get_presentation(self)
-
     end
+    # rubocop:enable CyclomaticComplexity, PerceivedComplexity, MethodLength, LineLength
 
     # Class
     # Parse json parameters and return a nice hash
     # @param [Object] parameter_data
     # @return [Hash]
+    # rubocop:disable MethodLength, LineLength
     def self.parse_parameters(parameter_data)
       wfparams = {}
       parameter_data.each do |parameter|
-        wfparam = VcoWorkflows::WorkflowParameter.new(type: parameter['type'], name: parameter['name'])
+        wfparam = VcoWorkflows::WorkflowParameter.new(type: parameter['type'],
+                                                      name: parameter['name'])
         if parameter['value']
           if wfparam.type.eql?('Array')
             value = []
@@ -73,22 +76,27 @@ module VcoWorkflows
         end
         wfparams[parameter['name']] = wfparam
       end
-      return wfparams
+
+      # Assert
+      wfparams
     end
+    # rubocop:enable MethodLength, LineLength
 
     # Public
     # Get an array of the names of all the required input parameters
     # @return [String[]]
-    def get_required_parameter_names
+    def required_parameter_names
       required = []
-      @input_parameters.each_value {|v| required << v.name if v.required}
-      return required
+      @input_parameters.each_value { |v| required << v.name if v.required }
+
+      # Assert
+      required
     end
 
     # Public
     # Get an array of the full set of input parameters
     # @return [String[]]
-    def get_parameter_names
+    def parameter_names
       @input_parameters.keys
     end
 
@@ -96,7 +104,7 @@ module VcoWorkflows
     # Get the value of a specific input parameter
     # @param [String] parameter_name - Name of the parameter whose value to get
     # @return [VcoWorkflows::WorkflowParameter]
-    def get_parameter(parameter_name)
+    def parameter(parameter_name)
       @input_parameters[parameter_name]
     end
 
@@ -110,14 +118,16 @@ module VcoWorkflows
 
     # Public
     # Verify that all mandatory input parameters have values
+    # rubocop:disable LineLength
     def verify_parameters
-      self.get_required_parameter_names.each do |name|
+      required_parameter_names.each do |name|
         param = @input_parameters[name]
         if param.required && (param.value.nil? || param.value.size == 0)
           fail(IOError, ERR[:param_verify_failed] << "#{name} required but not present.")
         end
       end
     end
+    # rubocop:enable LineLength
 
     # Public
     # Execute this workflow
@@ -130,48 +140,59 @@ module VcoWorkflows
       # If we still have a nil workflow_service, go home.
       fail(IOError, ERR[:no_workflow_service_defined]) if workflow_service.nil?
       # Let's get this thing running!
-      workflow_service.execute_workflow(@id, get_input_parameter_json)
+      workflow_service.execute_workflow(@id, input_parameter_json)
     end
 
     # Public
     # @return [String]
+    # rubocop:disable MethodLength
     def to_s
       string =  "Workflow:    #{@name}\n"
       string << "ID:          #{@id}\n"
       string << "Description: #{@description}\n"
       string << "Version:     #{@version}\n"
+
       string << "\nInput Parameters:\n"
-      @input_parameters.each_value { |wf_param| string << " #{wf_param}" } if @input_parameters.size > 0
-      # string << "\n"
-      # string << "REQUIRED Input Parameters: \n#{self.get_required_parameter_names.join(', ')}" << "\n"
+      if @input_parameters.size > 0
+        @input_parameters.each_value { |wf_param| string << " #{wf_param}" }
+      end
+
       string << "\nOutput Parameters:" << "\n"
-      @output_parameters.each_value { |wf_param| string << " #{wf_param}" } if @output_parameters.size > 0
-      return string
+      if @output_parameters.size > 0
+        @output_parameters.each_value { |wf_param| string << " #{wf_param}" }
+      end
+
+      # Assert
+      string
     end
+    # rubocop:enable MethodLength
 
     # Public
     # Convert the input parameters to a JSON document
     # @return [String]
-    def get_input_parameter_json
+    # rubocop:disable HashSyntax
+    def input_parameter_json
       tmp_params = []
-      @input_parameters.each {|_k,v| tmp_params << v.as_struct}
-      param_struct = {:parameters => tmp_params}
+      @input_parameters.each { |_k, v| tmp_params << v.as_struct }
+      param_struct = { :parameters => tmp_params }
       param_struct.to_json
     end
-
+    # rubocop:enable HashSyntax
   end
 
+  # WorkflowPresentation
   class WorkflowPresentation
-
-    attr_reader :source_json
     attr_reader :presentation_data
+    attr_reader :source_json
+
+    alias_method :source_json, :to_json
 
     # Public
     # @param [String] presentation_json
     # @param [VcoWorkflows::Workflow] workflow
     # @return [VcoWorkflows::WorkflowPresentation]
+    # rubocop:disable MethodLength
     def initialize(presentation_json, workflow)
-
       @source_json = presentation_json
 
       presentation_data = JSON.parse(presentation_json)
@@ -183,30 +204,20 @@ module VcoWorkflows
       fields = presentation_data['steps'][0]['step']['elements'][0]['fields']
 
       fields.each do |attribute|
-        if attribute.key?('constraints')
-          attribute['constraints'].each do |const|
-            if const.key?('@type') && const['@type'].eql?('mandatory')
-              workflow.input_parameters[attribute['id']].required = true
-            end
+        next unless attribute.key?('constraints')
+        attribute['constraints'].each do |const|
+          if const.key?('@type') && const['@type'].eql?('mandatory')
+            workflow.input_parameters[attribute['id']].required = true
           end
         end
-
       end
-
     end
+    # rubocop:enable MethodLength
 
     # Public
     # @return [String]
     def to_s
-      return JSON.pretty_generate(JSON.parse(@source_json))
+      JSON.pretty_generate(JSON.parse(@source_json))
     end
-
-    # Public
-    # @return [String]
-    def to_json
-      @source_json
-    end
-
   end
-
 end

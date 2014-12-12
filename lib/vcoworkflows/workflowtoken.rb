@@ -4,17 +4,8 @@ require_relative 'workflowservice'
 require 'json'
 
 module VcoWorkflows
-
+  # WorkflowToken
   class WorkflowToken
-
-    # "id": "ff80808148eb0494014a1c6314703d1d"
-    # "state": "running"
-    # "name": "Request Component"
-    # "href": "https://meorcpoc0001.dev.activenetwork.com:8281/vco/api/workflows/6e04a460-4a45-4e16-9603-db2922c24462/executions/ff80808148eb0494014a1c6314703d1d/"
-    # "start-date": 1417815463023
-    # "started-by": "gruiz-ade@DEV.ACTIVENETWORK.COM"
-    # "current-item-display-name": "__item-undefined__"
-
     attr_reader :id
     attr_reader :workflow_id
     attr_reader :name
@@ -31,8 +22,11 @@ module VcoWorkflows
     attr_reader :output_parameters
     attr_reader :json_content
 
+    # Public
+    # @param [String] token_json - JSON document defining the execution token
+    # @param [String] workflow_id - Workflow GUID
+    # rubocop:disable CyclomaticComplexity, PerceivedComplexity, MethodLength, LineLength
     def initialize(token_json, workflow_id)
-
       @json_content = token_json
       @workflow_id = workflow_id
 
@@ -51,43 +45,43 @@ module VcoWorkflows
       @content_exception  = token.key?('content-exeption')          ? token['content-exception']         : nil
 
       if token.key?('input-parameters')
-        @input_parameters = VcoWorkflows::Workflow::parse_parameters(token['input-parameters'])
+        @input_parameters = VcoWorkflows::Workflow.parse_parameters(token['input-parameters'])
       else
         @input_parameters = {}
       end
 
       if token.key?('output-parameters')
-        @output_parameters = VcoWorkflows::Workflow::parse_parameters(token['output-parameters'])
+        @output_parameters = VcoWorkflows::Workflow.parse_parameters(token['output-parameters'])
       else
         @output_parameters = {}
       end
-
     end
+    # rubocop:enable CyclomaticComplexity, PerceivedComplexity, MethodLength, LineLength
 
+    # Public
+    # Convert this object to a string representation
+    # rubocop:disable MethodLength, LineLength
     def to_s
-
       string =  "Execution ID:      #{@id}\n"
       string << "Name:              #{@name}\n"
       string << "Workflow ID:       #{@workflow_id}\n"
       string << "State:             #{@state}\n"
-      string << "Start Date:        #{Time.at(@start_date/1000)}\n"
-      string << "End Date:          #{Time.at(@end_date/1000)}\n"
+      string << "Start Date:        #{Time.at(@start_date / 1000)}\n"
+      string << "End Date:          #{Time.at(@end_date / 1000)}\n"
       string << "Started By:        #{@started_by}\n"
       string << "Content Exception: #{@content_exception}\n" unless @content_exception.nil?
       string << "\nInput Parameters:\n"
-      @input_parameters.each_value {|wf_param| string << " #{wf_param}" if wf_param.is_set?} if @input_parameters.size > 0
+      @input_parameters.each_value { |wf_param| string << " #{wf_param}" if wf_param.set? } if @input_parameters.size > 0
       string << "\nOutput Parameters:" << "\n"
-      @output_parameters.each_value {|wf_param| string << " #{wf_param}"} if @output_parameters.size > 0
-
-
-      return string
-
+      @output_parameters.each_value { |wf_param| string << " #{wf_param}" } if @output_parameters.size > 0
+      string
     end
+    # rubocop:enable MethodLength, LineLength
 
+    # Public
+    # Convert this object to a JSON document (string)
     def to_json
       JSON.pretty_generate(JSON.parse(@json_content))
     end
-
   end
-
 end

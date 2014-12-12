@@ -8,9 +8,8 @@ require 'erb'
 include ERB::Util
 
 module VcoWorkflows
-
+  # WorkflowService
   class WorkflowService
-
     # Public
     # Initialize the object
     def initialize(session)
@@ -27,10 +26,13 @@ module VcoWorkflows
 
     # Public
     # Get the presentation for the given workflow GUID
-    # @param [VcoWorkflows::Workflow] workflow - workflow GUID who's presentation we want
+    # @param [VcoWorkflows::Workflow] workflow - workflow GUID
     # @return [VcoWorkflows::WorkflowPresentation]
     def get_presentation(workflow)
-      VcoWorkflows::WorkflowPresentation.new(@session.get("/workflows/#{workflow.id}/presentation/").body, workflow)
+      VcoWorkflows::WorkflowPresentation.new(
+          @session.get("/workflows/#{workflow.id}/presentation/").body,
+          workflow
+      )
     end
 
     # Public
@@ -38,7 +40,8 @@ module VcoWorkflows
     # @param [String] name - Name of the workflow
     # @return [VcoWorkflows::Workflow] - the requested workflow
     def get_workflow_for_name(name)
-      response = JSON.parse(@session.get("/workflows?conditions=name=#{url_encode(name)}").body)
+      path = "/workflows?conditions=name=#{url_encode(name)}"
+      response = JSON.parse(@session.get(path).body)
 
       # barf if we got anything other than a single workflow
       fail(IOError, ERR[:too_many_workflows]) if response['total'] > 1
@@ -60,7 +63,8 @@ module VcoWorkflows
     # @param [String] execution_id - Execution GUID
     # @return [VcoWorkflows::WorkflowToken]
     def get_execution(workflow_id, execution_id)
-      response = @session.get("/workflows/#{workflow_id}/executions/#{execution_id}")
+      path = "/workflows/#{workflow_id}/executions/#{execution_id}"
+      response = @session.get(path)
       VcoWorkflows::WorkflowToken.new(response.body, workflow_id)
     end
 
@@ -69,7 +73,8 @@ module VcoWorkflows
     # @param [String] workflow_id - Workflow GUID
     # @return [Hash]
     def get_execution_list(workflow_id)
-      relations = JSON.parse(@session.get("/workflows/#{workflow_id}/executions/").body)['relations']
+      path = "/workflows/#{workflow_id}/executions/"
+      relations = JSON.parse(@session.get(path).body)['relations']
       # The first two elements of the relations['link'] array are URLS,
       # so scrap them. Everything else is an execution.
       executions = {}
@@ -79,7 +84,7 @@ module VcoWorkflows
         link['attributes'].each { |a| attributes[a['name']] = a['value'] }
         executions[attributes['id']] = attributes
       end
-      return executions
+      executions
     end
 
     # Public
@@ -88,21 +93,20 @@ module VcoWorkflows
     # @param [String] execution_id
     # @return [VcoWorkflows::WorkflowExecutionLog]
     def get_log(workflow_id, execution_id)
-      response = @session.get("/workflows/#{workflow_id}/executions/#{execution_id}/logs/")
+      path = "/workflows/#{workflow_id}/executions/#{execution_id}/logs/"
+      response = @session.get(path)
       VcoWorkflows::WorkflowExecutionLog.new(response.body)
     end
 
     # Public
     # Submit the given workflow for execution
     # @param [String] id - Workflow GUID for the workflow we want to execute
-    # @param [String] parameter_json - Required workflow input parameters as JSON
+    # @param [String] parameter_json - JSON document of input parameters
     def execute_workflow(id, parameter_json)
-      # response = JSON.parse(@session.post("/workflows/#{id}/executions/", parameter_json))
-      response = @session.post("/workflows/#{id}/executions/", parameter_json)
-      execution_id = response.headers[:location].gsub(/^.*\/executions\//,'')
+      path = "/workflows/#{id}/executions/"
+      response = @session.post(path, parameter_json)
+      execution_id = response.headers[:location].gsub(%r{^.*/executions/}, '')
       get_execution(id, execution_id)
     end
-
   end
-
 end
