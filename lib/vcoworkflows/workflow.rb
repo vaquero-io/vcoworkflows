@@ -17,7 +17,6 @@ module VcoWorkflows
     attr_accessor :workflow_service
     attr_reader :source_json
 
-    # Public
     # @param [String] workflow_json
     # @param [VcoWorkflows::WorkflowService] workflow_service
     # @return [VcoWorkflows::Workflow]
@@ -34,26 +33,47 @@ module VcoWorkflows
       @description = workflow_data.key?('description') ? workflow_data['description'] : nil
 
       # Process the input parameters
-      @input_parameters = {}
       if workflow_data.key?('input-parameters')
-        workflow_data['input-parameters'].each do |params|
-          wfparam = VcoWorkflows::WorkflowParameter.new(type: params['type'], name: params['name'])
-          @input_parameters[params['name']] = wfparam
-        end
+        @input_parameters = Workflow.parse_parameters(workflow_data['input-parameters'])
+      else
+        @input_parameters = {}
       end
 
       # Process the output parameters
-      @output_parameters = {}
       if workflow_data.key?('output-parameters')
-        workflow_data['output-parameters'].each do |params|
-          wfparam = VcoWorkflows::WorkflowParameter.new(type: params['type'], name: params['name'])
-          @output_parameters[params['name']] = wfparam
-        end
+        @output_parameters = Workflow.parse_parameters(workflow_data['output-parameters'])
+      else
+        @output_parameters = {}
       end
 
       # Get the presentation data and set required flags on our parameters
       @presentation = workflow_service.get_presentation(self)
 
+    end
+
+    # Class
+    # Parse json parameters and return a nice hash
+    # @param [Object] parameter_data
+    # @return [Hash]
+    def self.parse_parameters(parameter_data)
+      wfparams = {}
+      parameter_data.each do |parameter|
+        wfparam = VcoWorkflows::WorkflowParameter.new(type: parameter['type'], name: parameter['name'])
+        if parameter['value']
+          if wfparam.type.eql?('Array')
+            value = []
+            parameter['value'][wfparam.type.downcase]['elements'].each do |element|
+              value << element[wfparam.subtype]['value']
+            end
+          else
+            value = parameter['value'][wfparam.type.downcase]['value']
+          end
+          value = nil if value.eql?('null')
+          wfparam.set(value)
+        end
+        wfparams[parameter['name']] = wfparam
+      end
+      return wfparams
     end
 
     # Public
@@ -116,24 +136,17 @@ module VcoWorkflows
     # Public
     # @return [String]
     def to_s
-      my_string = "Workflow: " << @name << "\n"
-      my_string << "ID: " << @id << "\n"
-      my_string << "Description: " << @description << "\n"
-      my_string << "Version: " << @version << "\n"
-      my_string << "\n"
-      my_string << "Input Parameters:" << "\n"
-      @input_parameters.each do |name,wf_param|
-        type = "#{wf_param.type}#{'/' << wf_param.subtype unless wf_param.subtype.nil?}"
-        my_string << " - name: '#{name}', type: '#{type}', required: '#{wf_param.required}', value: '#{wf_param.value}'" << "\n"
-      end
-      my_string << "\n"
-      my_string << "REQUIRED Input Parameters: \n#{self.get_required_parameter_names.join(', ')}" << "\n"
-      my_string << "\n"
-      my_string << "Output Parameters:" << "\n"
-      @output_parameters.each do |name,wf_param|
-        my_string << " - name: '#{name}', type: '#{wf_param.type}', value: '#{wf_param.value}'" << "\n"
-      end
-      return my_string
+      string = "Workflow: " << @name << "\n"
+      string << "ID: " << @id << "\n"
+      string << "Description: " << @description << "\n"
+      string << "Version: " << @version << "\n"
+      string << "\nInput Parameters:\n"
+      @input_parameters.each_value { |wf_param| string << " #{wf_param}" } if @input_parameters.size > 0
+      # string << "\n"
+      # string << "REQUIRED Input Parameters: \n#{self.get_required_parameter_names.join(', ')}" << "\n"
+      string << "\nOutput Parameters:" << "\n"
+      @output_parameters.each_value { |wf_param| string << " #{wf_param}" } if @output_parameters.size > 0
+      return string
     end
 
     # Public
