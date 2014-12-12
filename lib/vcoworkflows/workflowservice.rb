@@ -54,11 +54,39 @@ module VcoWorkflows
       get_workflow_for_id(workflow_id)
     end
 
+    # Public
+    # Get a WorkflowToken for the requested workflow_id and execution_id
+    # @param [String] workflow_id - Workflow GUID
+    # @param [String] execution_id - Execution GUID
+    # @return [VcoWorkflows::WorkflowToken]
     def get_execution(workflow_id, execution_id)
       response = @session.get("/workflows/#{workflow_id}/executions/#{execution_id}")
       VcoWorkflows::WorkflowToken.new(response.body, workflow_id)
     end
 
+    # Public
+    # Get a list of executions for the given workflow GUID
+    # @param [String] workflow_id - Workflow GUID
+    # @return [Hash]
+    def get_execution_list(workflow_id)
+      relations = JSON.parse(@session.get("/workflows/#{workflow_id}/executions/").body)['relations']
+      # The first two elements of the relations['link'] array are URLS,
+      # so scrap them. Everything else is an execution.
+      executions = {}
+      relations['link'].each do |link|
+        next unless link.key?('attributes')
+        attributes = {}
+        link['attributes'].each { |a| attributes[a['name']] = a['value'] }
+        executions[attributes['id']] = attributes
+      end
+      return executions
+    end
+
+    # Public
+    # Get the log for a specific execution
+    # @param [String] workflow_id
+    # @param [String] execution_id
+    # @return [VcoWorkflows::WorkflowExecutionLog]
     def get_log(workflow_id, execution_id)
       response = @session.get("/workflows/#{workflow_id}/executions/#{execution_id}/logs/")
       VcoWorkflows::WorkflowExecutionLog.new(response.body)
