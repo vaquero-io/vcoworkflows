@@ -87,10 +87,14 @@ module VcoWorkflows
             end
           end
         else
-          puts wf
+          puts wf unless options[:executions]
         end
         
         if options[:executions]
+          puts "\nWorkflow:   #{wf.name}"
+          puts "ID:           #{wf.id}"
+          puts "Description:  #{wf.description}"
+          puts "Version:      #{wf.version}"
           puts "\nExecutions: "
           executions = {}
           wfs.get_execution_list(wf.id).each_value do |attrs|
