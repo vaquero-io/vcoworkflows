@@ -91,14 +91,14 @@ module VcoWorkflows
         # Fetch the results
         wftoken = wf.execute
         puts "Execution of #{wf.name} started at #{Time.at(wftoken.start_date / 1000)}"
-        puts "Execution #{wftoken.id} state: #{wftoken.state}"
+        puts "Checking status...\n"
 
         # Check for update results until we get one who's state
         # is not "running"
-        while wftoken.state.eql?('running')
+        while wftoken.state.eql?('running') || wftoken.state.match(/waiting/)
           sleep 5
           wftoken = wfs.get_execution(wf.id, wftoken.id)
-          puts "Execution #{wftoken.id} state: #{wftoken.state}"
+          puts "#{Time.now} state: #{wftoken.state}"
         end
 
         # Print out the execution log
