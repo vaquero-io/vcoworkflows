@@ -96,9 +96,9 @@ module VcoWorkflows
         # Check for update results until we get one who's state
         # is not "running"
         while wftoken.state.eql?('running') || wftoken.state.match(/waiting/)
-          sleep 5
           wftoken = wfs.get_execution(wf.id, wftoken.id)
           puts "#{Time.now} state: #{wftoken.state}"
+          sleep 10
         end
 
         # Print out the execution log
