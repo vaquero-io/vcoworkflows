@@ -104,7 +104,7 @@ module VcoWorkflows
         end
         keys.each do |timestamp|
           dataline = "#{timestamp}"
-          dataline << " [#{executions[timestamp]['id']}"
+          dataline << " [#{executions[timestamp]['id']}]"
           dataline << " #{executions[timestamp]['state']}"
           puts dataline
         end
