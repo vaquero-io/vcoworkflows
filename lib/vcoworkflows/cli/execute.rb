@@ -100,6 +100,8 @@ module VcoWorkflows
           puts "#{Time.now} state: #{wftoken.state}"
           sleep 10
         end
+        puts 'Final status of execution:'
+        puts wftoken
 
         # Print out the execution log
         log = wfs.get_log(wf.id, wftoken.id)
