@@ -15,16 +15,12 @@ module VcoWorkflows
       # @param [String] password
       # rubocop:disable LineLength
       def initialize(username: nil, password: nil)
-        # First we try to use whatever we were given.
-        @username = username
-        @password = password
+        # Set username and password from parameters, if provided, or
+        # environment variables $VCO_USER and $VCO_PASSWD, if not.
+        @username = username.nil? ? ENV['VCO_USER'] : username
+        @password = password.nil? ? ENV['VCO_PASSWD'] : password
 
-        # If we were given nothing, See if we can get username and password
-        # from the environment $VCO_USER and $VCO_PASSWD
-        @username = ENV['VCO_USER'] unless ENV['VCO_USER'].nil? if @username.nil?
-        @password = ENV['VCO_PASSWD'] unless ENV['VCO_PASSWD'].nil? if @password.nil?
-
-        # If we still got nothing, die a horrible death
+        # Fail if we don't have both a username and a password.
         fail(IOError, ERR[:username_unset]) if @username.nil?
         fail(IOError, ERR[:password_unset]) if @password.nil?
       end
