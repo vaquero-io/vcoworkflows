@@ -30,7 +30,9 @@ module VcoWorkflows
     too_many_workflows: 'vcoworkflows: more than one workflow found for given name!',
     wrong_workflow_wtf: 'vcoworkflows: search returned the wrong workflow! (?)',
     no_workflow_service_defined: 'vcoworkflows: Attempted to execute a workflow with a nil workflow service!',
-    param_verify_failed: 'vcoworkflows: Attempt to verify required parameter failed!'
+    param_verify_failed: 'vcoworkflows: Attempt to verify required parameter failed!',
+    username_unset: 'No username was specified, either by $VCO_USER or --username',
+    password_unset: 'No password was specified, either by $VCO_PASSWD or --password'
   }
 
   # rubocop:enable LineLength

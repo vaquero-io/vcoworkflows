@@ -33,6 +33,7 @@ module VcoWorkflows
       # Process the subcommand
       # rubocop:disable CyclomaticComplexity, PerceivedComplexity
       def query
+        auth = VcoWorkflows::Cli::Auth.new(username: options[:username], password: options[:password])
         if options[:dry_run]
           puts "\nQuerying against vCO REST endpoint:\n  #{options[:server]}"
           puts "Will search for workflow: '#{workflow}'"
@@ -42,8 +43,8 @@ module VcoWorkflows
 
         # Create the session
         session = VcoWorkflows::VcoSession.new(options[:server],
-                                               user: options[:username],
-                                               password: options[:password],
+                                               user: auth.username,
+                                               password: auth.password,
                                                verify_ssl: options[:verify_ssl])
 
         # Create the Workflow Service

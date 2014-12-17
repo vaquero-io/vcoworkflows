@@ -1,4 +1,4 @@
-require 'vcoworkflows/constants'
+require 'vcoworkflows'
 require 'thor/group'
 
 # rubocop:disable MethodLength, LineLength
@@ -28,6 +28,7 @@ module VcoWorkflows
 
       # rubocop:disable CyclomaticComplexity, PerceivedComplexity
       def execute
+        auth = VcoWorkflows::Cli::Auth.new(username: options[:username], password: options[])
         # Parse out the parameters
         parameters = {}
         options[:parameters].split(/,/).each do |p|
@@ -54,8 +55,8 @@ module VcoWorkflows
 
         # Create the session
         session = VcoWorkflows::VcoSession.new(options[:server],
-                                               user: options[:username],
-                                               password: options[:password],
+                                               user: auth.username,
+                                               password: auth.password,
                                                verify_ssl: options[:verify_ssl])
 
         # Create the Workflow Service
@@ -104,6 +105,7 @@ module VcoWorkflows
         puts wftoken
 
         # Print out the execution log
+        puts "\nWorkflow #{wf.name} log for execution #{wftoken.id}:"
         log = wfs.get_log(wf.id, wftoken.id)
         puts "\n#{log}"
       end
