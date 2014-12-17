@@ -1,5 +1,3 @@
-require_relative 'constants'
-
 require 'vcoworkflows'
 # rubocop:disable all
 module VcoWorkflows
@@ -12,7 +10,7 @@ module VcoWorkflows
 
     def execute!
       exit_code = begin
-                    # Thor accesses these streams directly rather than letting them be injected, so we replace them...
+        # Thor accesses these streams directly rather than letting them be injected, so we replace them...
         $stderr = @stderr
         $stdin = @stdin
         $stdout = @stdout
