@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+# require 'vcoworkflows'
 require 'vcoworkflows/runner'
 
 VcoWorkflows::Runner.new(ARGV.dup).execute!
+# VcoWorkflows::CLI.start(ARGV.dup)
