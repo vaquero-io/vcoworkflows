@@ -8,7 +8,7 @@ require 'vcoworkflows/workflowparameter'
 require 'vcoworkflows/workflowtoken'
 require 'vcoworkflows/cli/execute'
 require 'vcoworkflows/cli/query'
-require 'vcoworkflows/cli/auth'
+# require 'vcoworkflows/cli/auth'
 
 # rubocop:disable LineLength
 # Refer to README.md for use instructions

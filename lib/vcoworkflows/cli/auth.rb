@@ -1,4 +1,4 @@
-require 'vcoworkflows'
+require 'vcoworkflows/constants'
 
 # VcoWorkflows
 module VcoWorkflows

@@ -1,4 +1,5 @@
 require 'vcoworkflows'
+require_relative 'auth'
 require 'thor/group'
 
 # rubocop:disable MethodLength, LineLength
