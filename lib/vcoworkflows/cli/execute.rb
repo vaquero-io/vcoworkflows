@@ -29,7 +29,7 @@ module VcoWorkflows
 
       # rubocop:disable CyclomaticComplexity, PerceivedComplexity
       def execute
-        auth = VcoWorkflows::Cli::Auth.new(username: options[:username], password: options[])
+        auth = VcoWorkflows::Cli::Auth.new(username: options[:username], password: options[:password])
 
         # Parse out the parameters
         parameters = {}
