@@ -45,16 +45,12 @@ module VcoWorkflows
     # @param [Object] value - Value to set the parameter to
     # rubocop:disable CyclomaticComplexity
     def set(value)
-      case @type
-      when 'Array'
-        fail(IOError, ERR[:param_verify_failed]) unless value.is_a?(Array)
       # TODO: Determine if we really need to bother with "simple" types
       # It might be enough to just concern ourselves with complex types
       # like 'Array/*'
-      # when 'string'
-      #   fail(IOError, ERR[:param_verify_failed]) unless value.is_a?(String)
-      # when 'number'
-      #   fail(IOError, ERR[:param_verify_failed]) unless value.is_a?(Fixnum)
+      case @type
+      when 'Array'
+        fail(IOError, ERR[:param_verify_failed]) unless value.is_a?(Array)
       end unless value.nil?
       @value = value
     end
