@@ -34,6 +34,7 @@ module VcoWorkflows
       # rubocop:disable CyclomaticComplexity, PerceivedComplexity
       def query
         auth = VcoWorkflows::Cli::Auth.new(username: options[:username], password: options[:password])
+
         if options[:dry_run]
           puts "\nQuerying against vCO REST endpoint:\n  #{options[:server]}"
           puts "Will search for workflow: '#{workflow}'"
