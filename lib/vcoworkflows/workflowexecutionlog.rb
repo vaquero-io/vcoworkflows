@@ -21,7 +21,7 @@ module VcoWorkflows
     # @return [String]
     # rubocop:disable MethodLength, LineLength
     def to_s
-      message = "Workflow execution log:\n"
+      message = ''
       @messages.keys.sort.each do |timestamp|
         message << "#{Time.at(timestamp / 1000)}"
         message << " #{@messages[timestamp]['severity']}: #{@messages[timestamp]['user']}:"
