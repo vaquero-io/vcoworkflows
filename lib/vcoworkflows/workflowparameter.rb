@@ -89,9 +89,10 @@ module VcoWorkflows
     # Public
     # Return a string representation of the parameter
     # @return [String]
-    # rubocop:disable PerceivedComplexity, MethodLength
+    # rubocop:disable CyclomaticComplexity, PerceivedComplexity, MethodLength
     def to_s
       string = "#{@name}"
+      # If value is either nil or an empty array
       if @value.nil? || @value.is_a?(Array) && @value.size == 0
         string << " (#{@type}"
         string << "/#{@subtype}" if @subtype
@@ -107,7 +108,7 @@ module VcoWorkflows
       end
       string << "\n"
     end
-    # rubocop:enable PerceivedComplexity, MethodLength
+    # rubocop:enable CyclomaticComplexity, PerceivedComplexity, MethodLength
 
     # Public
     # Return a JSON document representation of this object
