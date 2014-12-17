@@ -1,4 +1,5 @@
 require 'vcoworkflows'
+
 # rubocop:disable all
 module VcoWorkflows
   # wrapper to assist aruba in single process execution

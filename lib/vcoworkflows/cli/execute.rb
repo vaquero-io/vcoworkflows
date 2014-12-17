@@ -84,17 +84,18 @@ module VcoWorkflows
         end
 
         # Verify parameters
-        puts 'Verifying required parameters...' if options[:verbose]
+        print 'Verifying required parameters...' if options[:verbose]
         wf.verify_parameters
+        puts "  Ok." if options[:verbose]
 
         # Execute the workflow
-        puts 'Executing workflow...'
+        print 'Executing workflow...'
         # puts JSON.pretty_generate(JSON.parse(wf.input_parameter_json))
 
         # Fetch the results
         wftoken = wf.execute
-        puts "Execution of #{wf.name} started at #{Time.at(wftoken.start_date / 1000)}"
-        puts "Checking status...\n"
+        puts "  Started at #{Time.at(wftoken.start_date / 1000)}"
+        puts "\nChecking status...\n"
 
         # Check for update results until we get one who's state
         # is not "running"
@@ -103,7 +104,7 @@ module VcoWorkflows
           puts "#{Time.now} state: #{wftoken.state}"
           sleep 10
         end
-        puts 'Final status of execution:'
+        puts "\nFinal status of execution:"
         puts wftoken
 
         # Print out the execution log
