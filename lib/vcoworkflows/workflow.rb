@@ -65,8 +65,14 @@ module VcoWorkflows
         if parameter['value']
           if wfparam.type.eql?('Array')
             value = []
-            parameter['value'][wfparam.type.downcase]['elements'].each do |element|
-              value << element[wfparam.subtype]['value']
+            begin
+              parameter['value'][wfparam.type.downcase]['elements'].each do |element|
+                value << element[wfparam.subtype]['value']
+              end
+            rescue NoMethodError => error
+              $stderr.puts "Ran into a problem parsing parameter #{wfparam.name} (#{wfparam.type})!"
+              $stderr.puts error.message
+              $stderr.puts "Source data: #{JSON.pretty_generate(parameter)}"
             end
           else
             value = parameter['value'][wfparam.type.downcase]['value']
