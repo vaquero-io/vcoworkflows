@@ -68,7 +68,7 @@ module VcoWorkflows
             value = []
             begin
               parameter['value'][wfparam.type.downcase]['elements'].each do |element|
-                value << element[wfparam.subtype]['value']
+                value << element[element.keys.first]['value']
               end
             rescue NoMethodError => error
               $stderr.puts "Ran into a problem parsing parameter #{wfparam.name} (#{wfparam.type})!"
@@ -76,7 +76,7 @@ module VcoWorkflows
               $stderr.puts "Source data: #{JSON.pretty_generate(parameter)}"
             end
           else
-            value = parameter['value'][wfparam.type.downcase]['value']
+              value = parameter['value'][parameter['value'].keys.first]['value']
           end
           value = nil if value.eql?('null')
           wfparam.set(value)
