@@ -86,7 +86,7 @@ module VcoWorkflows
         # Verify parameters
         print 'Verifying required parameters...' if options[:verbose]
         wf.verify_parameters
-        puts "  Ok." if options[:verbose]
+        puts '  Ok.' if options[:verbose]
 
         # Execute the workflow
         print 'Executing workflow...'
