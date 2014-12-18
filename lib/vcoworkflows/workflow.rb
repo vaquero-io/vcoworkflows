@@ -70,24 +70,38 @@ module VcoWorkflows
               parameter['value'][wfparam.type.downcase]['elements'].each do |element|
                 value << element[element.keys.first]['value']
               end
-            rescue NoMethodError => error
-              $stderr.puts "Ran into a problem parsing parameter #{wfparam.name} (#{wfparam.type})!"
-              $stderr.puts error.message
-              $stderr.puts "Source data: #{JSON.pretty_generate(parameter)}"
+            rescue Exception => error
+              parse_failure(error)
             end
           else
+            begin
               value = parameter['value'][parameter['value'].keys.first]['value']
+            rescue Exception => error
+              parse_failure(error)
+            end
           end
           value = nil if value.eql?('null')
           wfparam.set(value)
         end
         wfparams[parameter['name']] = wfparam
       end
-
-      # Assert
       wfparams
     end
     # rubocop:enable MethodLength, LineLength
+
+    # Class
+    # Process exceptions raised in parse_parameters by bravely ignoring them
+    # and forging ahead blindly!
+    # @param [Exception] error
+    # rubocop:disable LineLength
+    def self.parse_failure(error)
+      $stderr.puts "\nWhoops!"
+      $stderr.puts "Ran into a problem parsing parameter #{wfparam.name} (#{wfparam.type})!"
+      $stderr.puts "Source data: #{JSON.pretty_generate(parameter)}\n"
+      $stderr.puts error.message
+      $stderr.puts "\nBravely forging on and ignoring parameter #{wfparam.name}!"
+    end
+    # rubocop:enable LineLength
 
     # Public
     # Get an array of the names of all the required input parameters
@@ -120,7 +134,15 @@ module VcoWorkflows
     # @param [String] parameter - name of the parameter to set
     # @param [Object] value - value to set
     def set_parameter(parameter, value)
-      @input_parameters[parameter].set value
+      begin
+        @input_parameters[parameter].set value
+      rescue NoMethodError => e
+        $stderr.puts "\nAttempted to set a value for a non-existent WorkflowParameter!"
+        $stderr.puts "It appears that there is no parameter \"#{parameter}\"."
+        $stderr.puts "Valid parameter names are: #{parameter_names.join(', ')}"
+        $stderr.puts ''
+        raise e
+      end
     end
 
     # Public
