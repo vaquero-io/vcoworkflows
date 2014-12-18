@@ -7,6 +7,7 @@ require 'json'
 # VcoWorkflows
 module VcoWorkflows
   # Workflow
+  # rubocop:disable ClassLength
   class Workflow
     attr_reader :id
     attr_reader :name
@@ -185,6 +186,7 @@ module VcoWorkflows
     end
     # rubocop:enable HashSyntax
   end
+  # rubocop:enable ClassLength
 
   # WorkflowPresentation
   class WorkflowPresentation
