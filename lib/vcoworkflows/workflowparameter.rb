@@ -42,7 +42,7 @@ module VcoWorkflows
 
     # Public
     # Set the parameter value
-    # @param [Object] value - Value to set the parameter to
+    # @param [Object] value - Value for the parameter
     # rubocop:disable CyclomaticComplexity
     def set(value)
       # TODO: Determine if we really need to bother with "simple" types
