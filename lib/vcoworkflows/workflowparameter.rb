@@ -60,7 +60,12 @@ module VcoWorkflows
     # Quickly determine if a value's been set
     # @return [Boolean]
     def set?
-      value.nil? || value.size == 0 ? false : true
+      case value.class
+      when Array
+        value.size == 0 ? false : true
+      else
+        value.nil? ? false : true
+      end
     end
 
     # Public
