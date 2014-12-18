@@ -13,6 +13,7 @@ module VcoWorkflows
   DESC_CLI_USERNAME = 'vCO user name'
   DESC_CLI_PASSWORD = 'vCO password'
   DESC_CLI_VERIFY_SSL = 'Perform TSL Certificate verification'
+  DESC_CLI_EXECUTE_WATCH = 'Wait around for workflow results'
   DESC_CLI_EXECUTE_PARAMETERS = 'Comma-separated list of key=value parameters for workflow'
   DESC_CLI_QUERY_EXECS = 'Fetch a list of executions for the workflow'
   DESC_CLI_QUERY_EXEC_LIM = 'Limit the number of returned executions to the most recent N'

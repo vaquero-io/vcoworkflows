@@ -20,6 +20,7 @@ module VcoWorkflows
       class_option :verify_ssl, type: :boolean, default: true, desc: DESC_CLI_VERIFY_SSL
       class_option :dry_run, type: :boolean, default: false, desc: DESC_CLI_DRY_RUN
       class_option :verbose, type: :boolean, default: true, desc: DESC_CLI_VERBOSE
+      class_option :watch, type: :boolean, default: true, desc: DESC_CLI_EXECUTE_WATCH
 
       class_option :parameters, type: :string, required: true, desc: DESC_CLI_EXECUTE_PARAMETERS
 
@@ -95,14 +96,21 @@ module VcoWorkflows
         # Fetch the results
         wftoken = wf.execute
         puts "  Started at #{Time.at(wftoken.start_date / 1000)}"
-        puts "\nChecking status...\n"
+
+        # If we don't care about the results, move on.
+        unless options[:watch]
+          # puts "\nExecution information:"
+          # puts wftoken
+          return
+        end
 
         # Check for update results until we get one who's state
-        # is not "running"
+        # is not "running" or "waiting"
+        puts "\nChecking status...\n"
         while wftoken.state.eql?('running') || wftoken.state.match(/waiting/)
+          sleep 10
           wftoken = wfs.get_execution(wf.id, wftoken.id)
           puts "#{Time.now} state: #{wftoken.state}"
-          sleep 10
         end
         puts "\nFinal status of execution:"
         puts wftoken
