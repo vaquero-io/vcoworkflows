@@ -95,7 +95,7 @@ module VcoWorkflows
 
         # Fetch the results
         wftoken = wf.execute
-        puts "  Started at #{Time.at(wftoken.start_date / 1000)}"
+        puts "#{wftoken.id} started at #{Time.at(wftoken.start_date / 1000)}"
 
         # If we don't care about the results, move on.
         unless options[:watch]
