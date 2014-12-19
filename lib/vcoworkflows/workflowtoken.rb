@@ -67,7 +67,7 @@ module VcoWorkflows
       string << "Workflow ID:       #{@workflow_id}\n"
       string << "State:             #{@state}\n"
       string << "Start Date:        #{Time.at(@start_date / 1000)}\n"
-      string << "End Date:          #{Time.at(@end_date / 1000)}\n"
+      string << "End Date:          #{end_date.nil? ? '' : Time.at(@end_date / 1000)}\n"
       string << "Started By:        #{@started_by}\n"
       string << "Content Exception: #{@content_exception}\n" unless @content_exception.nil?
       string << "\nInput Parameters:\n"
