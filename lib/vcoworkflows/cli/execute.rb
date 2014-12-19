@@ -90,7 +90,7 @@ module VcoWorkflows
         puts '  Ok.' if options[:verbose]
 
         # Execute the workflow
-        print 'Executing workflow...'
+        puts 'Executing workflow...'
         # puts JSON.pretty_generate(JSON.parse(wf.input_parameter_json))
 
         # Fetch the results
