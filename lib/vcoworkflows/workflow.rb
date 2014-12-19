@@ -204,7 +204,7 @@ module VcoWorkflows
     # rubocop:disable HashSyntax
     def input_parameter_json
       tmp_params = []
-      @input_parameters.each { |_k, v| tmp_params << v.as_struct }
+      @input_parameters.each_value { |v| tmp_params << v.as_struct if v.set? }
       param_struct = { :parameters => tmp_params }
       param_struct.to_json
     end
