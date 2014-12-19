@@ -133,6 +133,7 @@ module VcoWorkflows
     # Set a parameter to a value
     # @param [String] parameter - name of the parameter to set
     # @param [Object] value - value to set
+    # rubocop:disable LineLength
     def set_parameter(parameter, value)
       begin
         @input_parameters[parameter].set value
@@ -144,6 +145,7 @@ module VcoWorkflows
         raise e
       end
     end
+    # rubocop:enable LineLength
 
     # Public
     # Verify that all mandatory input parameters have values
