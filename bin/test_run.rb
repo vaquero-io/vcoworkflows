@@ -82,7 +82,7 @@ class Provisioner
 
     puts 'Executing workflow...'
     wftoken = workflow.execute
-    parameters['nodename'] ? node = parameters['nodename'] : node = "#{parameters['machineCount']} node(s)"
+    parameters.key?('nodename') ? node = parameters['nodename'] : node = "#{parameters['machineCount']} node(s)"
     puts "Provisioning #{node} with \"#{workflow.name}\" (#{workflow.id}/#{wftoken.id})"
     wftoken.id
   end
@@ -126,7 +126,7 @@ end
 # "normal" nodes (i.e., we don't care what they're named)
 #
 if do_serialized
-  puts "\nProvisoning serialized nodes...\n"
+  puts "\nProvisioning serialized nodes...\n"
   wf = prov.workflow_service.get_workflow_for_name(workflow)
   build_parameters['machineCount'] = num_machines
   @running_jobs << prov.provision_nodes(wf, build_parameters)
@@ -139,20 +139,26 @@ puts 'Waiting for the following executions to complete:'
 @running_jobs.each { |id| puts " - #{id}" }
 
 while @running_jobs.size > 0
+  sleep check_sleep
+  puts "\nChecking on running workflows (#{Time.now})..."
   @running_jobs.each do |id|
     wftoken = prov.workflow_service.get_execution(wf.id, id)
-    unless wftoken.state.eql?('running') || wftoken.state.match(/waiting/)
+    print " - #{id} #{wftoken.state}"
+    if wftoken.state.eql?('running') || wftoken.state.match(/waiting/)
+      puts ''
+    else
+      puts "; Run time #{(wftoken.end_date - wftoken.start_date) / 1000} seconds"
       @running_jobs.delete(id)
-      puts "Execution #{id} ended with state: #{wftoken.state}"
+      wftoken.output_parameters.each do | k, v |
+        puts " #{k}: #{v}"
+      end
     end
   end
-  sleep check_sleep
-  puts "Checking on running workflows (#{Time.now})..."
-  @running_jobs.each { |id| puts " - #{id}" }
 end
 
 endtime = Time.now
 
+puts ''
 puts 'All workflows completed.'
 puts "Started:  #{starttime}"
 puts "Finished: #{endtime}"
