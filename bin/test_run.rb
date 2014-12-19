@@ -38,12 +38,20 @@ spec_nodes = []
 # Create a Provisioner class to manage the connection and give us
 # wrapper for common provisioning tasks...
 #
+# Initialize with a server URL, and optionally an auth object, then
+# use provision_nodes to do the work.
+#
 # rubocop:disable LineLength
 class Provisioner
   attr_reader :workflow_service
 
+  # Public
   # If we're not given an auth object, create a default one that pulls
   # from the environment.
+  #
+  # @param [String] server - server URL for vCenter Orchestrator
+  # @param [VcoWorkflows::Cli::Auth] auth - Authentication object
+  #
   def initialize(server = nil, auth = VcoWorkflows::Cli::Auth.new)
     session = VcoWorkflows::VcoSession.new(server,
                                            user: auth.username,
@@ -52,6 +60,14 @@ class Provisioner
     @workflow_service = VcoWorkflows::WorkflowService.new(session)
   end
 
+  # Public
+  # Provision some nodes. Take the workflow object, and our parameters hash,
+  # set all the workflow's input parameters, and execute the workflow.
+  #
+  # @param [VcoWorkflows::Workflow] workflow - Workflow object
+  # @param [Hash] parameters - input parameters in Hash form
+  # @return [VcoWorkflows::WorkflowToken]
+  #
   # rubocop:disable MethodLength
   def provision_nodes(workflow = nil, parameters = nil)
     # Set the parameters in the workflow
@@ -80,8 +96,14 @@ end
 #
 # ===================================================================
 
+# Timekeeping
 starttime = Time.now
+
+# Create our provisioner
+# Don't bother with auth, we'll pull from the environment
 prov = Provisioner.new(server)
+
+# Create our list of running jobs
 @running_jobs = []
 
 # ===================================================================
