@@ -21,7 +21,7 @@ module VcoWorkflows
       class_option :dry_run, type: :boolean, default: false, desc: DESC_CLI_DRY_RUN
 
       class_option :executions, type: :boolean, aliases: '-e', default: false, desc: DESC_CLI_QUERY_EXECS
-      class_option :executions_limit, type: :numeric, aliases: '-l', default: 0, desc: DESC_CLI_QUERY_EXEC_LIM
+      class_option :last, type: :numeric, aliases: '-l', default: 0, desc: DESC_CLI_QUERY_EXEC_LIM
       class_option :execution_id, type: :string, aliases: '-I', desc: DESC_CLI_QUERY_EXEC_ID
       class_option :state, type: :boolean, aliases: '-r', desc: DESC_CLI_QUERY_EXEC_STATE
       class_option :logs, type: :boolean, aliases: ['-L', '--log'], desc: DESC_CLI_QUERY_EXEC_LOG
@@ -102,8 +102,8 @@ module VcoWorkflows
           executions[attrs['startDate']] = attrs
         end
         keys = executions.keys.sort
-        if options[:executions_limit] > 0
-          keys = keys.slice(keys.size - options[:executions_limit], keys.size)
+        if options[:last] > 0
+          keys = keys.slice(keys.size - options[:last], keys.size)
         end
         keys.each do |timestamp|
           dataline = "#{timestamp}"
