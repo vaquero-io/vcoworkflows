@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+# rubocop:disable LineLength
+
 require 'vcoworkflows'
 require 'vcoworkflows/cli/auth'
 
@@ -41,7 +43,6 @@ spec_nodes = []
 # Initialize with a server URL, and optionally an auth object, then
 # use provision_nodes to do the work.
 #
-# rubocop:disable LineLength
 class Provisioner
   attr_reader :workflow_service
 
@@ -88,7 +89,6 @@ class Provisioner
   end
   # rubocop:enable MethodLength
 end
-# rubocop:enable LineLength
 
 # ===================================================================
 #
@@ -162,4 +162,6 @@ puts ''
 puts 'All workflows completed.'
 puts "Started:  #{starttime}"
 puts "Finished: #{endtime}"
-puts "Total #{sprintf("%2f", endtime - starttime)} seconds"
+puts "Total #{sprintf('%2f', endtime - starttime)} seconds"
+
+# rubocop:enable LineLength

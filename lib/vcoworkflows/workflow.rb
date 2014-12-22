@@ -70,13 +70,13 @@ module VcoWorkflows
               parameter['value'][wfparam.type.downcase]['elements'].each do |element|
                 value << element[element.keys.first]['value']
               end
-            rescue Exception => error
+            rescue StandardError => error
               parse_failure(error)
             end
           else
             begin
               value = parameter['value'][parameter['value'].keys.first]['value']
-            rescue Exception => error
+            rescue StandardError => error
               parse_failure(error)
             end
           end
@@ -135,14 +135,14 @@ module VcoWorkflows
     # @param [Object] value - value to set
     # rubocop:disable LineLength
     def set_parameter(parameter, value)
-      begin
+      if @input_parameters.key?(parameter)
         @input_parameters[parameter].set value
-      rescue NoMethodError => e
+      else
         $stderr.puts "\nAttempted to set a value for a non-existent WorkflowParameter!"
         $stderr.puts "It appears that there is no parameter \"#{parameter}\"."
         $stderr.puts "Valid parameter names are: #{parameter_names.join(', ')}"
         $stderr.puts ''
-        raise e
+        fail(IOError, ERR[:no_such_parameter])
       end
     end
     # rubocop:enable LineLength

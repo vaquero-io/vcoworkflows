@@ -32,6 +32,7 @@ module VcoWorkflows
     wrong_workflow_wtf: 'vcoworkflows: search returned the wrong workflow! (?)',
     no_workflow_service_defined: 'vcoworkflows: Attempted to execute a workflow with a nil workflow service!',
     param_verify_failed: 'vcoworkflows: Attempt to verify required parameter failed!',
+    no_such_parameter: 'Attempted to set a parameter that does not exist!',
     username_unset: 'No username was specified, either by $VCO_USER or --username',
     password_unset: 'No password was specified, either by $VCO_PASSWD or --password'
   }
