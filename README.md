@@ -88,6 +88,7 @@ until finished
   # If the state is 'running' or starts with 'waiting', we'll need to check
   # back again later. It's not done yet.
   unless wftoken.state.eql?('running') || wftoken.state.match(/waiting/)
+    finished = true
     wftoken.output_parameters.each { |k, v| puts " #{k}: #{v}" }
   end
 end
