@@ -22,10 +22,12 @@ module VcoWorkflows
     attr_reader :output_parameters
     attr_reader :json_content
 
-    # Public
+    # rubocop:disable CyclomaticComplexity, PerceivedComplexity, MethodLength, LineLength
+
+    # Create a new workflow token
     # @param [String] token_json - JSON document defining the execution token
     # @param [String] workflow_id - Workflow GUID
-    # rubocop:disable CyclomaticComplexity, PerceivedComplexity, MethodLength, LineLength
+    # @param [VcoWorkflows::WorkflowToken]
     def initialize(token_json, workflow_id)
       @json_content = token_json
       @workflow_id = workflow_id
@@ -58,9 +60,10 @@ module VcoWorkflows
     end
     # rubocop:enable CyclomaticComplexity, PerceivedComplexity, MethodLength, LineLength
 
-    # Public
-    # Convert this object to a string representation
     # rubocop:disable MethodLength, LineLength
+
+    # Convert this object to a string representation
+    # @return [String]
     def to_s
       string =  "Execution ID:      #{@id}\n"
       string << "Name:              #{@name}\n"
@@ -78,8 +81,8 @@ module VcoWorkflows
     end
     # rubocop:enable MethodLength, LineLength
 
-    # Public
     # Convert this object to a JSON document (string)
+    # @return [String] JSON representation of the workflow token
     def to_json
       JSON.pretty_generate(JSON.parse(@json_content))
     end

@@ -1,4 +1,4 @@
 # VcoWorkflows
-module Vcoworkflows
-  VERSION = '0.0.1'
+module VcoWorkflows
+  VERSION = '0.1.0'
 end

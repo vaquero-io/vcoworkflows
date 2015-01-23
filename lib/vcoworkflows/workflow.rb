@@ -6,8 +6,9 @@ require 'json'
 
 # VcoWorkflows
 module VcoWorkflows
-  # Workflow
   # rubocop:disable ClassLength
+
+  # Workflow
   class Workflow
     attr_reader :id
     attr_reader :name
@@ -20,10 +21,12 @@ module VcoWorkflows
     attr_reader :source_json
     alias_method :source_json, :to_json
 
-    # @param [String] workflow_json
-    # @param [VcoWorkflows::WorkflowService] workflow_service
-    # @return [VcoWorkflows::Workflow]
     # rubocop:disable CyclomaticComplexity, PerceivedComplexity, MethodLength, LineLength
+
+    # Create a Workflow object given vCenter Orchestrator's JSON description
+    # @param [String] workflow_json JSON document returned by vCenter Orchestrator representing the workflow
+    # @param [VcoWorkflows::WorkflowService] workflow_service Reference back the workflow service for this session
+    # @return [VcoWorkflows::Workflow]
     def initialize(workflow_json, workflow_service)
       workflow_data = JSON.parse(workflow_json)
       @workflow_service = workflow_service
@@ -53,11 +56,12 @@ module VcoWorkflows
     end
     # rubocop:enable CyclomaticComplexity, PerceivedComplexity, MethodLength, LineLength
 
-    # Class
-    # Parse json parameters and return a nice hash
-    # @param [Object] parameter_data
-    # @return [Hash]
     # rubocop:disable MethodLength, LineLength
+
+    # Parse json parameters and return a nice hash
+    # @param [Object] parameter_data JSON document of parameters as defined
+    # by vCO
+    # @return [Hash]
     def self.parse_parameters(parameter_data)
       wfparams = {}
       parameter_data.each do |parameter|

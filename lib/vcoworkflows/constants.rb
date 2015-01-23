@@ -1,6 +1,7 @@
 # VcoWorkflows
 module VcoWorkflows
   # rubocop:disable LineLength
+
   DESC_VERSION = 'Display the installed version of the VcoWorkflows gem'
   DESC_CLI_EXECUTE = 'Execute the specified workflow'
   DESC_CLI_QUERY = 'Query vCO for a workflow'
@@ -22,6 +23,7 @@ module VcoWorkflows
   DESC_CLI_QUERY_EXEC_LOG = 'In addition to execution data, show the execution log'
   DESC_CLI_QUERY_JSON = 'Show the JSON document for the requested information'
 
+  # What do all the vCO REST URIs start with?
   API_URL_BASE = '/vco/api'
 
   # error messages

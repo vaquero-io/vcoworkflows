@@ -7,9 +7,9 @@ module VcoWorkflows
   class WorkflowExecutionLog
     attr_reader :messages
 
-    # Public
-    #
+    # Create an execution log object
     # @param [String] log_json - JSON document as string
+    # @return [VcoWorkflows::WorkflowExecutionLog]
     def initialize(log_json)
       @messages = {}
       JSON.parse(log_json)['logs'].each do |log_entry|
@@ -17,9 +17,10 @@ module VcoWorkflows
       end
     end
 
-    # Public
-    # @return [String]
     # rubocop:disable MethodLength, LineLength
+
+    # Stringify the log
+    # @return [String]
     def to_s
       message = ''
       @messages.keys.sort.each do |timestamp|

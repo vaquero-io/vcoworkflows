@@ -9,11 +9,9 @@ module VcoWorkflows
       attr_reader :username
       attr_reader :password
 
-      # Public
       # Initialize the Auth object
       # @param [String] username
       # @param [String] password
-      # rubocop:disable LineLength
       def initialize(username: nil, password: nil)
         # Set username and password from parameters, if provided, or
         # environment variables $VCO_USER and $VCO_PASSWD, if not.
@@ -24,7 +22,6 @@ module VcoWorkflows
         fail(IOError, ERR[:username_unset]) if @username.nil?
         fail(IOError, ERR[:password_unset]) if @password.nil?
       end
-      # rubocop:enable LineLength
     end
   end
 end

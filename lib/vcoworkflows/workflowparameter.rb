@@ -2,7 +2,8 @@ require_relative 'constants'
 require 'json'
 
 module VcoWorkflows
-  # WorkflowParameter
+  # WorkflowParameter is an object wrapper for workflow input and output
+  # parameters.
   class WorkflowParameter
     attr_reader :name
     attr_reader :type
@@ -10,13 +11,14 @@ module VcoWorkflows
     attr_reader :value
     attr_accessor :required
 
-    # Public
+    # rubocop:disable MethodLength
+
+    # Create a new workflow parameter object
     # @param [String] name - Name of the workflow parameter
     # @param [String] type - Data type of the parameter (according to vCO)
     # @param [Boolean] required - Whether or not the parameter is mandatory
     # @param [Object] value - the parameter value
     # @return [VcoWorkflows::WorkflowParameter]
-    # rubocop:disable MethodLength
     def initialize(name: nil, type: nil, required: false, value: nil)
       @name = name
       case type
@@ -40,10 +42,10 @@ module VcoWorkflows
     end
     # rubocop:enable MethodLength
 
-    # Public
+    # rubocop:disable CyclomaticComplexity
+
     # Set the parameter value
     # @param [Object] value - Value for the parameter
-    # rubocop:disable CyclomaticComplexity
     def set(value)
       # TODO: Determine if we really need to bother with "simple" types
       # It might be enough to just concern ourselves with complex types
@@ -56,8 +58,7 @@ module VcoWorkflows
     end
     # rubocop:enable CyclomaticComplexity
 
-    # Public
-    # Quickly determine if a value's been set
+    # Has a value been set for this parameter?
     # @return [Boolean]
     def set?
       case value.class
@@ -68,10 +69,10 @@ module VcoWorkflows
       end
     end
 
-    # Public
-    # Return a data structure version of this object
-    # @return [Hash]
     # rubocop:disable LineLength, HashSyntax
+
+    # Hashify the parameter (primarily useful for converting to JSON or YAML)
+    # @return [Hash]
     def as_struct
       attributes = { :type => @type, :name => @name, :scope => 'local' }
 
@@ -91,10 +92,10 @@ module VcoWorkflows
     end
     # rubocop:enable LineLength, HashSyntax
 
-    # Public
+    # rubocop:disable CyclomaticComplexity, PerceivedComplexity, MethodLength
+
     # Return a string representation of the parameter
     # @return [String]
-    # rubocop:disable CyclomaticComplexity, PerceivedComplexity, MethodLength
     def to_s
       string = "#{@name}"
       # If value is either nil or an empty array

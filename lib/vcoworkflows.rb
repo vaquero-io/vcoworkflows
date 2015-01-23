@@ -11,6 +11,7 @@ require 'vcoworkflows/cli/query'
 # require 'vcoworkflows/cli/auth'
 
 # rubocop:disable LineLength
+
 # Refer to README.md for use instructions
 module VcoWorkflows
   # Start of main CLI processing
@@ -20,6 +21,8 @@ module VcoWorkflows
     map '-v' => :version
 
     desc 'version', DESC_VERSION
+
+    # Display the version of `vcoworkflows`
     def version
       puts VERSION
     end

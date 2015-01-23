@@ -9,19 +9,23 @@ module VcoWorkflows
       @argv, @stdin, @stdout, @stderr, @kernel = argv, stdin, stdout, stderr, kernel
     end
 
+    # Do the things!
     def execute!
       exit_code = begin
-        # Thor accesses these streams directly rather than letting them be injected, so we replace them...
+        # Thor accesses these streams directly rather than letting them be
+        # injected, so we replace them...
         $stderr = @stderr
         $stdin = @stdin
         $stdout = @stdout
 
         VcoWorkflows::CLI.start(@argv)
 
-        # Thor::Base#start does not have a return value, assume success if no exception is raised.
+        # Thor::Base#start does not have a return value, assume success if no
+        # exception is raised.
         0
       rescue StandardError => e
-        # The ruby interpreter would pipe this to STDERR and exit 1 in the case of an unhandled exception
+        # The ruby interpreter would pipe this to STDERR and exit 1 in the
+        # case of an unhandled exception
         b = e.backtrace
         b.unshift("#{b.shift}: #{e.message} (#{e.class})")
         @stderr.puts(b.map { |s| "\tfrom #{s}" }.join("\n"))
