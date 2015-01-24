@@ -2,6 +2,7 @@
 module VcoWorkflows
   # rubocop:disable LineLength
 
+  # Options description messages
   DESC_VERSION = 'Display the installed version of the VcoWorkflows gem'
   DESC_CLI_EXECUTE = 'Execute the specified workflow'
   DESC_CLI_QUERY = 'Query vCO for a workflow'

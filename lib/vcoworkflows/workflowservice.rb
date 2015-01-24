@@ -11,6 +11,7 @@ module VcoWorkflows
   # WorkflowService is the object which acts as the interface to the vCO
   # API, and is loosely modeled from the vCO API documentation.
   class WorkflowService
+    # rubocop:disable LineLength
 
     # Create a new WorkflowService
     # @param [VcoWorkflows::VcoSession] session Session object for the API endpoint
@@ -18,6 +19,7 @@ module VcoWorkflows
     def initialize(session)
       @session = session
     end
+    # rubocop:enable LineLength
 
     # Get a workflow by GUID
     # @param [String] id Workflow GUID

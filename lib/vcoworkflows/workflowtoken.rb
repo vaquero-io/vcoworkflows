@@ -27,7 +27,7 @@ module VcoWorkflows
     # Create a new workflow token
     # @param [String] token_json - JSON document defining the execution token
     # @param [String] workflow_id - Workflow GUID
-    # @param [VcoWorkflows::WorkflowToken]
+    # @return [VcoWorkflows::WorkflowToken]
     def initialize(token_json, workflow_id)
       @json_content = token_json
       @workflow_id = workflow_id
