@@ -9,7 +9,6 @@ module VcoWorkflows
     attr_reader :type
     attr_reader :subtype
     attr_reader :value
-    attr_accessor :required
 
     # rubocop:disable MethodLength
 
@@ -67,6 +66,19 @@ module VcoWorkflows
       else
         value.nil? ? false : true
       end
+    end
+
+    # Set whether or not this WorkflowParameter is required
+    # @param [Boolean] required
+    def required(required = false)
+      @required = required
+    end
+
+    # Determine whether or not this WorkflowParameter has been marked as
+    # required
+    # @return [Boolean]
+    def required?
+      @required
     end
 
     # rubocop:disable LineLength, HashSyntax

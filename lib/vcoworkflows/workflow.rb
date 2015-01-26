@@ -112,10 +112,7 @@ module VcoWorkflows
     # @return [String[]]
     def required_parameter_names
       required = []
-      @input_parameters.each_value { |v| required << v.name if v.required }
-
-      # Assert
-      required
+      @input_parameters.each_value { |v| required << v.name if v.required? }
     end
 
     # Public
@@ -157,7 +154,7 @@ module VcoWorkflows
     def verify_parameters
       required_parameter_names.each do |name|
         param = @input_parameters[name]
-        if param.required && (param.value.nil? || param.value.size == 0)
+        if param.required? && (param.value.nil? || param.value.size == 0)
           fail(IOError, ERR[:param_verify_failed] << "#{name} required but not present.")
         end
       end
