@@ -7,6 +7,9 @@ describe VcoWorkflows::WorkflowParameter, 'WorkflowParameter' do
     @paramname = 'testparam'
     @paramtype = 'string'
     @paramvalue = 'squirrel!'
+    @paramarray = %w{ a b c }
+    @string_json = '''{"type":"string","name":"testparam","scope":"local","value":{"string":{"value":"squirrel!"}}}'''
+    @array_json = '''{"type":"Array","name":"testparam","scope":"local","value":{"array":{"elements":[{"string":{"value":"a"}},{"string":{"value":"b"}},{"string":{"value":"c"}}]}}}'''
   end
 
   it 'should not be set' do
@@ -45,24 +48,22 @@ describe VcoWorkflows::WorkflowParameter, 'WorkflowParameter' do
   it 'should be an array of strings ["a", "b", "c"]' do
     wfp = VcoWorkflows::WorkflowParameter.new(name: @paramnam,
                                               type: 'Array/string')
-    wfp.set(%w{ a b c })
+    wfp.set(@paramarray)
     expect(wfp.value).to eq([ 'a', 'b', 'c'])
   end
 
   it 'should generate a JSON document for single value' do
-    expected_document = '''{"type":"string","name":"testparam","scope":"local","value":{"string":{"value":"squirrel!"}}}'''
     wfp = VcoWorkflows::WorkflowParameter.new(name: @paramname,
                                               type: @paramtype,
                                               value: @paramvalue)
-    expect(wfp.to_json).to eql(expected_document)
+    expect(wfp.to_json).to eql(@string_json)
   end
 
   it 'should generate a JSON document for Array value' do
-    expected_document = '''{"type":"Array","name":"testparam","scope":"local","value":{"array":{"elements":[{"string":{"value":"a"}},{"string":{"value":"b"}},{"string":{"value":"c"}}]}}}'''
     wfp = VcoWorkflows::WorkflowParameter.new(name: @paramname,
                                               type: 'Array/string',
-                                              value: %w{ a b c })
-    expect(wfp.to_json).to eql(expected_document)
+                                              value: @paramarray)
+    expect(wfp.to_json).to eql(@array_json)
   end
 
 end
