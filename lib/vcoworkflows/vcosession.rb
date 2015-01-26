@@ -7,7 +7,7 @@ require 'rest_client'
 module VcoWorkflows
   # VcoSession
   class VcoSession
-
+    # Accessor for rest-client object, primarily for testing purposes
     attr_reader :rest_resource
 
     # Initialize the session
