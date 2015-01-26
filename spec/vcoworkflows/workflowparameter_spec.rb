@@ -2,14 +2,15 @@ require_relative '../spec_helper.rb'
 require 'vcoworkflows'
 
 describe VcoWorkflows::WorkflowParameter, 'WorkflowParameter' do
-
   before(:each) do
     @paramname = 'testparam'
     @paramtype = 'string'
     @paramvalue = 'squirrel!'
-    @paramarray = %w{ a b c }
+    @paramarray = %w( a b c )
+    # rubocop:disable LineLength
     @string_json = '''{"type":"string","name":"testparam","scope":"local","value":{"string":{"value":"squirrel!"}}}'''
     @array_json = '''{"type":"Array","name":"testparam","scope":"local","value":{"array":{"elements":[{"string":{"value":"a"}},{"string":{"value":"b"}},{"string":{"value":"c"}}]}}}'''
+    # rubocop:enable LineLength
   end
 
   it 'should not be set' do
@@ -45,11 +46,11 @@ describe VcoWorkflows::WorkflowParameter, 'WorkflowParameter' do
     expect(wfp.subtype).to eql('string')
   end
 
-  it 'should be an array of strings ["a", "b", "c"]' do
+  it "should be an array of strings #{@paramarray}" do
     wfp = VcoWorkflows::WorkflowParameter.new(name: @paramnam,
                                               type: 'Array/string')
     wfp.set(@paramarray)
-    expect(wfp.value).to eq([ 'a', 'b', 'c'])
+    expect(wfp.value).to eq(@paramarray)
   end
 
   it 'should generate a JSON document for single value' do
@@ -65,5 +66,4 @@ describe VcoWorkflows::WorkflowParameter, 'WorkflowParameter' do
                                               value: @paramarray)
     expect(wfp.to_json).to eql(@array_json)
   end
-
 end

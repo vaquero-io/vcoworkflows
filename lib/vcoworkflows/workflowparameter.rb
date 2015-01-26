@@ -68,11 +68,14 @@ module VcoWorkflows
       end
     end
 
+    # rubocop:disable LineLength
+
     # Set whether or not this WorkflowParameter is required
     # @param [Boolean] required Set this parameter as required (if not specified)
     def required(required = true)
       @required = required
     end
+    # rubocop:enable LineLength
 
     # Determine whether or not this WorkflowParameter has been marked as
     # required
