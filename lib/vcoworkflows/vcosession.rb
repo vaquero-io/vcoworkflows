@@ -7,6 +7,9 @@ require 'rest_client'
 module VcoWorkflows
   # VcoSession
   class VcoSession
+
+    attr_reader :rest_resource
+
     # Initialize the session
     #
     # @param [String] uri URI for the vCenter Orchestrator API endpoint
