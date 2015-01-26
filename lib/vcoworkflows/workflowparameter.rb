@@ -13,10 +13,10 @@ module VcoWorkflows
     # rubocop:disable MethodLength
 
     # Create a new workflow parameter object
-    # @param [String] name - Name of the workflow parameter
-    # @param [String] type - Data type of the parameter (according to vCO)
-    # @param [Boolean] required - Whether or not the parameter is mandatory
-    # @param [Object] value - the parameter value
+    # @param [String] name Name of the workflow parameter
+    # @param [String] type Data type of the parameter (according to vCO)
+    # @param [Boolean] required Whether or not the parameter is mandatory
+    # @param [Object] value the parameter value
     # @return [VcoWorkflows::WorkflowParameter]
     def initialize(name: nil, type: nil, required: false, value: nil)
       @name = name
@@ -44,7 +44,7 @@ module VcoWorkflows
     # rubocop:disable CyclomaticComplexity
 
     # Set the parameter value
-    # @param [Object] value - Value for the parameter
+    # @param [Object] value Value for the parameter
     def set(value)
       # TODO: Determine if we really need to bother with "simple" types
       # It might be enough to just concern ourselves with complex types
@@ -89,7 +89,7 @@ module VcoWorkflows
     # rubocop:disable LineLength, HashSyntax
 
     # Hashify the parameter (primarily useful for converting to JSON or YAML)
-    # @return [Hash]
+    # @return [Hash] Contents of this object as a hash
     def as_struct
       attributes = { :type => @type, :name => @name, :scope => 'local' }
 
@@ -112,7 +112,7 @@ module VcoWorkflows
     # rubocop:disable CyclomaticComplexity, PerceivedComplexity, MethodLength
 
     # Return a string representation of the parameter
-    # @return [String]
+    # @return [String] Pretty-formatted string
     def to_s
       string = "#{@name}"
       # If value is either nil or an empty array
@@ -135,7 +135,7 @@ module VcoWorkflows
 
     # Public
     # Return a JSON document representation of this object
-    # @return [String]
+    # @return [String] JSON representation
     def to_json
       as_struct.to_json
     end

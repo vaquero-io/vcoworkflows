@@ -4,7 +4,8 @@ require_relative 'workflowservice'
 require 'json'
 
 module VcoWorkflows
-  # WorkflowToken
+  # WorkflowToken is used for workflow execution results, and contains as much
+  # data on the given workflow execution instance as vCO can provide.
   class WorkflowToken
     attr_reader :id
     attr_reader :workflow_id

@@ -3,12 +3,13 @@ require 'json'
 
 # VcoWorkflows
 module VcoWorkflows
-  # WorkflowExecutionLog
+  # WorkflowExecutionLog is a simple object to contain the log for an
+  # execution of a workflow.
   class WorkflowExecutionLog
     attr_reader :messages
 
     # Create an execution log object
-    # @param [String] log_json - JSON document as string
+    # @param [String] log_json JSON document as string
     # @return [VcoWorkflows::WorkflowExecutionLog]
     def initialize(log_json)
       @messages = {}
@@ -32,9 +33,6 @@ module VcoWorkflows
         end
         message << "\n"
       end
-
-      # Assert
-      message
     end
     # rubocop:enable MethodLength, LineLength
   end
