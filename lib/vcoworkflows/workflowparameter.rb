@@ -69,8 +69,8 @@ module VcoWorkflows
     end
 
     # Set whether or not this WorkflowParameter is required
-    # @param [Boolean] required
-    def required(required = false)
+    # @param [Boolean] required Set this parameter as required (if not specified)
+    def required(required = true)
       @required = required
     end
 
