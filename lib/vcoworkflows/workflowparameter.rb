@@ -68,6 +68,7 @@ module VcoWorkflows
       end
     end
 
+    # rubocop:disable TrivialAccessors
     # rubocop:disable LineLength
 
     # Set whether or not this WorkflowParameter is required
@@ -83,6 +84,7 @@ module VcoWorkflows
     def required?
       @required
     end
+    # rubocop:enable TrivialAccessors
 
     # rubocop:disable LineLength, HashSyntax
 
