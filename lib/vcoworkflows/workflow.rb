@@ -20,17 +20,67 @@ module VcoWorkflows
     attr_accessor :workflow_service
 
     attr_reader :source_json
-    alias_method :source_json, :to_json
 
     # rubocop:disable CyclomaticComplexity, PerceivedComplexity, MethodLength, LineLength
 
     # Create a Workflow object given vCenter Orchestrator's JSON description
-    # @param [String] workflow_json JSON document returned by vCenter Orchestrator representing the workflow
-    # @param [VcoWorkflows::WorkflowService] workflow_service Reference back the workflow service for this session
+    #
+    # When passed `url`, `username` and `password` the necessary session and
+    # service objects will be created behind the scenes. Alternatively you can
+    # pass in a VcoSession object or a WorkflowService object if you have
+    # constructed them yourself.
+    # @param [String] url full URL to vCO API Endpoint (i.e. https://vco.example.com:8281/vco/api)
+    # @param [String] username vCO user name
+    # @param [String] password vCO password
+    # @param [VcoWorkflows::VcoSession] session VcoSession object, if not specifying url, username and password
+    # @param [VcoWorkflows::WorkflowService] service WorkflowService, if not specifying url, username and password OR session
+    # @param [String] name Workflow name
+    # @param [String] id Workflow GUID
+    # @param [Boolean] verify_ssl control SSL certificate verification for connections to vCO
     # @return [VcoWorkflows::Workflow]
-    def initialize(workflow_json, workflow_service)
+    def initialize(name = nil,
+                   url: nil,
+                   username: nil,
+                   password: nil,
+                   session: nil,
+                   service: nil,
+                   id: nil,
+                   verify_ssl: true)
+
+      @workflow_service = nil
+      @session = nil
+
+      # -------------------------------------------------------------
+      # Figure out how to get a workflow service. If I can't, I die.
+      # (DUN dun dun...)
+
+      # If I'm handed one, I'll just use that
+      if service
+        @workflow_service = service
+      else
+        # If I'm just handed a session, I'll use that to fetch a service
+        if session
+          @session = session
+        # Otherwise, if I'm handed a url, username and password, I'll do all
+        # the work myself.
+        elsif url && username && password
+          @session = VcoWorkflows::VcoSession.new(url,
+                                                  user: username,
+                                                  password: password,
+                                                  verify_ssl: verify_ssl)
+        end
+        @workflow_service = VcoWorkflows::WorkflowService.new(@session)
+      end
+
+      fail(IOError, 'Unable to create/use a WorkflowService!') if @workflow_service == nil
+
+      # -------------------------------------------------------------
+      # Retrieve the workflow and parse it into a data structure
+      # If we're given both a name and ID, prefer the id
+      name = nil if name && id
+      workflow_json = @workflow_service.get_workflow_for_id(id) if id && ! name
+      workflow_json = @workflow_service.get_workflow_for_name(name) if name && ! id
       workflow_data = JSON.parse(workflow_json)
-      @workflow_service = workflow_service
 
       # Set up the attributes if they exist in the data json, otherwise nil them
       @id          = workflow_data.key?('id')          ? workflow_data['id']          : nil
@@ -51,10 +101,6 @@ module VcoWorkflows
       else
         @output_parameters = {}
       end
-
-      # Get the presentation data and set required flags on our parameters
-      @presentation = workflow_service.get_presentation(self)
-      @presentation.apply
     end
     # rubocop:enable CyclomaticComplexity, PerceivedComplexity, MethodLength, LineLength
 

@@ -56,23 +56,14 @@ module VcoWorkflows
 
         return if options[:dry_run]
 
-        # Create the session
-        session = VcoWorkflows::VcoSession.new(options[:server],
-                                               user: auth.username,
-                                               password: auth.password,
-                                               verify_ssl: options[:verify_ssl])
-
-        # Create the Workflow Service
-        wfs = VcoWorkflows::WorkflowService.new(session)
-
         # Get the workflow
         puts "Retrieving workflow '#{workflow}' ..."
-        wf = nil
-        if options.key?(:id)
-          wf = wfs.get_workflow_for_id(options[:id])
-        else
-          wf = wfs.get_workflow_for_name(workflow)
-        end
+        wf = VcoWorkflows::Workflow.new(workflow,
+                                        url: options[:server],
+                                        username: auth.username,
+                                        password: auth.password,
+                                        verify_ssl: options[:verify_ssl],
+                                        id: options[:id])
 
         # List out mandatory parameters
         puts "Required parameters:\n #{wf.required_parameter_names.join(', ')}"

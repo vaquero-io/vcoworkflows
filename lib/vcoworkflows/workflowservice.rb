@@ -25,17 +25,14 @@ module VcoWorkflows
     # @param [String] id Workflow GUID
     # @return [VcoWorkflows::Workflow] the requested workflow
     def get_workflow_for_id(id)
-      VcoWorkflows::Workflow.new(@session.get("/workflows/#{id}"), self)
+      @session.get("/workflows/#{id}")
     end
 
     # Get the presentation for the given workflow GUID
     # @param [VcoWorkflows::Workflow] workflow workflow GUID
-    # @return [VcoWorkflows::WorkflowPresentation]
-    def get_presentation(workflow)
-      VcoWorkflows::WorkflowPresentation.new(
-          @session.get("/workflows/#{workflow.id}/presentation/").body,
-          workflow
-      )
+    # @return [String] JSON document representation of Workflow Presentation
+    def get_presentation(workflow_id)
+        @session.get("/workflows/#{workflow_id}/presentation/").body
     end
 
     # Get one workflow with a specified name.

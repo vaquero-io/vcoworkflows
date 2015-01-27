@@ -15,9 +15,7 @@ module VcoWorkflows
   # whether input parameters for the workflow are required or not.
   class WorkflowPresentation
     attr_reader :presentation_data
-    attr_reader :source_json
-
-    alias_method :source_json, :to_json
+    attr_reader :required
 
     # rubocop:disable LineLength, MethodLength
 
@@ -25,35 +23,49 @@ module VcoWorkflows
     # @param [String] presentation_json JSON response body from vCO
     # @param [VcoWorkflows::Workflow] workflow Workflow object to apply presentation to
     # @return [VcoWorkflows::WorkflowPresentation]
-    def initialize(presentation_json, workflow)
-      @source_json = presentation_json
-      @workflow = workflow
-      @presentation_data = JSON.parse(presentation_json)
+    def initialize(workflow_service, workflow_id)
+      @required = []
+      @presentation_data = JSON.parse(workflow_service.get_presentation(workflow_id))
+
+      # Determine if there are any required input parameters
+      find_required
     end
 
+    # String representation of the presentation
+    # @return [String]
+    def to_s
+      @presentation_data.to_s
+    end
+
+    # JSON document
+    # @return [String] JSON Document
+    def to_json
+      JSON.pretty_generate(@presentation_data)
+    end
+
+    # ===============================================================
+    # Private methods
+    # ===============================================================
+    private
+
     # Apply the workflow presentation to the workflow
-    def apply
+    def find_required
       # We're parsing this because we specifically want to know if any of
       # the input parameters are marked as required. This is very specifically
       # in the array of hashes in:
       # presentation_data[:steps][0][:step][:elements][0][:fields]
       fields = @presentation_data['steps'][0]['step']['elements'][0]['fields']
-
       fields.each do |attribute|
         next unless attribute.key?('constraints')
         attribute['constraints'].each do |const|
           if const.key?('@type') && const['@type'].eql?('mandatory')
-            @workflow.input_parameters[attribute['id']].required
+            @required << attribute['id']
           end
         end
       end
     end
     # rubocop:enable LineLength, MethodLength
 
-    # @return [String]
-    def to_s
-      JSON.pretty_generate(JSON.parse(@source_json))
-    end
   end
 
   # rubocop:enable ClassLength

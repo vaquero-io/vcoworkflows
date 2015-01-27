@@ -43,23 +43,14 @@ module VcoWorkflows
           return
         end
 
-        # Create the session
-        session = VcoWorkflows::VcoSession.new(options[:server],
-                                               user: auth.username,
-                                               password: auth.password,
-                                               verify_ssl: options[:verify_ssl])
-
-        # Create the Workflow Service
-        wfs = VcoWorkflows::WorkflowService.new(session)
-
+        # Get the workflow
         puts "\nRetrieving workflow '#{workflow}' ..."
-
-        wf = nil
-        if options[:id]
-          wf = wfs.get_workflow_for_id(options[:id])
-        else
-          wf = wfs.get_workflow_for_name(workflow)
-        end
+        wf = VcoWorkflows::Workflow.new(workflow,
+                                        url: options[:server],
+                                        username: auth.username,
+                                        password: auth.password,
+                                        verify_ssl: options[:verify_ssl],
+                                        id: options[:id])
 
         puts ''
         if options[:execution_id]

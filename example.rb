@@ -3,7 +3,7 @@
 require 'vcoworkflows'
 
 # What am I connecting to?
-server = 'https://myvco.example.com:8281/'
+url = 'https://myvco.example.com:8281/vco/api'
 username = 'myuser'
 password = 'secret!'
 
@@ -17,17 +17,12 @@ input_parameters = { 'name'    => 'a string value',
                      'version' => '2',
                      'words'   => %w(fe fi fo fum) }
 
-# Set up our session credentials for vCO
-session = VcoWorkflows::VcoSession.new(server,
-                                       user: username,
-                                       password: password,
-                                       verify_ssl: false)
-
-# Set up a WorkflowService which will broker our API calls
-workflow_service = VcoWorkflows::WorkflowService.new(session)
-
-# Get the workflow
-workflow = workflow_service.get_workflow_for_name(workflow_name)
+# Fetch the workflow from vCO
+workflow = VcoWorkflows::Workflow.new(workflow_name,
+                                      url: url,
+                                      username: username,
+                                      password: password,
+                                      verify_ssl: false)
 
 # Set the parameters in the workflow
 input_parameters.each { |k, v| workflow.set_parameter(k, v) }
