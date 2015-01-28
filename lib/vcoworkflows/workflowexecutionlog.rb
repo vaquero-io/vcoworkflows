@@ -33,6 +33,7 @@ module VcoWorkflows
         end
         message << "\n"
       end
+      message
     end
     # rubocop:enable MethodLength, LineLength
   end
