@@ -22,7 +22,7 @@ module VcoWorkflows
 
       class_option :executions, type: :boolean, aliases: '-e', default: false, desc: DESC_CLI_QUERY_EXECS
       class_option :last, type: :numeric, aliases: '-l', default: 0, desc: DESC_CLI_QUERY_EXEC_LIM
-      class_option :execution_id, type: :string, aliases: '-I', desc: DESC_CLI_QUERY_EXEC_ID
+      class_option :execution_id, type: :string, aliases: ['-I', '--execution'], desc: DESC_CLI_QUERY_EXEC_ID
       class_option :state, type: :boolean, aliases: '-r', desc: DESC_CLI_QUERY_EXEC_STATE
       class_option :logs, type: :boolean, aliases: ['-L', '--log'], desc: DESC_CLI_QUERY_EXEC_LOG
       class_option :show_json, type: :boolean, default: false, desc: DESC_CLI_QUERY_JSON
