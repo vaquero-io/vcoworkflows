@@ -252,6 +252,8 @@ module VcoWorkflows
     end
     # rubocop:enable MethodLength
 
+    private
+
     # rubocop:disable HashSyntax
 
     # Convert the input parameters to a JSON document
@@ -265,5 +267,4 @@ module VcoWorkflows
     # rubocop:enable HashSyntax
   end
   # rubocop:enable ClassLength
-
 end
