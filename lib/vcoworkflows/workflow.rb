@@ -218,6 +218,8 @@ module VcoWorkflows
     end
     # rubocop:enable LineLength
 
+    # rubocop:disable LineLength
+
     # Execute this workflow
     # @param [VcoWorkflows::WorkflowService] workflow_service
     # @return [String] Workflow Execution ID
