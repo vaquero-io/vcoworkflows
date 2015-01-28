@@ -63,6 +63,24 @@ module VcoWorkflows
     end
     # rubocop:enable CyclomaticComplexity, PerceivedComplexity, MethodLength, LineLength
 
+    # Is the workflow execution still alive?
+    # @return [Boolean]
+    def alive?
+      running? || waiting?
+    end
+
+    # Is the workflow actively running?
+    # @return [Boolean]
+    def running?
+      state.eql('running')
+    end
+
+    # Is the workflow in a waiting state?
+    # @return [Boolean]
+    def waiting?
+      state.match(/waiting/)
+    end
+
     # rubocop:disable MethodLength, LineLength
 
     # Convert this object to a string representation
