@@ -55,7 +55,7 @@ module VcoWorkflows
         puts ''
         if options[:execution_id]
           puts "Fetching data for execution #{options[:execution_id]}..."
-          execution = wfs.get_execution(wf.id, options[:execution_id])
+          execution = wf.token(options[:execution_id])
           if options[:state]
             puts "Execution started at #{Time.at(execution.start_date / 1000)}"
             puts "Execution #{execution.state} at #{Time.at(execution.end_date / 1000)}"
@@ -70,11 +70,11 @@ module VcoWorkflows
 
           if options[:logs]
             puts ''
-            wftoken = wfs.get_log(wf.id, options[:execution_id])
+            wflog = wf.log(options[:execution_id])
             if options[:show_json]
-              puts wftoken.to_json
+              puts wflog.to_json
             else
-              puts wftoken
+              puts wflog
             end
           end
         else
@@ -89,7 +89,7 @@ module VcoWorkflows
         puts "Version:      #{wf.version}"
         puts "\nExecutions: "
         executions = {}
-        wfs.get_execution_list(wf.id).each_value do |attrs|
+        wf.service.get_execution_list(wf.id).each_value do |attrs|
           executions[attrs['startDate']] = attrs
         end
         keys = executions.keys.sort

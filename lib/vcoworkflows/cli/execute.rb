@@ -82,25 +82,21 @@ module VcoWorkflows
 
         # Execute the workflow
         puts 'Executing workflow...'
-        # puts JSON.pretty_generate(JSON.parse(wf.input_parameter_json))
+        wf.execute
 
         # Fetch the results
-        wftoken = wf.execute
+        wftoken = wf.token
         puts "#{wftoken.id} started at #{Time.at(wftoken.start_date / 1000)}"
 
         # If we don't care about the results, move on.
-        unless options[:watch]
-          # puts "\nExecution information:"
-          # puts wftoken
-          return
-        end
+        return unless options[:watch]
 
         # Check for update results until we get one who's state
         # is not "running" or "waiting"
         puts "\nChecking status...\n"
         while wftoken.state.eql?('running') || wftoken.state.match(/waiting/)
           sleep 10
-          wftoken = wfs.get_execution(wf.id, wftoken.id)
+          wftoken = wf.token
           puts "#{Time.now} state: #{wftoken.state}"
         end
         puts "\nFinal status of execution:"
@@ -108,7 +104,7 @@ module VcoWorkflows
 
         # Print out the execution log
         puts "\nWorkflow #{wf.name} log for execution #{wftoken.id}:"
-        log = wfs.get_log(wf.id, wftoken.id)
+        log = wf.log(wftoken.id)
         puts "\n#{log}"
       end
       # rubocop:enable CyclomaticComplexity, PerceivedComplexity
