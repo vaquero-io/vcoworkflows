@@ -214,6 +214,8 @@ module VcoWorkflows
       # Let's get this thing running!
       @execution_id = workflow_service.execute_workflow(@id, input_parameter_json)
     end
+    # rubocop:enable LineLength
+
 
     # rubocop:disable MethodLength
 
