@@ -41,9 +41,8 @@ until finished
   sleep 5
   # Fetch a new workflow token to check the status of the workflow execution
   wftoken = worflow_service.get_execution(workflow.id, wftoken.id)
-  # If the state is 'running' or starts with 'waiting', we'll need to check
-  # back again later. It's not done yet. Otherwise, dump out the results.
-  unless wftoken.state.eql?('running') || wftoken.state.match(/waiting/)
+  # If the execution is no longer alive, exit the loop and report the results.
+  unless wftoken.alive?
     finished = true
     wftoken.output_parameters.each { |k, v| puts " #{k}: #{v}" }
   end
