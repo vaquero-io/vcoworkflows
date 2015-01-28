@@ -29,57 +29,46 @@ module VcoWorkflows
     # service objects will be created behind the scenes. Alternatively you can
     # pass in a VcoSession object or a WorkflowService object if you have
     # constructed them yourself.
-    # @param [String] url full URL to vCO API Endpoint (i.e. https://vco.example.com:8281/vco/api)
-    # @param [String] username vCO user name
-    # @param [String] password vCO password
-    # @param [VcoWorkflows::VcoSession] session VcoSession object, if not specifying url, username and password
-    # @param [VcoWorkflows::WorkflowService] service WorkflowService, if not specifying url, username and password OR session
-    # @param [String] name Workflow name
-    # @param [String] id Workflow GUID
-    # @param [Boolean] verify_ssl control SSL certificate verification for connections to vCO
+    # @param [String] name Name of the requested workflow
+    # @param [Hash] options Hash of options, see README.md for details
     # @return [VcoWorkflows::Workflow]
-    def initialize(name = nil,
-                   url: nil,
-                   username: nil,
-                   password: nil,
-                   session: nil,
-                   service: nil,
-                   id: nil,
-                   verify_ssl: true)
+    def initialize(name = nil, options = {})
+      @options = {
+        id: nil,
+        url: nil,
+        username: nil,
+        password: nil,
+        verify_ssl: true,
+        service: nil
+      }.merge(options)
 
-      @workflow_service = nil
-      @session = nil
+      @service = nil
+      @execution_id = nil
 
       # -------------------------------------------------------------
       # Figure out how to get a workflow service. If I can't, I die.
       # (DUN dun dun...)
 
-      # If I'm handed one, I'll just use that
-      if service
-        @workflow_service = service
-      else
-        # If I'm just handed a session, I'll use that to fetch a service
-        if session
-          @session = session
-        # Otherwise, if I'm handed a url, username and password, I'll do all
-        # the work myself.
-        elsif url && username && password
-          @session = VcoWorkflows::VcoSession.new(url,
-                                                  user: username,
-                                                  password: password,
-                                                  verify_ssl: verify_ssl)
-        end
-        @workflow_service = VcoWorkflows::WorkflowService.new(@session)
+      if options[:service]
+        @service = options[:service]
+      elsif @options[:url] && @options[:username] && @options[:password]
+        session = VcoWorkflows::VcoSession.new(@options[:url],
+                                               user: @options[:username],
+                                               password: @options[:password],
+                                               verify_ssl: @options[:verify_ssl])
+        @service = VcoWorkflows::WorkflowService.new(session)
       end
 
-      fail(IOError, 'Unable to create/use a WorkflowService!') if @workflow_service == nil
+      fail(IOError, 'Unable to create/use a WorkflowService!') if @service.nil?
 
       # -------------------------------------------------------------
       # Retrieve the workflow and parse it into a data structure
       # If we're given both a name and ID, prefer the id
-      name = nil if name && id
-      workflow_json = @workflow_service.get_workflow_for_id(id) if id && ! name
-      workflow_json = @workflow_service.get_workflow_for_name(name) if name && ! id
+      if @options[:id]
+        workflow_json = @service.get_workflow_for_id(@options[:id])
+      else
+        workflow_json = @service.get_workflow_for_name(name)
+      end
       workflow_data = JSON.parse(workflow_json)
 
       # Set up the attributes if they exist in the data json, otherwise nil them
@@ -93,6 +82,12 @@ module VcoWorkflows
         @input_parameters = Workflow.parse_parameters(workflow_data['input-parameters'])
       else
         @input_parameters = {}
+      end
+
+      # Identify required input_parameters
+      wfpres = VcoWorkflows::WorkflowPresentation.new(@service, @id)
+      wfpres.required.each do |req_param|
+        @input_parameters[req_param].required(true)
       end
 
       # Process the output parameters
