@@ -26,14 +26,16 @@ module VcoWorkflows
     # rubocop:disable CyclomaticComplexity, PerceivedComplexity, MethodLength, LineLength
 
     # Create a new workflow token
-    # @param [String] token_json - JSON document defining the execution token
-    # @param [String] workflow_id - Workflow GUID
+    # @param [VcoWorkflows::WorkflowService] workflow_service Workflow service to use
+    # @param [String] workflow_id GUID of the workflow
+    # @param [String] execution_id GUID of execution
     # @return [VcoWorkflows::WorkflowToken]
-    def initialize(token_json, workflow_id)
-      @json_content = token_json
+    def initialize(workflow_service, workflow_id, execution_id)
+      @service = workflow_service
       @workflow_id = workflow_id
+      @json_content = @service.get_execution(workflow_id, execution_id)
 
-      token = JSON.parse(token_json)
+      token = JSON.parse(@json_content)
 
       @id                 = token.key?('id')                        ? token['id']                        : nil
       @name               = token.key?('name')                      ? token['name']                      : nil
