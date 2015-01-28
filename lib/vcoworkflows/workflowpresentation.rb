@@ -20,36 +20,14 @@ module VcoWorkflows
     # rubocop:disable LineLength, MethodLength
 
     # Create a new WorkflowPresentation
-    # @param [String] presentation_json JSON response body from vCO
-    # @param [VcoWorkflows::Workflow] workflow Workflow object to apply presentation to
+    # @param [VcoWorkflows::WorkflowService] workflow_service workflow service to use
+    # @param [String] workflow_id workflow GUID
     # @return [VcoWorkflows::WorkflowPresentation]
     def initialize(workflow_service, workflow_id)
       @required = []
       @presentation_data = JSON.parse(workflow_service.get_presentation(workflow_id))
 
       # Determine if there are any required input parameters
-      find_required
-    end
-
-    # String representation of the presentation
-    # @return [String]
-    def to_s
-      @presentation_data.to_s
-    end
-
-    # JSON document
-    # @return [String] JSON Document
-    def to_json
-      JSON.pretty_generate(@presentation_data)
-    end
-
-    # ===============================================================
-    # Private methods
-    # ===============================================================
-    private
-
-    # Apply the workflow presentation to the workflow
-    def find_required
       # We're parsing this because we specifically want to know if any of
       # the input parameters are marked as required. This is very specifically
       # in the array of hashes in:
@@ -64,10 +42,18 @@ module VcoWorkflows
         end
       end
     end
-    # rubocop:enable LineLength, MethodLength
 
+    # String representation of the presentation
+    # @return [String]
+    def to_s
+      @presentation_data.to_s
+    end
+
+    # JSON document
+    # @return [String] JSON Document
+    def to_json
+      JSON.pretty_generate(@presentation_data)
+    end
   end
-
   # rubocop:enable ClassLength
-
 end
