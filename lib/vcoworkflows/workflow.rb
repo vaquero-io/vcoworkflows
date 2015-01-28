@@ -100,6 +100,22 @@ module VcoWorkflows
     end
     # rubocop:enable CyclomaticComplexity, PerceivedComplexity, MethodLength, LineLength
 
+    def url
+      options[:url]
+    end
+
+    def username
+      options[:username]
+    end
+
+    def password
+      options[:password]
+    end
+
+    def verify_ssl?
+      options[:verify_ssl]
+    end
+
     # rubocop:disable MethodLength, LineLength
 
     # Parse json parameters and return a nice hash
