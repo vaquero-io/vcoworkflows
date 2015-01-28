@@ -216,6 +216,12 @@ module VcoWorkflows
     end
     # rubocop:enable LineLength
 
+    # Return a WorkflowToken
+    def token(execution_id = nil)
+      execution_id = @execution_id if execution_id.nil?
+      VcoWorkflows::WorkflowToken.new(@service, @id, execution_id)
+    end
+
 
     # rubocop:disable MethodLength
 
