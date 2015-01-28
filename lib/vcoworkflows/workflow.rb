@@ -17,7 +17,7 @@ module VcoWorkflows
     attr_reader :description
     attr_reader :input_parameters
     attr_reader :output_parameters
-    attr_accessor :workflow_service
+    attr_accessor :service
 
     attr_reader :source_json
 
@@ -207,11 +207,11 @@ module VcoWorkflows
     def execute(workflow_service = nil)
       # If we're not given an explicit workflow service for this execution
       # request, use the one defined when we were created.
-      workflow_service = @workflow_service if workflow_service.nil?
+      workflow_service = @service if workflow_service.nil?
       # If we still have a nil workflow_service, go home.
       fail(IOError, ERR[:no_workflow_service_defined]) if workflow_service.nil?
       # Let's get this thing running!
-      workflow_service.execute_workflow(@id, input_parameter_json)
+      @execution_id = workflow_service.execute_workflow(@id, input_parameter_json)
     end
 
     # rubocop:disable MethodLength
