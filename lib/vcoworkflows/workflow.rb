@@ -18,6 +18,7 @@ module VcoWorkflows
     attr_reader :input_parameters
     attr_reader :output_parameters
     attr_accessor :service
+    attr_reader :execution_id
 
     attr_reader :source_json
 
@@ -203,7 +204,7 @@ module VcoWorkflows
 
     # Execute this workflow
     # @param [VcoWorkflows::WorkflowService] workflow_service
-    # @return [VcoWorkflows::WorkflowToken]
+    # @return [String] Workflow Execution ID
     def execute(workflow_service = nil)
       # If we're not given an explicit workflow service for this execution
       # request, use the one defined when we were created.
