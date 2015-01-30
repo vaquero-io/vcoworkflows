@@ -18,4 +18,4 @@ task :doc do
 end
 
 # task default: [:spec, :features, :style, :doc, 'coveralls:push']
-task default: [:spec, :features, :style, :doc]
+task default: [:spec, :style, :doc]

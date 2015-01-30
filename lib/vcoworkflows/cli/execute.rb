@@ -56,26 +56,17 @@ module VcoWorkflows
 
         return if options[:dry_run]
 
-        # Create the session
-        session = VcoWorkflows::VcoSession.new(options[:server],
-                                               user: auth.username,
-                                               password: auth.password,
-                                               verify_ssl: options[:verify_ssl])
-
-        # Create the Workflow Service
-        wfs = VcoWorkflows::WorkflowService.new(session)
-
         # Get the workflow
         puts "Retrieving workflow '#{workflow}' ..."
-        wf = nil
-        if options.key?(:id)
-          wf = wfs.get_workflow_for_id(options[:id])
-        else
-          wf = wfs.get_workflow_for_name(workflow)
-        end
+        wf = VcoWorkflows::Workflow.new(workflow,
+                                        url: options[:server],
+                                        username: auth.username,
+                                        password: auth.password,
+                                        verify_ssl: options[:verify_ssl],
+                                        id: options[:id])
 
         # List out mandatory parameters
-        puts "Required parameters:\n #{wf.required_parameter_names.join(', ')}"
+        puts "Required parameters:\n #{wf.required_parameters.keys.join(', ')}"
 
         # Set the input parameters
         puts 'Setting workflow input parameters...' if options[:verbose]
@@ -91,25 +82,21 @@ module VcoWorkflows
 
         # Execute the workflow
         puts 'Executing workflow...'
-        # puts JSON.pretty_generate(JSON.parse(wf.input_parameter_json))
+        wf.execute
 
         # Fetch the results
-        wftoken = wf.execute
+        wftoken = wf.token
         puts "#{wftoken.id} started at #{Time.at(wftoken.start_date / 1000)}"
 
         # If we don't care about the results, move on.
-        unless options[:watch]
-          # puts "\nExecution information:"
-          # puts wftoken
-          return
-        end
+        return unless options[:watch]
 
         # Check for update results until we get one who's state
         # is not "running" or "waiting"
         puts "\nChecking status...\n"
-        while wftoken.state.eql?('running') || wftoken.state.match(/waiting/)
+        while wftoken.alive?
           sleep 10
-          wftoken = wfs.get_execution(wf.id, wftoken.id)
+          wftoken = wf.token
           puts "#{Time.now} state: #{wftoken.state}"
         end
         puts "\nFinal status of execution:"
@@ -117,7 +104,7 @@ module VcoWorkflows
 
         # Print out the execution log
         puts "\nWorkflow #{wf.name} log for execution #{wftoken.id}:"
-        log = wfs.get_log(wf.id, wftoken.id)
+        log = wf.log(wftoken.id)
         puts "\n#{log}"
       end
       # rubocop:enable CyclomaticComplexity, PerceivedComplexity

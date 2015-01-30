@@ -11,6 +11,9 @@ module VcoWorkflows
   # WorkflowService is the object which acts as the interface to the vCO
   # API, and is loosely modeled from the vCO API documentation.
   class WorkflowService
+    # Return the VcoSession
+    attr_reader :session
+
     # rubocop:disable LineLength
 
     # Create a new WorkflowService
@@ -25,17 +28,14 @@ module VcoWorkflows
     # @param [String] id Workflow GUID
     # @return [VcoWorkflows::Workflow] the requested workflow
     def get_workflow_for_id(id)
-      VcoWorkflows::Workflow.new(@session.get("/workflows/#{id}"), self)
+      @session.get("/workflows/#{id}")
     end
 
     # Get the presentation for the given workflow GUID
-    # @param [VcoWorkflows::Workflow] workflow workflow GUID
-    # @return [VcoWorkflows::WorkflowPresentation]
-    def get_presentation(workflow)
-      VcoWorkflows::WorkflowPresentation.new(
-          @session.get("/workflows/#{workflow.id}/presentation/").body,
-          workflow
-      )
+    # @param [String] workflow_id workflow GUID
+    # @return [String] JSON document representation of Workflow Presentation
+    def get_presentation(workflow_id)
+      @session.get("/workflows/#{workflow_id}/presentation/").body
     end
 
     # Get one workflow with a specified name.
@@ -62,11 +62,10 @@ module VcoWorkflows
     # Get a WorkflowToken for the requested workflow_id and execution_id
     # @param [String] workflow_id Workflow GUID
     # @param [String] execution_id Execution GUID
-    # @return [VcoWorkflows::WorkflowToken]
+    # @return [String] JSON document for workflow token
     def get_execution(workflow_id, execution_id)
       path = "/workflows/#{workflow_id}/executions/#{execution_id}"
-      response = @session.get(path)
-      VcoWorkflows::WorkflowToken.new(response.body, workflow_id)
+      @session.get(path).body
     end
 
     # Get a list of executions for the given workflow GUID
@@ -93,18 +92,17 @@ module VcoWorkflows
     # @return [VcoWorkflows::WorkflowExecutionLog]
     def get_log(workflow_id, execution_id)
       path = "/workflows/#{workflow_id}/executions/#{execution_id}/logs/"
-      response = @session.get(path)
-      VcoWorkflows::WorkflowExecutionLog.new(response.body)
+      @session.get(path).body
     end
 
     # Submit the given workflow for execution
     # @param [String] id Workflow GUID for the workflow we want to execute
     # @param [String] parameter_json JSON document of input parameters
+    # @return [String] Execution ID
     def execute_workflow(id, parameter_json)
       path = "/workflows/#{id}/executions/"
       response = @session.post(path, parameter_json)
-      execution_id = response.headers[:location].gsub(%r{^.*/executions/}, '')
-      get_execution(id, execution_id)
+      response.headers[:location].gsub(%r{^.*/executions/}, '')
     end
   end
 end

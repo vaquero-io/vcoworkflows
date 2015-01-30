@@ -9,17 +9,20 @@ module VcoWorkflows
     attr_reader :type
     attr_reader :subtype
     attr_reader :value
-    attr_accessor :required
 
     # rubocop:disable MethodLength
 
     # Create a new workflow parameter object
-    # @param [String] name - Name of the workflow parameter
-    # @param [String] type - Data type of the parameter (according to vCO)
-    # @param [Boolean] required - Whether or not the parameter is mandatory
-    # @param [Object] value - the parameter value
+    # @param [String] name Name of the workflow parameter
+    # @param [String] type Data type of the parameter (according to vCO)
+    # @param [Boolean] required Whether or not the parameter is mandatory
+    # @param [Object] value the parameter value
     # @return [VcoWorkflows::WorkflowParameter]
-    def initialize(name: nil, type: nil, required: false, value: nil)
+    def initialize(name = nil, type = nil, options = {})
+      @options = {
+        required: false,
+        value: nil
+      }.merge(options)
       @name = name
       case type
       when /\//
@@ -45,11 +48,9 @@ module VcoWorkflows
     # rubocop:disable CyclomaticComplexity
 
     # Set the parameter value
-    # @param [Object] value - Value for the parameter
+    # @param [Object] value Value for the parameter
     def set(value)
-      # TODO: Determine if we really need to bother with "simple" types
-      # It might be enough to just concern ourselves with complex types
-      # like 'Array/*'
+      # Do some basic checking for Arrays.
       case @type
       when 'Array'
         fail(IOError, ERR[:param_verify_failed]) unless value.is_a?(Array)
@@ -69,33 +70,28 @@ module VcoWorkflows
       end
     end
 
-    # rubocop:disable LineLength, HashSyntax
+    # rubocop:disable TrivialAccessors
+    # rubocop:disable LineLength
 
-    # Hashify the parameter (primarily useful for converting to JSON or YAML)
-    # @return [Hash]
-    def as_struct
-      attributes = { :type => @type, :name => @name, :scope => 'local' }
-
-      # If the value is an array, we need to build it in the somewhat silly
-      # manner that vCO requires it to be presented. Otherwise, just paste
-      # it on the end of the hash.
-      if @type.eql?('Array')
-        fail(IOError, ERR[:wtf]) unless @value.is_a?(Array)
-        attributes[:value] = { @type.downcase => { :elements => [] } }
-        @value.each { |val| attributes[:value][@type.downcase][:elements] << { @subtype => { :value => val } } }
-      else
-        attributes[:value] = { @type => { :value => @value } }
-      end
-
-      # Assert
-      attributes
+    # Set whether or not this WorkflowParameter is required
+    # @param [Boolean] required Set this parameter as required (if not specified)
+    def required(required = true)
+      @required = required
     end
-    # rubocop:enable LineLength, HashSyntax
+    # rubocop:enable LineLength
+
+    # Determine whether or not this WorkflowParameter has been marked as
+    # required
+    # @return [Boolean]
+    def required?
+      @required
+    end
+    # rubocop:enable TrivialAccessors
 
     # rubocop:disable CyclomaticComplexity, PerceivedComplexity, MethodLength
 
     # Return a string representation of the parameter
-    # @return [String]
+    # @return [String] Pretty-formatted string
     def to_s
       string = "#{@name}"
       # If value is either nil or an empty array
@@ -118,9 +114,30 @@ module VcoWorkflows
 
     # Public
     # Return a JSON document representation of this object
-    # @return [String]
+    # @return [String] JSON representation
     def to_json
       as_struct.to_json
     end
+
+    # rubocop:disable LineLength
+
+    # Hashify the parameter (primarily useful for converting to JSON or YAML)
+    # @return [Hash] Contents of this object as a hash
+    private def as_struct
+      attributes = { type: @type, name: @name, scope: 'local' }
+
+      # If the value is an array, we need to build it in the somewhat silly
+      # manner that vCO requires it to be presented. Otherwise, just paste
+      # it on the end of the hash.
+      if @type.eql?('Array')
+        fail(IOError, ERR[:wtf]) unless @value.is_a?(Array)
+        attributes[:value] = { @type.downcase => { elements: [] } }
+        @value.each { |val| attributes[:value][@type.downcase][:elements] << { @subtype => { value: val } } }
+      else
+        attributes[:value] = { @type => { value: @value } }
+      end
+      attributes
+    end
+    # rubocop:enable LineLength
   end
 end

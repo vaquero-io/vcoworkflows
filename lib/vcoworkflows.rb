@@ -1,14 +1,14 @@
 require 'thor'
-require 'vcoworkflows/version'
-require 'vcoworkflows/constants'
-require 'vcoworkflows/vcosession'
-require 'vcoworkflows/workflowservice'
-require 'vcoworkflows/workflow'
-require 'vcoworkflows/workflowparameter'
-require 'vcoworkflows/workflowtoken'
-require 'vcoworkflows/cli/execute'
-require 'vcoworkflows/cli/query'
-# require 'vcoworkflows/cli/auth'
+
+require File.dirname(__FILE__) + '/vcoworkflows/version'
+require File.dirname(__FILE__) + '/vcoworkflows/constants'
+require File.dirname(__FILE__) + '/vcoworkflows/vcosession'
+require File.dirname(__FILE__) + '/vcoworkflows/workflowservice'
+require File.dirname(__FILE__) + '/vcoworkflows/workflow'
+require File.dirname(__FILE__) + '/vcoworkflows/workflowparameter'
+require File.dirname(__FILE__) + '/vcoworkflows/workflowtoken'
+require File.dirname(__FILE__) + '/vcoworkflows/cli/execute'
+require File.dirname(__FILE__) + '/vcoworkflows/cli/query'
 
 # rubocop:disable LineLength
 

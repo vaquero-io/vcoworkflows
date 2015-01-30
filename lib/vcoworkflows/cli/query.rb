@@ -22,7 +22,7 @@ module VcoWorkflows
 
       class_option :executions, type: :boolean, aliases: '-e', default: false, desc: DESC_CLI_QUERY_EXECS
       class_option :last, type: :numeric, aliases: '-l', default: 0, desc: DESC_CLI_QUERY_EXEC_LIM
-      class_option :execution_id, type: :string, aliases: '-I', desc: DESC_CLI_QUERY_EXEC_ID
+      class_option :execution_id, type: :string, aliases: ['-I', '--execution'], desc: DESC_CLI_QUERY_EXEC_ID
       class_option :state, type: :boolean, aliases: '-r', desc: DESC_CLI_QUERY_EXEC_STATE
       class_option :logs, type: :boolean, aliases: ['-L', '--log'], desc: DESC_CLI_QUERY_EXEC_LOG
       class_option :show_json, type: :boolean, default: false, desc: DESC_CLI_QUERY_JSON
@@ -43,28 +43,19 @@ module VcoWorkflows
           return
         end
 
-        # Create the session
-        session = VcoWorkflows::VcoSession.new(options[:server],
-                                               user: auth.username,
-                                               password: auth.password,
-                                               verify_ssl: options[:verify_ssl])
-
-        # Create the Workflow Service
-        wfs = VcoWorkflows::WorkflowService.new(session)
-
+        # Get the workflow
         puts "\nRetrieving workflow '#{workflow}' ..."
-
-        wf = nil
-        if options[:id]
-          wf = wfs.get_workflow_for_id(options[:id])
-        else
-          wf = wfs.get_workflow_for_name(workflow)
-        end
+        wf = VcoWorkflows::Workflow.new(workflow,
+                                        url: options[:server],
+                                        username: auth.username,
+                                        password: auth.password,
+                                        verify_ssl: options[:verify_ssl],
+                                        id: options[:id])
 
         puts ''
         if options[:execution_id]
           puts "Fetching data for execution #{options[:execution_id]}..."
-          execution = wfs.get_execution(wf.id, options[:execution_id])
+          execution = wf.token(options[:execution_id])
           if options[:state]
             puts "Execution started at #{Time.at(execution.start_date / 1000)}"
             puts "Execution #{execution.state} at #{Time.at(execution.end_date / 1000)}"
@@ -79,11 +70,11 @@ module VcoWorkflows
 
           if options[:logs]
             puts ''
-            wftoken = wfs.get_log(wf.id, options[:execution_id])
+            wflog = wf.log(options[:execution_id])
             if options[:show_json]
-              puts wftoken.to_json
+              puts wflog.to_json
             else
-              puts wftoken
+              puts wflog
             end
           end
         else
@@ -98,7 +89,7 @@ module VcoWorkflows
         puts "Version:      #{wf.version}"
         puts "\nExecutions: "
         executions = {}
-        wfs.get_execution_list(wf.id).each_value do |attrs|
+        wf.service.get_execution_list(wf.id).each_value do |attrs|
           executions[attrs['startDate']] = attrs
         end
         keys = executions.keys.sort
