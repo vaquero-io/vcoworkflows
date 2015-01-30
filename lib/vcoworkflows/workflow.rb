@@ -205,7 +205,7 @@ module VcoWorkflows
     # rubocop:disable LineLength
 
     # Verify that all mandatory input parameters have values
-    def verify_parameters
+    private def verify_parameters
       required_parameters.each do |name, wfparam|
         if wfparam.required? && (wfparam.value.nil? || wfparam.value.size == 0)
           fail(IOError, ERR[:param_verify_failed] << "#{name} required but not present.")
@@ -225,6 +225,8 @@ module VcoWorkflows
       workflow_service = @service if workflow_service.nil?
       # If we still have a nil workflow_service, go home.
       fail(IOError, ERR[:no_workflow_service_defined]) if workflow_service.nil?
+      # Make sure we didn't forget any required parameters
+      verify_parameters
       # Let's get this thing running!
       @execution_id = workflow_service.execute_workflow(@id, input_parameter_json)
     end

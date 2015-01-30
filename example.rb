@@ -27,12 +27,8 @@ workflow = VcoWorkflows::Workflow.new(workflow_name,
 # Set the parameters in the workflow
 input_parameters.each { |k, v| workflow.set_parameter(k, v) }
 
-# Make sure we didn't miss any required input parameters
-workflow.verify_parameters
-
-# Execute the workflow. This gives us a `VcoWorkflows::WorkflowToken` object
-# back, which has the information we need to check up on this execution later.
-wftoken = workflow.execute
+# Execute the workflow.
+workflow.execute
 
 # We're going to wait around until the execution is done, so we'll check
 # on it every 5 seconds until we see whether it completed or failed.
@@ -40,7 +36,7 @@ finished = false
 until finished
   sleep 5
   # Fetch a new workflow token to check the status of the workflow execution
-  wftoken = worflow_service.get_execution(workflow.id, wftoken.id)
+  wftoken = workflow.token
   # If the execution is no longer alive, exit the loop and report the results.
   unless wftoken.alive?
     finished = true
