@@ -19,11 +19,14 @@ module VcoWorkflows
     # @param [Object] value the parameter value
     # @return [VcoWorkflows::WorkflowParameter]
     def initialize(name = nil, type = nil, options = {})
-      @options = {
+      # Merge provided options with our defaults
+      options = {
         required: false,
         value: nil
       }.merge(options)
+
       @name = name
+
       case type
       when /\//
         @type = type.gsub(/\/.*$/, '')
@@ -32,15 +35,16 @@ module VcoWorkflows
         @type = type
         @subtype = nil
       end
-      @required = required
+
+      @required = options[:required]
 
       # If value is supposed to be an array but we dont' have a value yet,
       # create an empty array. If it's not supposed to be an array, just
       # set the value, even if it's still nil.
-      if @type.eql?('Array') && value.nil?
-        @value = []
+      if options[:value].nil?
+        @type.eql?('Array') ? @value = [] : @value = nil
       else
-        @value = set(value)
+        @value = set(options[:value])
       end
     end
     # rubocop:enable MethodLength
