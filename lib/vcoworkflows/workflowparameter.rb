@@ -127,7 +127,7 @@ module VcoWorkflows
 
     # Hashify the parameter (primarily useful for converting to JSON or YAML)
     # @return [Hash] Contents of this object as a hash
-    private def as_struct
+    def as_struct
       attributes = { type: @type, name: @name, scope: 'local' }
 
       # If the value is an array, we need to build it in the somewhat silly
