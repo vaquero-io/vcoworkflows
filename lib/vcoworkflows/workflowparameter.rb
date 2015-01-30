@@ -86,29 +86,6 @@ module VcoWorkflows
     end
     # rubocop:enable TrivialAccessors
 
-    # rubocop:disable LineLength, HashSyntax
-
-    # Hashify the parameter (primarily useful for converting to JSON or YAML)
-    # @return [Hash] Contents of this object as a hash
-    def as_struct
-      attributes = { :type => @type, :name => @name, :scope => 'local' }
-
-      # If the value is an array, we need to build it in the somewhat silly
-      # manner that vCO requires it to be presented. Otherwise, just paste
-      # it on the end of the hash.
-      if @type.eql?('Array')
-        fail(IOError, ERR[:wtf]) unless @value.is_a?(Array)
-        attributes[:value] = { @type.downcase => { :elements => [] } }
-        @value.each { |val| attributes[:value][@type.downcase][:elements] << { @subtype => { :value => val } } }
-      else
-        attributes[:value] = { @type => { :value => @value } }
-      end
-
-      # Assert
-      attributes
-    end
-    # rubocop:enable LineLength, HashSyntax
-
     # rubocop:disable CyclomaticComplexity, PerceivedComplexity, MethodLength
 
     # Return a string representation of the parameter
@@ -139,5 +116,28 @@ module VcoWorkflows
     def to_json
       as_struct.to_json
     end
+
+    private
+
+    # rubocop:disable LineLength
+
+    # Hashify the parameter (primarily useful for converting to JSON or YAML)
+    # @return [Hash] Contents of this object as a hash
+    def as_struct
+      attributes = { type: @type, name: @name, scope: 'local' }
+
+      # If the value is an array, we need to build it in the somewhat silly
+      # manner that vCO requires it to be presented. Otherwise, just paste
+      # it on the end of the hash.
+      if @type.eql?('Array')
+        fail(IOError, ERR[:wtf]) unless @value.is_a?(Array)
+        attributes[:value] = { @type.downcase => { elements: [] } }
+        @value.each { |val| attributes[:value][@type.downcase][:elements] << { @subtype => { value: val } } }
+      else
+        attributes[:value] = { @type => { value: @value } }
+      end
+      attributes
+    end
+    # rubocop:enable LineLength
   end
 end
