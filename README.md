@@ -1,5 +1,8 @@
 # Vcoworkflows
 
+**This gem is in very early development stages, and as such, may change
+incompatibly as we work towards our first release.**
+
 `vcoworkflows` provides a Ruby API for finding and executing vCenter
 Orchestrator workflows. You can search for a workflow either by name or
 by GUID, populate the resulting `VcoWorkflows::Workflow` object's
@@ -13,6 +16,13 @@ authentication is used with vCenter Orchestrator, and the username and
 password can either be passed as command-line arguments or set as environment
 variables (`$VCO_USER` and `$VCO_PASSWD`).
 
+## Requirements
+
+- [rest-client](https://github.com/rest-client/rest-client) is used for all the
+communications with vCenter Orchestrator.
+- [thor](http://whatisthor.com) is used for the command-line utilities.
+
+The only external dependency is vCenter Orchestrator.
 
 ## Installation
 
@@ -34,64 +44,219 @@ Or install it yourself as:
 
 ## Usage
 
-[example.rb](example.rb):
+Quick example:
 
 ```ruby
-#!/usr/bin/env ruby
-
 require 'vcoworkflows'
 
-# What am I connecting to?
-server = 'https://myvco.example.com:8281/'
-username = 'myuser'
-password = 'secret!'
+workflow_name = 'Request Component'
+vco_user = 'jdoe'
+vco_passwd = 'secret'
+vco_url = 'https://vco.example.com:8281/vco/api'
 
-# What's the workflow I want to work with?
-workflow_name = 'Do Something Cool'
+my_workflow = VcoWorkflows::Workflow.new(
+    workflow_name,
+    url: vco_url,
+    username: vco_user,
+    password: vco_passwd,
+    verify_ssl: false
+)
 
-# Define the parameters for the workflow which we need to supply.
-# The 'Do Something Cool' workflow needs a name, version, and words (an array
-# of strings).
+```
+
+All the necessary interactions with a Workflow in vCenter Orchestrator are
+available via the [`VcoWorkflows::Workflow`](lib/vcoworkflows/Workflow.rb)
+class.
+
+### Selecting a Workflow
+
+It is possible to select a Workflow by GUID (as divined by the vCenter
+Orchestrator client) or by specifying the Workflow's name. If specifying by
+name, however, an exeption will be raised if either no workflows are found,
+or multiple workflows are found. Therefor, GUID is likely "safer". In either
+case, however, the workflow name must be given, as in the example above.
+
+Selecting a workflow by GUID is done by adding the `id:` parameter when
+creating a new `Workflow` object:
+
+```ruby
+my_workflow = VcoWorkflows::Workflow.new(
+    'Request Component,
+    id: '6e04a460-4a45-4e16-9603-db2922c24462',
+    url: 'https://vco.example.com:8281/vco/api',
+    username: 'jdoe',
+    password: 's3cr3t',
+    verify_ssl: false
+)
+```
+
+### Executing a workflow
+
+To execute a workflow, set any input parameters to appropriate values (if
+required), then send call `execute`. This will return an execution ID from
+vCenter Orchestrator, which identifies the run you have requested. The
+execution ID is also preserved in the `Workflow` object for simplicity.
+
+```ruby
 input_parameters = { 'name'    => 'a string value',
                      'version' => '2',
                      'words'   => %w(fe fi fo fum) }
-
-# Set up our session credentials for vCO
-session = VcoWorkflows::VcoSession.new(server,
-                                       user: username,
-                                       password: password,
-                                       verify_ssl: false)
-
-# Set up a WorkflowService which will broker our API calls
-workflow_service = VcoWorkflows::WorkflowService.new(session)
-
-# Get the workflow
-workflow = workflow_service.get_workflow_for_name(workflow_name)
-
-# Set the parameters in the workflow
+# ...
 input_parameters.each { |k, v| workflow.set_parameter(k, v) }
+workflow.execute
+```
 
-# Make sure we didn't miss any required input parameters
-workflow.verify_parameters
+### Checking an execution status
 
-# Execute the workflow. This gives us a `VcoWorkflows::WorkflowToken` object
-# back, which has the information we need to check up on this execution later.
-wftoken = workflow.execute
+You can then get a Workflow Token from the Workflow, which will contain
+state and result information for the execution.
 
-# We're going to wait around until the execution is done, so we'll check
-# on it every 5 seconds until we see whether it completed or failed.
+```ruby
+wf_token = workflow.token(workflow.execute)
+```
+
+The `WorkflowToken` can be used to determine the current state and disposition
+of a Workflow execution. This can be used to periodically check up on the
+execution, if you want to follow its status:
+
+```ruby
 finished = false
 until finished
   sleep 5
   # Fetch a new workflow token to check the status of the workflow execution
-  wftoken = worflow_service.get_execution(workflow.id, wftoken.id)
-  # If the state is 'running' or starts with 'waiting', we'll need to check
-  # back again later. It's not done yet.
-  unless wftoken.state.eql?('running') || wftoken.state.match(/waiting/)
+  wftoken = workflow.token
+  # If the execution is no longer alive, exit the loop and report the results.
+  unless wftoken.alive?
     finished = true
     wftoken.output_parameters.each { |k, v| puts " #{k}: #{v}" }
   end
 end
+```
+
+### Fetching the execution log
+
+For any workflow execution, you can fetch the log:
+
+```ruby
+workflow.execute
+# ... some time later
+log = workflow.log
+puts log
+```
+
+If you have the execution ID from a previous execution:
+
+```ruby
+log = workflow.log(execution_id)
+puts log
+```
+
+### Querying a Workflow from the command line
+
+The `vcoworkflows` command line allows you to query a vCO server for a
+workflow, as well as executions and details on a specific execution.
+
+```
+$ vcoworkflows query "Request Component" \
+    --server=https://vco.example.com:8281/
+
+Retrieving workflow 'Request Component' ...
+
+Workflow:    Request Component
+ID:          6e04a460-4a45-4e16-9603-db2922c24462
+Description:
+Version:     0.0.33
+
+Input Parameters:
+ coreCount (string) [required]
+ ramMB (string) [required]
+ onBehalfOf (string) [required]
+ machineCount (string) [required]
+ businessUnit (string) [required]
+ reservation (string) [required]
+ location (string) [required]
+ environment (string) [required]
+ image (string) [required]
+ runlist (Array/string) [required]
+ nodename (string) [required]
+ component (string) [required]
+ attributesJS (string) [required]
+
+Output Parameters:
+ result (string) [required]
+ requestNumber (number) [required]
+ requestCompletionDetails (string) [required]
+```
+
+You can also retrieve a full list of executions, or only the last N:
+
+```
+$ vcoworkflows query "Request Component" \
+    --server=https://vco.example.com:8281/ \
+    --executions --last 5
+
+Retrieving workflow 'Request Component' ...
+
+
+Workflow:   Request Component
+ID:           6e04a460-4a45-4e16-9603-db2922c24462
+Description:
+Version:      0.0.33
+
+Executions:
+2014-12-19T20:38:18.457Z [ff8080814a1cb55c014a6445b85b7714] completed
+2014-12-19T20:49:04.087Z [ff8080814a1cb55c014a644f925577cf] completed
+2014-12-19T21:00:25.587Z [ff8080814a1cb55c014a6459f87278c0] completed
+2014-12-19T21:25:04.170Z [ff8080814a1cb55c014a64708829797f] completed
+2014-12-19T21:43:46.833Z [ff8080814a1cb55c014a6481a9927a78] completed
+```
+
+To get the logs from a specific execution:
+
+```
+vcoworkflows query "Request Component" \
+    --server=https://vco.example.com:8281/ \
+    --execution-id ff8080814a1cb55c014a6481a9927a78 \
+    --log
+
+Retrieving workflow 'Request Component' ...
+
+Fetching data for execution ff8080814a1cb55c014a6481a9927a78...
+
+Execution ID:      ff8080814a1cb55c014a6481a9927a78
+Name:              Request Component
+Workflow ID:       6e04a460-4a45-4e16-9603-db2922c24462
+State:             completed
+Start Date:        2014-12-19 13:43:46 -0800
+End Date:          2014-12-19 13:55:24 -0800
+Started By:        user@example.com
+
+Input Parameters:
+ coreCount = 2
+ ramMB = 2048
+ onBehalfOf = service_account@example.com
+ machineCount = 1
+ businessUnit = aw
+ reservation = nonprodlinux
+ location = us_east
+ environment = dev1
+ image = centos-6.6-x86_64-20141203-1
+ runlist =
+  - role[base]
+  - role[api]
+ nodename =
+ component = api
+ attributesJS =
+
+Output Parameters:
+ result = SUCCESSFUL
+ requestNumber = 326.0
+ requestCompletionDetails = Request succeeded. Created vm00378.
+
+2014-12-19 13:43:46 -0800 info: gruiz-ade: Workflow 'Request Component' has started
+2014-12-19 13:43:59 -0800 info: gruiz-ade: Workflow is paused; Workflow 'Request Component' has paused while waiting on signal
+2014-12-19 13:55:23 -0800 info: gruiz-ade: Workflow 'Request Component' has resumed
+2014-12-19 13:55:24 -0800 info: gruiz-ade: Workflow 'Request Component' has completed
 ```
 
 ## Contributing
