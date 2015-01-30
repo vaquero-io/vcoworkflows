@@ -66,7 +66,7 @@ module VcoWorkflows
                                         id: options[:id])
 
         # List out mandatory parameters
-        puts "Required parameters:\n #{wf.required_parameter_names.join(', ')}"
+        puts "Required parameters:\n #{wf.required_parameters.keys.join(', ')}"
 
         # Set the input parameters
         puts 'Setting workflow input parameters...' if options[:verbose]

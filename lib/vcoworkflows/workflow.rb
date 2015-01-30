@@ -167,18 +167,15 @@ module VcoWorkflows
     end
     # rubocop:enable LineLength
 
-    # Get an array of the names of all the required input parameters
-    # @return [String[]]
-    def required_parameter_names
-      required = []
-      @input_parameters.each_value { |v| required << v.name if v.required? }
-    end
+    # rubocop:disable LineLength
 
-    # Get an array of the full set of input parameters
-    # @return [String[]]
-    def parameter_names
-      @input_parameters.keys
+    # Get an array of the names of all the required input parameters
+    # @return [Hash] Hash of WorkflowParameter input parameters which are required for this workflow
+    def required_parameters
+      required = {}
+      @input_parameters.each_value { |v| required[v.name] = v if v.required? }
     end
+    # rubocop:enable LineLength
 
     # Get the value of a specific input parameter
     # @param [String] parameter_name - Name of the parameter whose value to get
@@ -192,13 +189,13 @@ module VcoWorkflows
     # Set a parameter to a value
     # @param [String] parameter - name of the parameter to set
     # @param [Object] value - value to set
-    def set_parameter(parameter, value)
-      if @input_parameters.key?(parameter)
-        @input_parameters[parameter].set value
+    def set_parameter(parameter_name, value)
+      if @input_parameters.key?(parameter_name)
+        @input_parameters[parameter_name].set value
       else
         $stderr.puts "\nAttempted to set a value for a non-existent WorkflowParameter!"
         $stderr.puts "It appears that there is no parameter \"#{parameter}\"."
-        $stderr.puts "Valid parameter names are: #{parameter_names.join(', ')}"
+        $stderr.puts "Valid parameter names are: #{@input_parameters.keys.join(', ')}"
         $stderr.puts ''
         fail(IOError, ERR[:no_such_parameter])
       end
@@ -209,9 +206,8 @@ module VcoWorkflows
 
     # Verify that all mandatory input parameters have values
     def verify_parameters
-      required_parameter_names.each do |name|
-        param = @input_parameters[name]
-        if param.required? && (param.value.nil? || param.value.size == 0)
+      required_parameters.each do |name, wfparam|
+        if wfparam.required? && (wfparam.value.nil? || wfparam.value.size == 0)
           fail(IOError, ERR[:param_verify_failed] << "#{name} required but not present.")
         end
       end
@@ -272,17 +268,14 @@ module VcoWorkflows
 
     private
 
-    # rubocop:disable HashSyntax
-
     # Convert the input parameters to a JSON document
     # @return [String]
     def input_parameter_json
       tmp_params = []
       @input_parameters.each_value { |v| tmp_params << v.as_struct if v.set? }
-      param_struct = { :parameters => tmp_params }
+      param_struct = { parameters: tmp_params }
       param_struct.to_json
     end
-    # rubocop:enable HashSyntax
   end
   # rubocop:enable ClassLength
 end
