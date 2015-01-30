@@ -1,10 +1,6 @@
 require_relative '../spec_helper.rb'
 require 'vcoworkflows'
 
-# rubocop:disable LineLength
-
 describe VcoWorkflows::Workflow, 'Workflow' do
-
+  # TODO: write this test
 end
-
-# rubocop:enable LineLength
