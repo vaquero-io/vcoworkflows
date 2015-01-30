@@ -125,8 +125,8 @@ module VcoWorkflows
     def self.parse_parameters(parameter_data)
       wfparams = {}
       parameter_data.each do |parameter|
-        wfparam = VcoWorkflows::WorkflowParameter.new(type: parameter['type'],
-                                                      name: parameter['name'])
+        wfparam = VcoWorkflows::WorkflowParameter.new(parameter['name'],
+                                                      parameter['type'])
         if parameter['value']
           if wfparam.type.eql?('Array')
             value = []

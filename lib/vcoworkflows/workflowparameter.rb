@@ -18,7 +18,11 @@ module VcoWorkflows
     # @param [Boolean] required Whether or not the parameter is mandatory
     # @param [Object] value the parameter value
     # @return [VcoWorkflows::WorkflowParameter]
-    def initialize(name: nil, type: nil, required: false, value: nil)
+    def initialize(name = nil, type = nil, options = {})
+      @options = {
+        required: false,
+        value: nil
+      }.merge(options)
       @name = name
       case type
       when /\//
@@ -46,9 +50,7 @@ module VcoWorkflows
     # Set the parameter value
     # @param [Object] value Value for the parameter
     def set(value)
-      # TODO: Determine if we really need to bother with "simple" types
-      # It might be enough to just concern ourselves with complex types
-      # like 'Array/*'
+      # Do some basic checking for Arrays.
       case @type
       when 'Array'
         fail(IOError, ERR[:param_verify_failed]) unless value.is_a?(Array)
