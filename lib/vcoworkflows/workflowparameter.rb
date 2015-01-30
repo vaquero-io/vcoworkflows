@@ -119,13 +119,11 @@ module VcoWorkflows
       as_struct.to_json
     end
 
-    private
-
     # rubocop:disable LineLength
 
     # Hashify the parameter (primarily useful for converting to JSON or YAML)
     # @return [Hash] Contents of this object as a hash
-    def as_struct
+    private def as_struct
       attributes = { type: @type, name: @name, scope: 'local' }
 
       # If the value is an array, we need to build it in the somewhat silly

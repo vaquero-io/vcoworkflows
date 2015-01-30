@@ -268,11 +268,9 @@ module VcoWorkflows
     end
     # rubocop:enable MethodLength
 
-    private
-
     # Convert the input parameters to a JSON document
     # @return [String]
-    def input_parameter_json
+    private def input_parameter_json
       tmp_params = []
       @input_parameters.each_value { |v| tmp_params << v.as_struct if v.set? }
       param_struct = { parameters: tmp_params }
