@@ -1,8 +1,6 @@
 require_relative 'constants'
 require 'rest_client'
 
-# rubocop:disable HashSyntax
-
 # VcoWorkflows
 module VcoWorkflows
   # VcoSession
@@ -20,9 +18,9 @@ module VcoWorkflows
       api_url = "#{uri.gsub(/\/$/, '')}/vco/api"
       RestClient.proxy = ENV['http_proxy'] # Set a proxy if present
       @rest_resource = RestClient::Resource.new(api_url,
-                                                :user => user,
-                                                :password => password,
-                                                :verify_ssl => verify_ssl)
+                                                user: user,
+                                                password: password,
+                                                verify_ssl: verify_ssl)
     end
 
     # Perform a REST GET operation against the specified endpoint
@@ -31,7 +29,7 @@ module VcoWorkflows
     # @param [Hash] headers Optional headers to use in request
     # @return [String] JSON response body
     def get(endpoint, headers = {})
-      headers = { :accept => :json }.merge(headers)
+      headers = { accept: :json }.merge(headers)
       @rest_resource[endpoint].get headers
     end
 
@@ -43,10 +41,8 @@ module VcoWorkflows
     # @param [Hash] headers Optional headers to use in request
     # @return [String] JSON response body
     def post(endpoint, body, headers = {})
-      headers = { :accept => :json, :content_type => :json }.merge(headers)
+      headers = { accept: :json, content_type: :json }.merge(headers)
       @rest_resource[endpoint].post body, headers
     end
   end
 end
-
-# rubocop:enable HashSyntax
