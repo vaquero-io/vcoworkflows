@@ -11,6 +11,9 @@ module VcoWorkflows
   # WorkflowService is the object which acts as the interface to the vCO
   # API, and is loosely modeled from the vCO API documentation.
   class WorkflowService
+    # Return the VcoSession
+    attr_reader :session
+
     # rubocop:disable LineLength
 
     # Create a new WorkflowService
