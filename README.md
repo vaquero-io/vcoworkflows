@@ -48,18 +48,12 @@ Quick example:
 
 ```ruby
 require 'vcoworkflows'
-
-workflow_name = 'Request Component'
-vco_user = 'jdoe'
-vco_passwd = 'secret'
-vco_url = 'https://vco.example.com:8281/vco/api'
-
 my_workflow = VcoWorkflows::Workflow.new(
-    workflow_name,
-    url: vco_url,
-    username: vco_user,
-    password: vco_passwd,
-    verify_ssl: false
+    'Request Component,
+    url: 'https://vco.example.com:8281/vco/api',
+    username: 'jdoe',
+    password: 's3cr3t',
+
 )
 
 ```
