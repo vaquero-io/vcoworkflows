@@ -247,11 +247,16 @@ module VcoWorkflows
     end
 
     # Return a WorkflowToken
+    # @param [String] execution_id optional execution id to get logs for
+    # @return [VcoWorkflows::WorkflowToken]
     def token(execution_id = nil)
       execution_id = @execution_id if execution_id.nil?
       VcoWorkflows::WorkflowToken.new(@service, @id, execution_id)
     end
 
+    # Return logs for the given execution
+    # @param [String] execution_id optional execution id to get logs for
+    # @return [VcoWorkflows::WorkflowExecutionLog]
     def log(execution_id = nil)
       execution_id = @execution_id if execution_id.nil?
       log_json = @service.get_log(@id, execution_id)
@@ -260,6 +265,7 @@ module VcoWorkflows
 
     # rubocop:disable MethodLength
 
+    # Stringify the workflow
     # @return [String]
     def to_s
       string =  "Workflow:    #{@name}\n"
