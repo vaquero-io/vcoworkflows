@@ -174,6 +174,7 @@ module VcoWorkflows
     def required_parameters
       required = {}
       @input_parameters.each_value { |v| required[v.name] = v if v.required? }
+      required
     end
     # rubocop:enable LineLength
 
