@@ -119,14 +119,13 @@ module VcoWorkflows
     # rubocop:disable MethodLength, LineLength
 
     # Parse json parameters and return a nice hash
-    # @param [Object] parameter_data JSON document of parameters as defined
+    # @param [Array] parameter_data JSON document of parameters as defined
     # by vCO
     # @return [Hash]
-    def self.parse_parameters(parameter_data)
+    def self.parse_parameters(parameter_data = [])
       wfparams = {}
       parameter_data.each do |parameter|
-        wfparam = VcoWorkflows::WorkflowParameter.new(parameter['name'],
-                                                      parameter['type'])
+        wfparam = VcoWorkflows::WorkflowParameter.new(parameter['name'], parameter['type'])
         if parameter['value']
           if wfparam.type.eql?('Array')
             value = []
