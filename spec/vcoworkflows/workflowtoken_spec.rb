@@ -4,7 +4,6 @@ require 'vcoworkflows'
 # rubocop:disable LineLength
 
 describe VcoWorkflows::WorkflowToken, 'WorkflowToken' do
-  # TODO: write this test
 
   before(:each) do
     # Set up some basic starting data
@@ -18,28 +17,42 @@ describe VcoWorkflows::WorkflowToken, 'WorkflowToken' do
     # Mock the WorkflowService
     @service = double("service")
     allow(@service).to receive(:get_execution) { @token_json }
-    @token = VcoWorkflows::WorkflowToken.new(@service, @workflow_id, @execution_id)
   end
 
   it 'should successfully initialize from token json' do
-    expect(@token).to_not eq(nil)
+    token = VcoWorkflows::WorkflowToken.new(@service, @workflow_id, @execution_id)
+    expect(token).to_not eq(nil)
   end
 
   it 'should match the workflow id' do
-    expect(@token.id).to eql?(@execution_id)
+    token = VcoWorkflows::WorkflowToken.new(@service, @workflow_id, @execution_id)
+    expect(token.id).to eql(@execution_id)
   end
 
   it 'should match the execution id' do
-    expect(@token.workflow_id).to eql?(@workflow_id)
+    token = VcoWorkflows::WorkflowToken.new(@service, @workflow_id, @execution_id)
+    expect(token.workflow_id).to eql(@workflow_id)
   end
 
   it 'should match the workflow name' do
-    expect(@token.name).to eql?(@workflow_name)
+    token = VcoWorkflows::WorkflowToken.new(@service, @workflow_id, @execution_id)
+    expect(token.name).to eql(@workflow_name)
   end
 
   it 'should be completed' do
-    expect(@token.alive?).to eq(false)
-    expect(@token.state).to eql('completed')
+    token = VcoWorkflows::WorkflowToken.new(@service, @workflow_id, @execution_id)
+    expect(token.alive?).to eq(false)
+    expect(token.state).to eql('completed')
+  end
+
+  it 'should have been successful' do
+    token = VcoWorkflows::WorkflowToken.new(@service, @workflow_id, @execution_id)
+    expect(token.output_parameters['result'].value).to eql('SUCCESSFUL')
+  end
+
+  it 'should have an end date' do
+    token = VcoWorkflows::WorkflowToken.new(@service, @workflow_id, @execution_id)
+    expect(token.end_date).to_not eq(nil)
   end
 end
 
