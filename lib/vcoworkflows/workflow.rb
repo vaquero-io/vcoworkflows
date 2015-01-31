@@ -178,7 +178,7 @@ module VcoWorkflows
     # rubocop:enable LineLength
 
     # Get the value of a specific input parameter
-    # @param [String] parameter_name - Name of the parameter whose value to get
+    # @param [String] parameter_name Name of the parameter whose value to get
     # @return [VcoWorkflows::WorkflowParameter]
     def parameter(parameter_name)
       @input_parameters[parameter_name]
@@ -187,8 +187,8 @@ module VcoWorkflows
     # rubocop:disable LineLength
 
     # Set a parameter to a value
-    # @param [String] parameter - name of the parameter to set
-    # @param [Object] value - value to set
+    # @param [String] parameter_name name of the parameter to set
+    # @param [Object] value value to set
     def set_parameter(parameter_name, value)
       if @input_parameters.key?(parameter_name)
         @input_parameters[parameter_name].set value
@@ -202,12 +202,15 @@ module VcoWorkflows
     end
     # rubocop:enable LineLength
 
+    # rubocop:disable LineLength
+
     # Get the value for an input parameter
     # @param [String] parameter_name Name of the input parameter whose value to get
     # @return [Object]
     def get_parameter(parameter_name)
       @input_parameters[parameter_name].value
     end
+    # rubocop:enable LineLength
 
     # rubocop:disable LineLength
 
