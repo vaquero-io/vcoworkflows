@@ -15,8 +15,6 @@ module VcoWorkflows
     # Create a new workflow parameter object
     # @param [String] name Name of the workflow parameter
     # @param [String] type Data type of the parameter (according to vCO)
-    # @param [Boolean] required Whether or not the parameter is mandatory
-    # @param [Object] value the parameter value
     # @return [VcoWorkflows::WorkflowParameter]
     def initialize(name = nil, type = nil, options = {})
       # Merge provided options with our defaults
