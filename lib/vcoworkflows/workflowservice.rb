@@ -28,7 +28,7 @@ module VcoWorkflows
     # @param [String] id Workflow GUID
     # @return [VcoWorkflows::Workflow] the requested workflow
     def get_workflow_for_id(id)
-      @session.get("/workflows/#{id}")
+      @session.get("/workflows/#{id}").body
     end
 
     # Get the presentation for the given workflow GUID
@@ -102,7 +102,9 @@ module VcoWorkflows
     def execute_workflow(id, parameter_json)
       path = "/workflows/#{id}/executions/"
       response = @session.post(path, parameter_json)
-      response.headers[:location].gsub(%r{^.*/executions/}, '')
+      # Execution ID is the final component in the Location header URL, so
+      # hack off the front, then pull off any trailing /
+      response.headers[:location].gsub(%r{^.*/executions/}, '').gsub(%r{/$}, '')
     end
   end
 end
