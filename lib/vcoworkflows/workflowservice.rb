@@ -103,8 +103,8 @@ module VcoWorkflows
       path = "/workflows/#{id}/executions/"
       response = @session.post(path, parameter_json)
       # Execution ID is the final component in the Location header URL, so
-      # hack off the front, then pull off any trailing /
-      response.headers[:location].gsub(%r{^.*/executions/}, '').gsub(%r{/$}, '')
+      # chop off the front, then pull off any trailing /
+      response.headers[:location].gsub(%r{^.*/executions/}, '').gsub(/\/$/, '')
     end
   end
 end
