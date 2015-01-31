@@ -239,6 +239,13 @@ module VcoWorkflows
     end
     # rubocop:enable LineLength
 
+    # Get a list of all the executions of this workflow. Wrapper for
+    # VcoWorkflows::WorkflowService#get_execution_list
+    # @return [Hash]
+    def executions
+      @service.get_execution_list(@id)
+    end
+
     # Return a WorkflowToken
     def token(execution_id = nil)
       execution_id = @execution_id if execution_id.nil?
