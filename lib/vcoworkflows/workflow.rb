@@ -202,6 +202,13 @@ module VcoWorkflows
     end
     # rubocop:enable LineLength
 
+    # Get the value for an input parameter
+    # @param [String] parameter_name Name of the input parameter whose value to get
+    # @return [Object]
+    def get_parameter(parameter_name)
+      @input_parameters[parameter_name].value
+    end
+
     # rubocop:disable LineLength
 
     # Verify that all mandatory input parameters have values
