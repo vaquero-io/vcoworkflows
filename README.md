@@ -13,7 +13,7 @@
 `vcoworkflows` provides a Ruby API for finding and executing vCenter
 Orchestrator workflows. You can search for a workflow either by name or
 by GUID, populate the resulting `VcoWorkflows::Workflow` object's
-`inputParameters` with the required values, and then request that the
+input parameters with the required values, and then request that the
 the configured workflow be executed by vCenter Orchestrator.
 
 Under the hood, communcations with vCenter Orchestrator is done via its
@@ -56,7 +56,7 @@ Quick example:
 ```ruby
 require 'vcoworkflows'
 my_workflow = VcoWorkflows::Workflow.new(
-    'Request Component,
+    'Request Component',
     url: 'https://vco.example.com:8281/vco/api',
     username: 'jdoe',
     password: 's3cr3t',
@@ -82,7 +82,7 @@ creating a new `Workflow` object:
 
 ```ruby
 my_workflow = VcoWorkflows::Workflow.new(
-    'Request Component,
+    'Request Component',
     id: '6e04a460-4a45-4e16-9603-db2922c24462',
     url: 'https://vco.example.com:8281/vco/api',
     username: 'jdoe',
@@ -287,4 +287,3 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
-
