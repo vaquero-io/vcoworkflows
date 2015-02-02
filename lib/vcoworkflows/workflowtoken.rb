@@ -72,13 +72,13 @@ module VcoWorkflows
     # Is the workflow actively running?
     # @return [Boolean]
     def running?
-      state.eql('running')
+      state.eql?('running')
     end
 
     # Is the workflow in a waiting state?
     # @return [Boolean]
     def waiting?
-      state.match(/waiting/)
+      state.match(/waiting/).nil? ? false : true
     end
 
     # rubocop:disable MethodLength, LineLength

@@ -89,13 +89,9 @@ module VcoWorkflows
         puts "Version:      #{wf.version}"
         puts "\nExecutions: "
         executions = {}
-        wf.service.get_execution_list(wf.id).each_value do |attrs|
-          executions[attrs['startDate']] = attrs
-        end
+        wf.executions.each_value { |attrs| executions[attrs['startDate']] = attrs }
         keys = executions.keys.sort
-        if options[:last] > 0
-          keys = keys.slice(keys.size - options[:last], keys.size)
-        end
+        keys = keys.slice(keys.size - options[:last], keys.size) if options[:last] > 0
         keys.each do |timestamp|
           dataline = "#{timestamp}"
           dataline << " [#{executions[timestamp]['id']}]"

@@ -119,14 +119,13 @@ module VcoWorkflows
     # rubocop:disable MethodLength, LineLength
 
     # Parse json parameters and return a nice hash
-    # @param [Object] parameter_data JSON document of parameters as defined
+    # @param [Array] parameter_data JSON document of parameters as defined
     # by vCO
     # @return [Hash]
-    def self.parse_parameters(parameter_data)
+    def self.parse_parameters(parameter_data = [])
       wfparams = {}
       parameter_data.each do |parameter|
-        wfparam = VcoWorkflows::WorkflowParameter.new(parameter['name'],
-                                                      parameter['type'])
+        wfparam = VcoWorkflows::WorkflowParameter.new(parameter['name'], parameter['type'])
         if parameter['value']
           if wfparam.type.eql?('Array')
             value = []
@@ -174,11 +173,12 @@ module VcoWorkflows
     def required_parameters
       required = {}
       @input_parameters.each_value { |v| required[v.name] = v if v.required? }
+      required
     end
     # rubocop:enable LineLength
 
     # Get the value of a specific input parameter
-    # @param [String] parameter_name - Name of the parameter whose value to get
+    # @param [String] parameter_name Name of the parameter whose value to get
     # @return [VcoWorkflows::WorkflowParameter]
     def parameter(parameter_name)
       @input_parameters[parameter_name]
@@ -187,8 +187,8 @@ module VcoWorkflows
     # rubocop:disable LineLength
 
     # Set a parameter to a value
-    # @param [String] parameter - name of the parameter to set
-    # @param [Object] value - value to set
+    # @param [String] parameter_name name of the parameter to set
+    # @param [Object] value value to set
     def set_parameter(parameter_name, value)
       if @input_parameters.key?(parameter_name)
         @input_parameters[parameter_name].set value
@@ -199,6 +199,16 @@ module VcoWorkflows
         $stderr.puts ''
         fail(IOError, ERR[:no_such_parameter])
       end
+    end
+    # rubocop:enable LineLength
+
+    # rubocop:disable LineLength
+
+    # Get the value for an input parameter
+    # @param [String] parameter_name Name of the input parameter whose value to get
+    # @return [Object]
+    def get_parameter(parameter_name)
+      @input_parameters[parameter_name].value
     end
     # rubocop:enable LineLength
 
@@ -232,12 +242,24 @@ module VcoWorkflows
     end
     # rubocop:enable LineLength
 
+    # Get a list of all the executions of this workflow. Wrapper for
+    # VcoWorkflows::WorkflowService#get_execution_list
+    # @return [Hash]
+    def executions
+      @service.get_execution_list(@id)
+    end
+
     # Return a WorkflowToken
+    # @param [String] execution_id optional execution id to get logs for
+    # @return [VcoWorkflows::WorkflowToken]
     def token(execution_id = nil)
       execution_id = @execution_id if execution_id.nil?
       VcoWorkflows::WorkflowToken.new(@service, @id, execution_id)
     end
 
+    # Return logs for the given execution
+    # @param [String] execution_id optional execution id to get logs for
+    # @return [VcoWorkflows::WorkflowExecutionLog]
     def log(execution_id = nil)
       execution_id = @execution_id if execution_id.nil?
       log_json = @service.get_log(@id, execution_id)
@@ -246,6 +268,7 @@ module VcoWorkflows
 
     # rubocop:disable MethodLength
 
+    # Stringify the workflow
     # @return [String]
     def to_s
       string =  "Workflow:    #{@name}\n"
