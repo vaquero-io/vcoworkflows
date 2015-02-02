@@ -1,7 +1,14 @@
 # Vcoworkflows
 
-**This gem is in very early development stages, and as such, may change
-incompatibly as we work towards our first release.**
+[![Build Status](https://travis-ci.org/ActiveSCM/vcoworkflows.svg?branch=master)][travis]
+[![Dependency Status](https://gemnasium.com/ActiveSCM/vcoworkflows.svg)](https://gemnasium.com/ActiveSCM/vcoworkflows)
+[![Coverage Status](https://coveralls.io/repos/ActiveSCM/vcoworkflows/badge.svg)](https://coveralls.io/r/ActiveSCM/vcoworkflows)
+[![Inline docs](http://inch-ci.org/github/ActiveSCM/vcoworkflows.png?branch=master)][inch]
+
+[travis]: http://travis-ci.org/ActiveSCM/vcoworkflows
+[gemnasium]: https://gemnasium.com/ActiveSCM/vcoworkflows
+[coveralls]: https://coveralls.io/r/ActiveSCM/vcoworkflows
+[inch]: http://inch-ci.org/github/ActiveSCM/vcoworkflows
 
 `vcoworkflows` provides a Ruby API for finding and executing vCenter
 Orchestrator workflows. You can search for a workflow either by name or
