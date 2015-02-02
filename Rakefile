@@ -7,7 +7,7 @@ require 'yard'
 Bundler::GemHelper.install_tasks
 RSpec::Core::RakeTask.new(:spec)
 Cucumber::Rake::Task.new(:features)
-# Coveralls::RakeTask.new
+Coveralls::RakeTask.new
 
 task :style do
   sh 'rubocop'
@@ -18,4 +18,4 @@ task :doc do
 end
 
 # task default: [:spec, :features, :style, :doc, 'coveralls:push']
-task default: [:spec, :style, :doc]
+task default: [:spec, :style, :doc, 'coveralls:push']
