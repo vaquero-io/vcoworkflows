@@ -1,14 +1,15 @@
 # Vcoworkflows
 
-[![Build Status](https://travis-ci.org/ActiveSCM/elevage.svg?branch=master)][travis]
-[![Dependency Status](https://gemnasium.com/ActiveSCM/elevage.png?travis)][gemnasium]
-[![Coverage Status](https://coveralls.io/repos/ActiveSCM/elevage/badge.png?branch=master)][coveralls]
-[![Inline docs](http://inch-ci.org/github/ActiveSCM/elevage.png?branch=master)][inch]
+[![Build Status](https://travis-ci.org/ActiveSCM/vcoworkflows.svg?branch=master)][travis]
+[![Dependency Status](https://gemnasium.com/ActiveSCM/vcoworklfows.png?travis)][gemnasium]
+[![Coverage Status](https://coveralls.io/repos/ActiveSCM/vcoworkflows/badge.svg)](https://coveralls.io/r/ActiveSCM/vcoworkflows)
+[![Inline docs](http://inch-ci.org/github/ActiveSCM/vcoworkflows.png?branch=master)][inch]
 
-[travis]: http://travis-ci.org/ActiveSCM/elevage
-[gemnasium]: https://gemnasium.com/ActiveSCM/elevage
-[coveralls]: https://coveralls.io/r/ActiveSCM/elevage
-[inch]: http://inch-ci.org/github/ActiveSCM/elevage
+[travis]: http://travis-ci.org/ActiveSCM/vcoworkflows
+[gemnasium]: https://gemnasium.com/ActiveSCM/vcoworkflows
+[coveralls]: https://coveralls.io/r/ActiveSCM/vcoworkflows
+[inch]: http://inch-ci.org/github/ActiveSCM/vcoworkflows
+
 
 **This gem is in very early development stages, and as such, may change
 incompatibly as we work towards our first release.**
