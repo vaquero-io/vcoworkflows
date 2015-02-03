@@ -129,18 +129,26 @@ module VcoWorkflows
     end
     # rubocop:enable CyclomaticComplexity, PerceivedComplexity, MethodLength, LineLength
 
+    # vCO API URL used when creating this workflow
+    # @return [String]
     def url
       options[:url]
     end
 
+    # vCO user name used when creating this workflow object
+    # @return [String]
     def username
       options[:username]
     end
 
+    # vCO password used when creating this workflow object
+    # @return [String]
     def password
       options[:password]
     end
 
+    # Verify SSL?
+    # @return [Boolean]
     def verify_ssl?
       options[:verify_ssl]
     end
