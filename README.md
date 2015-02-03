@@ -1,8 +1,8 @@
 # Vcoworkflows
 
 [![Build Status](https://travis-ci.org/ActiveSCM/vcoworkflows.svg?branch=master)][travis]
-[![Dependency Status](https://gemnasium.com/ActiveSCM/vcoworkflows.svg)](https://gemnasium.com/ActiveSCM/vcoworkflows)
-[![Coverage Status](https://coveralls.io/repos/ActiveSCM/vcoworkflows/badge.svg)](https://coveralls.io/r/ActiveSCM/vcoworkflows)
+[![Dependency Status](https://gemnasium.com/ActiveSCM/vcoworkflows.svg)][gemnasium]
+[![Coverage Status](https://coveralls.io/repos/ActiveSCM/vcoworkflows/badge.png?branch=master)][coveralls]
 [![Inline docs](http://inch-ci.org/github/ActiveSCM/vcoworkflows.png?branch=master)][inch]
 
 [travis]: http://travis-ci.org/ActiveSCM/vcoworkflows
