@@ -3,7 +3,8 @@ require 'rest_client'
 
 # VcoWorkflows
 module VcoWorkflows
-  # VcoSession
+  # VcoSession is a simple wrapper for RestClient::Resource, and supports
+  # GET and POST operations against the vCO API.
   class VcoSession
     # Accessor for rest-client object, primarily for testing purposes
     attr_reader :rest_resource

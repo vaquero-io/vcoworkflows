@@ -27,6 +27,7 @@ module VcoWorkflows
       class_option :logs, type: :boolean, aliases: ['-L', '--log'], desc: DESC_CLI_QUERY_EXEC_LOG
       class_option :show_json, type: :boolean, default: false, desc: DESC_CLI_QUERY_JSON
 
+      # Thor
       def self.source_root
         File.dirname(__FILE__)
       end

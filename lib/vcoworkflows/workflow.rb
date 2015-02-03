@@ -11,16 +11,45 @@ module VcoWorkflows
 
   # Class to represent a Workflow as presented by vCenter Orchestrator.
   class Workflow
+    # rubocop:disable LineLength
+
+    # Workflow GUID
+    # @return [String] workflow GUID
     attr_reader :id
+
+    # Workflow name
+    # @return [String] workflow name
     attr_reader :name
+
+    # Workflow version
+    # @return [String] workflow version
     attr_reader :version
+
+    # Workflow description
+    # @return [String] workflow description
     attr_reader :description
+
+    # Workflow Input Parameters
+    # @return [VcoWorkflows::WorkflowParameter{}] Hash of WorkflowParameter objects, keyed by name
     attr_reader :input_parameters
+
+    # Workflow Output Parameters
+    # @return [VcoWorkflows::WorkflowParameter{}] Hash of WorkflowParameter objects, keyed by name
     attr_reader :output_parameters
+
+    # Workflow Service
+    # @return [VcoWorkflows::WorkflowService] The WorkflowService currently being used to interface with vCO
     attr_accessor :service
+
+    # Workflow execution ID
+    # @return [String] workflow execution ID
     attr_reader :execution_id
 
+    # Workflow source JSON
+    # @return [String] the source JSON returned by vCO for this workflow
     attr_reader :source_json
+
+    # rubocop:enable LineLength
 
     # rubocop:disable CyclomaticComplexity, PerceivedComplexity, MethodLength, LineLength
 
@@ -100,18 +129,26 @@ module VcoWorkflows
     end
     # rubocop:enable CyclomaticComplexity, PerceivedComplexity, MethodLength, LineLength
 
+    # vCO API URL used when creating this workflow
+    # @return [String]
     def url
       options[:url]
     end
 
+    # vCO user name used when creating this workflow object
+    # @return [String]
     def username
       options[:username]
     end
 
+    # vCO password used when creating this workflow object
+    # @return [String]
     def password
       options[:password]
     end
 
+    # Verify SSL?
+    # @return [Boolean]
     def verify_ssl?
       options[:verify_ssl]
     end

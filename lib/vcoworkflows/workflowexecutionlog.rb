@@ -6,6 +6,8 @@ module VcoWorkflows
   # WorkflowExecutionLog is a simple object to contain the log for an
   # execution of a workflow.
   class WorkflowExecutionLog
+    # Log messages
+    # @return [String[]] Array of log message lines
     attr_reader :messages
 
     # Create an execution log object

@@ -14,7 +14,12 @@ module VcoWorkflows
   # WorkflowPresentation examines the presentation JSON from vCO to determine
   # whether input parameters for the workflow are required or not.
   class WorkflowPresentation
+    # Accessor for the data structure
+    # @return [Hash] parsed JSON
     attr_reader :presentation_data
+
+    # Get the list of required parameters for the workflow
+    # @return [String[]] Array of strings (names of parameters)
     attr_reader :required
 
     # rubocop:disable LineLength, MethodLength

@@ -1,4 +1,5 @@
 # VcoWorkflows
 module VcoWorkflows
-  VERSION = '0.1.1'
+  # Gem Version
+  VERSION = '0.1.2'
 end

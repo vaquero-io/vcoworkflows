@@ -8,7 +8,7 @@ require 'thor/group'
 module VcoWorkflows
   # Cli
   module Cli
-    # Execute
+    # Execute a workflow with the given options.
     class Execute < Thor::Group
       include Thor::Actions
 
@@ -24,6 +24,7 @@ module VcoWorkflows
 
       class_option :parameters, type: :string, required: true, desc: DESC_CLI_EXECUTE_PARAMETERS
 
+      # Thor
       def self.source_root
         File.dirname(__FILE__)
       end

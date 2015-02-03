@@ -7,8 +7,8 @@ require 'vcoworkflows/version'
 Gem::Specification.new do |spec|
   spec.name          = 'vcoworkflows'
   spec.version       = VcoWorkflows::VERSION
-  spec.authors       = %w('Gregory Ruiz-ade')
-  spec.email         = %w('gregory.ruiz-ade@activenetwork.com')
+  spec.authors       = 'Gregory Ruiz-ade'
+  spec.email         = 'gregory.ruiz-ade@activenetwork.com'
   spec.summary       = 'vCO Workflows REST API Wrapper'
   spec.description   = 'Ruby implementation of vCenter Orchestrator REST API'
   spec.homepage      = ''

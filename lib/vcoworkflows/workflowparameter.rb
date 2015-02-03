@@ -5,9 +5,20 @@ module VcoWorkflows
   # WorkflowParameter is an object wrapper for workflow input and output
   # parameters.
   class WorkflowParameter
+    # Parameter name
+    # @return [String] parameter name
     attr_reader :name
+
+    # Parameter type
+    # @return [String] parameter type
     attr_reader :type
+
+    # Parameter subtype (used when type is 'Array')
+    # @return [String] parameter subtype
     attr_reader :subtype
+
+    # Parameter value
+    # @return [Object] parameter value
     attr_reader :value
 
     # rubocop:disable MethodLength
