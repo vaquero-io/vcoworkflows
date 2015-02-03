@@ -7,6 +7,8 @@ module VcoWorkflows
   # WorkflowToken is used for workflow execution results, and contains as much
   # data on the given workflow execution instance as vCO can provide.
   class WorkflowToken
+    # rubocop:disable LineLength
+
     # Workflow execution ID
     # @return [String] the execution id for this token
     attr_reader :id
@@ -62,6 +64,8 @@ module VcoWorkflows
     # Source JSON
     # @return [String] source JSON document returned by vCO for this execution
     attr_reader :json_content
+
+    # rubocop:enable LineLength
 
     # rubocop:disable CyclomaticComplexity, PerceivedComplexity, MethodLength, LineLength
 

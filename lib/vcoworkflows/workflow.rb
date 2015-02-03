@@ -11,6 +11,8 @@ module VcoWorkflows
 
   # Class to represent a Workflow as presented by vCenter Orchestrator.
   class Workflow
+    # rubocop:disable LineLength
+
     # Workflow GUID
     # @return [String] workflow GUID
     attr_reader :id
@@ -36,7 +38,6 @@ module VcoWorkflows
     attr_reader :output_parameters
 
     # Workflow Service
-    # @param [VcoWorkflows::WorkflowService] service If set, the WorkflowService to use to talk to vCO
     # @return [VcoWorkflows::WorkflowService] The WorkflowService currently being used to interface with vCO
     attr_accessor :service
 
@@ -47,6 +48,8 @@ module VcoWorkflows
     # Workflow source JSON
     # @return [String] the source JSON returned by vCO for this workflow
     attr_reader :source_json
+
+    # rubocop:enable LineLength
 
     # rubocop:disable CyclomaticComplexity, PerceivedComplexity, MethodLength, LineLength
 
