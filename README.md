@@ -55,12 +55,11 @@ Quick example:
 
 ```ruby
 require 'vcoworkflows'
-my_workflow = VcoWorkflows::Workflow.new(
+workflow = VcoWorkflows::Workflow.new(
     'Request Component',
     url: 'https://vco.example.com:8281/vco/api',
     username: 'jdoe',
-    password: 's3cr3t',
-
+    password: 's3cr3t'
 )
 
 ```
@@ -73,7 +72,7 @@ class.
 
 It is possible to select a Workflow by GUID (as divined by the vCenter
 Orchestrator client) or by specifying the Workflow's name. If specifying by
-name, however, an exeption will be raised if either no workflows are found,
+name, however, an exception will be raised if either no workflows are found,
 or multiple workflows are found. Therefor, GUID is likely "safer". In either
 case, however, the workflow name must be given, as in the example above.
 
@@ -81,13 +80,12 @@ Selecting a workflow by GUID is done by adding the `id:` parameter when
 creating a new `Workflow` object:
 
 ```ruby
-my_workflow = VcoWorkflows::Workflow.new(
+workflow = VcoWorkflows::Workflow.new(
     'Request Component',
     id: '6e04a460-4a45-4e16-9603-db2922c24462',
     url: 'https://vco.example.com:8281/vco/api',
     username: 'jdoe',
-    password: 's3cr3t',
-    verify_ssl: false
+    password: 's3cr3t'
 )
 ```
 
