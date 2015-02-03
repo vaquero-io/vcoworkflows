@@ -7,20 +7,60 @@ module VcoWorkflows
   # WorkflowToken is used for workflow execution results, and contains as much
   # data on the given workflow execution instance as vCO can provide.
   class WorkflowToken
+    # Workflow execution ID
+    # @return [String] the execution id for this token
     attr_reader :id
+
+    # Workflow ID
+    # @return [String] the GUID for this workflow
     attr_reader :workflow_id
+
+    # Workflow name
+    # @return [String] name of the workflow
     attr_reader :name
+
+    # Execution state
+    # @return [String] current state of the workflow execution
     attr_reader :state
+
+    # Execution href
+    # @return [String] link to this execution via the REST API
     attr_reader :href
+
+    # Execution start date
+    # @return [String] date and time the workflow execution started
     attr_reader :start_date
+
+    # Execution end date
+    # @return [String] date and time the workflow execution ended
     attr_reader :end_date
+
+    # Execution started by
+    # @return [String] vCO user who started this execution
     attr_reader :started_by
+
+    # @return [String]
     attr_reader :current_item_name
+
+    # @return [String]
     attr_reader :current_item_state
+
+    # @return [String]
     attr_reader :content_exception
+
+    # @return [String]
     attr_reader :global_state
+
+    # Workflow execution input parameters
+    # @return [VcoWorkflows::WorkflowParameter{}] Hash of input parameters which were given when the workflow was executed
     attr_reader :input_parameters
+
+    # Workflow execution output parameters
+    # @return [VcoWorkflows::WorkflowParameter{}] Hash of output parameters set by the workflow execution
     attr_reader :output_parameters
+
+    # Source JSON
+    # @return [String] source JSON document returned by vCO for this execution
     attr_reader :json_content
 
     # rubocop:disable CyclomaticComplexity, PerceivedComplexity, MethodLength, LineLength

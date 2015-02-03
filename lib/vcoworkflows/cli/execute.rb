@@ -8,7 +8,7 @@ require 'thor/group'
 module VcoWorkflows
   # Cli
   module Cli
-    # Execute
+    # Execute a workflow with the given options.
     class Execute < Thor::Group
       include Thor::Actions
 
