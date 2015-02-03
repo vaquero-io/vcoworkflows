@@ -13,7 +13,12 @@ module VcoWorkflows
     # those. Otherwise, command line options will override environment
     # values.
     class Auth
+      # username
+      # @return [String]
       attr_reader :username
+
+      # password
+      # @return [String]
       attr_reader :password
 
       # Initialize the Auth object. If the paramaters are nil, look
