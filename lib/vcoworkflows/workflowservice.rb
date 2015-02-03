@@ -11,7 +11,8 @@ module VcoWorkflows
   # WorkflowService is the object which acts as the interface to the vCO
   # API, and is loosely modeled from the vCO API documentation.
   class WorkflowService
-    # Return the VcoSession
+    # The VcoSession used by this service
+    # @return [VcoWorkflows::VcoSession]
     attr_reader :session
 
     # rubocop:disable LineLength
@@ -26,7 +27,7 @@ module VcoWorkflows
 
     # Get a workflow by GUID
     # @param [String] id Workflow GUID
-    # @return [VcoWorkflows::Workflow] the requested workflow
+    # @return [String] the JSON document of the requested workflow
     def get_workflow_for_id(id)
       @session.get("/workflows/#{id}").body
     end
@@ -40,7 +41,7 @@ module VcoWorkflows
 
     # Get one workflow with a specified name.
     # @param [String] name Name of the workflow
-    # @return [VcoWorkflows::Workflow] the requested workflow
+    # @return [String] the JSON document of the requested workflow
     def get_workflow_for_name(name)
       path = "/workflows?conditions=name=#{url_encode(name)}"
       response = JSON.parse(@session.get(path).body)
@@ -70,7 +71,7 @@ module VcoWorkflows
 
     # Get a list of executions for the given workflow GUID
     # @param [String] workflow_id Workflow GUID
-    # @return [Hash]
+    # @return [Hash] workflow executions, keyed by execution ID
     def get_execution_list(workflow_id)
       path = "/workflows/#{workflow_id}/executions/"
       relations = JSON.parse(@session.get(path).body)['relations']
