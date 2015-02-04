@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.email         = 'gregory.ruiz-ade@activenetwork.com'
   spec.summary       = 'vCO Workflows REST API Wrapper'
   spec.description   = 'Ruby implementation of vCenter Orchestrator REST API'
-  spec.homepage      = 'https://github.com/ActiveSCM/vcoworkflows'
+  spec.homepage      = 'https://github.com/activenetwork-automation/vcoworkflows'
   spec.license       = 'Apache 2.0'
 
   spec.files         = `git ls-files -z`.split("\x0")
