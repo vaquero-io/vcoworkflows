@@ -248,10 +248,13 @@ module VcoWorkflows
     # rubocop:disable LineLength
 
     # Get the value for an input parameter
-    # @param [String] parameter_name Name of the input parameter whose value to get
+    # @deprecated Use {#parameter} to retrive the
+    #   {VcoWorkflows::WorkflowParameter} object
+    # @param [String] parameter_name Name of the input parameter
+    #   whose value to get
     # @return [Object]
     def get_parameter(parameter_name)
-      @input_parameters[parameter_name].value
+      parameter(parameter_name).value
     end
     # rubocop:enable LineLength
 
