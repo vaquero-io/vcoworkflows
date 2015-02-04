@@ -30,15 +30,18 @@ module VcoWorkflows
     attr_reader :description
 
     # Workflow Input Parameters
-    # @return [VcoWorkflows::WorkflowParameter{}] Hash of WorkflowParameter objects, keyed by name
+    # @return [Hash<VcoWorkflows::WorkflowParameter>] Hash of
+    #   WorkflowParameter objects, keyed by name
     attr_reader :input_parameters
 
     # Workflow Output Parameters
-    # @return [VcoWorkflows::WorkflowParameter{}] Hash of WorkflowParameter objects, keyed by name
+    # @return [Hash<VcoWorkflows::WorkflowParameter>] Hash of
+    #   WorkflowParameter objects, keyed by name
     attr_reader :output_parameters
 
     # Workflow Service
-    # @return [VcoWorkflows::WorkflowService] The WorkflowService currently being used to interface with vCO
+    # @return [VcoWorkflows::WorkflowService] The WorkflowService
+    #   currently being used to interface with vCO
     attr_accessor :service
 
     # Workflow execution ID
@@ -101,7 +104,8 @@ module VcoWorkflows
       end
       workflow_data = JSON.parse(workflow_json)
 
-      # Set up the attributes if they exist in the data json, otherwise nil them
+      # Set up the attributes if they exist in the data json,
+      # otherwise nil them
       @id          = workflow_data.key?('id')          ? workflow_data['id']          : nil
       @name        = workflow_data.key?('name')        ? workflow_data['name']        : nil
       @version     = workflow_data.key?('version')     ? workflow_data['version']     : nil
@@ -156,7 +160,7 @@ module VcoWorkflows
     # rubocop:disable MethodLength, LineLength
 
     # Parse json parameters and return a nice hash
-    # @param [Array] parameter_data JSON document of parameters as defined
+    # @param [Array<Hash>] parameter_data Array of parameter data hashes
     # by vCO
     # @return [Hash]
     def self.parse_parameters(parameter_data = [])
@@ -192,7 +196,7 @@ module VcoWorkflows
     # rubocop:disable LineLength
 
     # Process exceptions raised in parse_parameters by bravely ignoring them
-    # and forging ahead blindly!
+    #   and forging ahead blindly!
     # @param [Exception] error
     def self.parse_failure(error)
       $stderr.puts "\nWhoops!"
@@ -206,7 +210,8 @@ module VcoWorkflows
     # rubocop:disable LineLength
 
     # Get an array of the names of all the required input parameters
-    # @return [Hash] Hash of WorkflowParameter input parameters which are required for this workflow
+    # @return [Hash] Hash of WorkflowParameter input parameters which
+    #   are required for this workflow
     def required_parameters
       required = {}
       @input_parameters.each_value { |v| required[v.name] = v if v.required? }
@@ -214,14 +219,15 @@ module VcoWorkflows
     end
     # rubocop:enable LineLength
 
-    # Get the value of a specific input parameter
-    # @param [String] parameter_name Name of the parameter whose value to get
-    # @return [VcoWorkflows::WorkflowParameter]
+    # Get the named parameter.
+    #
+    # To get a parameter value, use parameter(parameter_name).value
+    #
+    # @param [String] parameter_name Name of the parameter to get
+    # @return [VcoWorkflows::WorkflowParameter, nil]
     def parameter(parameter_name)
       @input_parameters[parameter_name]
     end
-
-    # rubocop:disable LineLength
 
     # Set a parameter to a value
     # @param [String] parameter_name name of the parameter to set
