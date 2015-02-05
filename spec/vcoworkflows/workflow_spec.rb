@@ -123,6 +123,15 @@ describe VcoWorkflows::Workflow, 'Workflow' do
     end
   end
 
+  it 'should set all parameters= by hash' do
+    wf = VcoWorkflows::Workflow.new(@workflow_name, service: @service)
+    wf.parameters = @target_parameters
+
+    @target_parameters.each_key do |param_name|
+      expect(wf.parameter(param_name).value).to eql(@target_parameters[param_name])
+    end
+  end
+
   it 'should set a parameter by object' do
     wf = VcoWorkflows::Workflow.new(@workflow_name, service: @service)
     wfparam = VcoWorkflows::WorkflowParameter.new('coreCount', 'string', value: 2)
