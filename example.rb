@@ -25,9 +25,10 @@ workflow = VcoWorkflows::Workflow.new(workflow_name,
                                       verify_ssl: false)
 
 # Set the parameters in the workflow
-input_parameters.each { |k, v| workflow.set_parameter(k, v) }
+workflow.parameters = input_parameters
 
-# Execute the workflow.
+# Execute the workflow. This will also save the execution id in our
+# workflow object.
 workflow.execute
 
 # We're going to wait around until the execution is done, so we'll check
