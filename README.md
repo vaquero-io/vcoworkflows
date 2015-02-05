@@ -243,7 +243,7 @@ Workflow ID:       6e04a460-4a45-4e16-9603-db2922c24462
 State:             completed
 Start Date:        2014-12-19 13:43:46 -0800
 End Date:          2014-12-19 13:55:24 -0800
-Started By:        user@example.com
+Started By:        jdoe@example.com
 
 Input Parameters:
  coreCount = 2
@@ -267,10 +267,10 @@ Output Parameters:
  requestNumber = 326.0
  requestCompletionDetails = Request succeeded. Created vm00378.
 
-2014-12-19 13:43:46 -0800 info: gruiz-ade: Workflow 'Request Component' has started
-2014-12-19 13:43:59 -0800 info: gruiz-ade: Workflow is paused; Workflow 'Request Component' has paused while waiting on signal
-2014-12-19 13:55:23 -0800 info: gruiz-ade: Workflow 'Request Component' has resumed
-2014-12-19 13:55:24 -0800 info: gruiz-ade: Workflow 'Request Component' has completed
+2014-12-19 13:43:46 -0800 info: jdoe: Workflow 'Request Component' has started
+2014-12-19 13:43:59 -0800 info: jdoe: Workflow is paused; Workflow 'Request Component' has paused while waiting on signal
+2014-12-19 13:55:23 -0800 info: jdoe: Workflow 'Request Component' has resumed
+2014-12-19 13:55:24 -0800 info: jdoe: Workflow 'Request Component' has completed
 ```
 
 ## Current limitations
