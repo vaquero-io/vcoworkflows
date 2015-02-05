@@ -229,6 +229,8 @@ module VcoWorkflows
       @input_parameters[parameter_name]
     end
 
+    # rubocop:disable LineLength
+
     # Set a parameter to a value
     # @param [String] parameter_name name of the parameter to set
     # @param [Object] value value to set
