@@ -273,6 +273,28 @@ Output Parameters:
 2014-12-19 13:55:24 -0800 info: gruiz-ade: Workflow 'Request Component' has completed
 ```
 
+## Current limitations
+
+### General vCO REST API functionality
+
+This gem is very specifically targeted at operation of workflows within vCO.
+As such, anything that was not necessary or required to be able to operate
+workflows has not yet been included.
+
+### Cancellation / Termination of running workflows
+
+There is currently no facility to cancel a running workflow. This will be
+added at some point in the future.
+
+### Parameter Types
+
+Currently, there is no included support for complex parameter types (i.e.,
+anything other than Strings, Numerics, or Arrays of same). This is not to say
+they cannot be used, but you will need to marshall vCO object parameters into an
+appropriately-constructed `Hash` to pass as the parameter value, such that when
+the values are converted to JSON for the actual REST call, they are properly
+constructed for vCO.
+
 ## Contributing
 
 1. Fork it ( https://github.com/ActiveSCM/vcoworkflows/fork )
@@ -286,7 +308,7 @@ Output Parameters:
 - [Gregory Ruiz-Ade](https://github.com/gkra)
 
 ```
-Copyright 2014 Active Network, LLC
+Copyright 2014 ACTIVE Network, LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
