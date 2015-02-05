@@ -1,14 +1,14 @@
 # Vcoworkflows
 
-[![Build Status](https://travis-ci.org/ActiveSCM/vcoworkflows.svg?branch=master)][travis]
-[![Dependency Status](https://gemnasium.com/ActiveSCM/vcoworkflows.svg)][gemnasium]
-[![Coverage Status](https://coveralls.io/repos/ActiveSCM/vcoworkflows/badge.png?branch=master)][coveralls]
-[![Inline docs](http://inch-ci.org/github/ActiveSCM/vcoworkflows.png?branch=master)][inch]
+[![Build Status](https://travis-ci.org/activenetwork-automation/vcoworkflows.svg?branch=master)][travis]
+[![Dependency Status](https://gemnasium.com/activenetwork-automation/vcoworkflows.svg)][gemnasium]
+[![Coverage Status](https://coveralls.io/repos/activenetwork-automation/vcoworkflows/badge.png?branch=master)][coveralls]
+[![Inline docs](http://inch-ci.org/github/activenetwork-automation/vcoworkflows.png?branch=master)][inch]
 
-[travis]: http://travis-ci.org/ActiveSCM/vcoworkflows
-[gemnasium]: https://gemnasium.com/ActiveSCM/vcoworkflows
-[coveralls]: https://coveralls.io/r/ActiveSCM/vcoworkflows
-[inch]: http://inch-ci.org/github/ActiveSCM/vcoworkflows
+[travis]: http://travis-ci.org/activenetwork-automation/vcoworkflows
+[gemnasium]: https://gemnasium.com/activenetwork-automation/vcoworkflows
+[coveralls]: https://coveralls.io/r/activenetwork-automation/vcoworkflows
+[inch]: http://inch-ci.org/github/activenetwork-automation/vcoworkflows
 
 `vcoworkflows` provides a Ruby API for finding and executing vCenter
 Orchestrator workflows. You can search for a workflow either by name or
@@ -297,7 +297,7 @@ constructed for vCO.
 
 ## Contributing
 
-1. Fork it ( https://github.com/ActiveSCM/vcoworkflows/fork )
+1. Fork it ( https://github.com/activenetwork-automation/vcoworkflows/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
