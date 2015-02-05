@@ -99,19 +99,17 @@ execution ID is also preserved in the `Workflow` object for simplicity.
 Setting parameters individually:
 
 ```ruby
-workflow.set_parameter('name', 'a string value')
-worfklow.set_parameter('version', 2)
-workflow.set_parameter('words', %w(fe fi fo fum))
+workflow.parameter('name', 'a string value')
+worfklow.parameter('version', 2)
+workflow.parameter('words', %w(fe fi fo fum))
 ```
 
 Setting parameters via a hash:
 
 ```ruby
-input_parameters = { 'name'    => 'a string value',
-                     'version' => '2',
-                     'words'   => %w(fe fi fo fum) }
-# ...
-workflow.set_parameters(input_parameters)
+workflow.parameters = { 'name'    => 'a string value',
+                        'version' => '2',
+                        'words'   => %w(fe fi fo fum) }
 ```
 
 Then execute:
