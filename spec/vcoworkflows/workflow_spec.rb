@@ -118,17 +118,9 @@ describe VcoWorkflows::Workflow, 'Workflow' do
     wf = VcoWorkflows::Workflow.new(@workflow_name, service: @service)
     wf.parameters(@target_parameters)
 
-    expect(wf.parameter('coreCount').value).to eq(@target_parameters['coreCount'])
-    expect(wf.parameter('ramMB').value).to eq(@target_parameters['ramMB'])
-    expect(wf.parameter('businessUnit').value).to eql(@target_parameters['businessUnit'])
-    expect(wf.parameter('reservation').value).to eql(@target_parameters['reservation'])
-    expect(wf.parameter('environment').value).to eql(@target_parameters['environment'])
-    expect(wf.parameter('image').value).to eql(@target_parameters['image'])
-    expect(wf.parameter('component').value).to eql(@target_parameters['component'])
-    expect(wf.parameter('onBehalfOf').value).to eql(@target_parameters['onBehalfOf'])
-    expect(wf.parameter('location').value).to eql(@target_parameters['location'])
-    expect(wf.parameter('runlist').value).to eql(@target_parameters['runlist'])
-    expect(wf.parameter('machineCount').value).to eq(@target_parameters['machineCount'])
+    @target_parameters.each_key do |param_name|
+      expect(wf.parameter(param_name).value).to eql(@target_parameters[param_name])
+    end
   end
 
   it 'should set a parameter by object' do
