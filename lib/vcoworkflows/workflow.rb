@@ -256,6 +256,13 @@ module VcoWorkflows
       parameter(parameter_name).set?
     end
 
+    # Set all input parameters using the given hash
+    # @param [Hash] parameter_hash input parameter values keyed by
+    #   input_parameter name
+    def parameters=(parameter_hash)
+      parameter_hash.each { |name, value| parameter(name, value) }
+    end
+
     # rubocop:disable LineLength
 
     # Set a parameter to a value.
@@ -266,16 +273,6 @@ module VcoWorkflows
     def set_parameter(parameter_name, value)
       parameter(parameter_name, value)
     end
-    # rubocop:enable LineLength
-
-    # Set all input parameters using the given hash
-    # @param [Hash] parameter_hash input parameter values keyed by
-    #   input_parameter name
-    def parameters=(parameter_hash)
-      parameter_hash.each { |name, value| parameter(name, value) }
-    end
-
-    # rubocop:disable LineLength
 
     # Get the value for an input parameter
     # @deprecated Use {#parameter} to retrieve the
@@ -286,7 +283,6 @@ module VcoWorkflows
     def get_parameter(parameter_name)
       parameter(parameter_name).value
     end
-    # rubocop:enable LineLength
 
     # rubocop:disable LineLength
 
