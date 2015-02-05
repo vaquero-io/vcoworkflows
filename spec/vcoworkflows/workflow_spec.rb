@@ -101,17 +101,22 @@ describe VcoWorkflows::Workflow, 'Workflow' do
     expect(wf.required_parameters.size).to eq(required_param_count)
   end
 
-  it 'should set and return a parameter value' do
+  it 'should set a parameter value' do
     wf = VcoWorkflows::Workflow.new(@workflow_name, service: @service)
 
-    expect(wf.set_parameter('coreCount', 4)).to eq(4)
+    # Set the value and check the returned parameter
+    expect(wf.parameter('coreCount', 4).value).to eq(4)
+
+    # Check the parameter value
+    expect(wf.parameter('coreCount').value).to eq(4)
+
+    # Check the parameter by reaching through input_parameters
     expect(wf.input_parameters['coreCount'].value).to eq(4)
-    expect(wf.get_parameter('coreCount')).to eql(4)
   end
 
   it 'should set all parameters by hash' do
     wf = VcoWorkflows::Workflow.new(@workflow_name, service: @service)
-    wf.set_parameters(@target_parameters)
+    wf.parameters(@target_parameters)
 
     expect(wf.parameter('coreCount').value).to eq(@target_parameters['coreCount'])
     expect(wf.parameter('ramMB').value).to eq(@target_parameters['ramMB'])
@@ -124,6 +129,16 @@ describe VcoWorkflows::Workflow, 'Workflow' do
     expect(wf.parameter('location').value).to eql(@target_parameters['location'])
     expect(wf.parameter('runlist').value).to eql(@target_parameters['runlist'])
     expect(wf.parameter('machineCount').value).to eq(@target_parameters['machineCount'])
+  end
+
+  it 'should set a parameter by object' do
+    wf = VcoWorkflows::Workflow.new(@workflow_name, service: @service)
+    wfparam = VcoWorkflows::WorkflowParameter.new('coreCount', 'string', value: 2)
+    wf.parameter = wfparam
+
+    expect(wf.parameter('coreCount')).to_not eq(nil)
+    expect(wf.parameter('coreCount').type).to eql('string')
+    expect(wf.parameter('coreCount').value).to eq(2)
   end
 
   it 'should execute' do
