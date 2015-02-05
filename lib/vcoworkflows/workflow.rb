@@ -274,6 +274,7 @@ module VcoWorkflows
     def parameters(parameter_hash)
       parameter_hash.each { |name, value| parameter(name, value) }
     end
+    alias_method :parameters=, :parameters
 
     # rubocop:disable LineLength
 
