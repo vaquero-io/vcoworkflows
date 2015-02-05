@@ -239,6 +239,13 @@ module VcoWorkflows
     end
     # rubocop:enable LineLength
 
+    # Set all input parameters using the given hash
+    # @param [Hash] parameter_data Hash of all input parameter values, keyed
+    #   by input_parameter name
+    def set_parameters(parameter_hash)
+      parameter_hash.each { |name, value| set_parameter(name, value) }
+    end
+
     # rubocop:disable LineLength
 
     # Get the value for an input parameter
