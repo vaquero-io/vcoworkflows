@@ -14,6 +14,20 @@ describe VcoWorkflows::Workflow, 'Workflow' do
     @param_string_json = '''{"type":"string","name":"stringparam","scope":"local","value":{"string":{"value":"squirrel!"}}}'''
     @param_array_json = '''{"type":"Array/string","name":"arrayparam","scope":"local","value":{"array":{"elements":[{"string":{"value":"a"}},{"string":{"value":"b"}},{"string":{"value":"c"}}]}}}'''
 
+    @target_parameters = {
+      'coreCount'    => 2,
+      'ramMB'        => 2048,
+      'businessUnit' => 'aw',
+      'reservation'  => 'nonprodlinux',
+      'environment'  => 'dev1',
+      'image'        => 'centos-6.6-x86_64-20141203-1',
+      'component'    => 'api',
+      'onBehalfOf'   => 'svcacct@example.com',
+      'location'     => 'us_east',
+      'runlist'      => %w(role[loc_uswest] role[base] role[api]),
+      'machineCount' => 1
+    }
+
     # Mock the WorkflowService
     @service = double('service')
     allow(@service).to receive(:get_workflow_for_id) { @workflow_json }
@@ -95,24 +109,28 @@ describe VcoWorkflows::Workflow, 'Workflow' do
     expect(wf.get_parameter('coreCount')).to eql(4)
   end
 
+  it 'should set all parameters by hash' do
+    wf = VcoWorkflows::Workflow.new(@workflow_name, service: @service)
+    wf.set_parameters(@target_parameters)
+
+    expect(wf.parameter('coreCount').value).to eq(@target_parameters['coreCount'])
+    expect(wf.parameter('ramMB').value).to eq(@target_parameters['ramMB'])
+    expect(wf.parameter('businessUnit').value).to eql(@target_parameters['businessUnit'])
+    expect(wf.parameter('reservation').value).to eql(@target_parameters['reservation'])
+    expect(wf.parameter('environment').value).to eql(@target_parameters['environment'])
+    expect(wf.parameter('image').value).to eql(@target_parameters['image'])
+    expect(wf.parameter('component').value).to eql(@target_parameters['component'])
+    expect(wf.parameter('onBehalfOf').value).to eql(@target_parameters['onBehalfOf'])
+    expect(wf.parameter('location').value).to eql(@target_parameters['location'])
+    expect(wf.parameter('runlist').value).to eql(@target_parameters['runlist'])
+    expect(wf.parameter('machineCount').value).to eq(@target_parameters['machineCount'])
+  end
+
   it 'should execute' do
     allow(@service).to receive(:execute_workflow) { @execution_id }
-    target_parameters = {
-      'coreCount'    => 2,
-      'ramMB'        => 2048,
-      'businessUnit' => 'aw',
-      'reservation'  => 'nonprodlinux',
-      'environment'  => 'dev1',
-      'image'        => 'centos-6.6-x86_64-20141203-1',
-      'component'    => 'api',
-      'onBehalfOf'   => 'svcacct@example.com',
-      'location'     => 'us_east',
-      'runlist'      => %w(role[loc_uswest] role[base] role[api]),
-      'machineCount' => 1
-    }
 
     wf = VcoWorkflows::Workflow.new(@workflow_name, service: @service)
-    target_parameters.each { |k, v| wf.set_parameter(k, v) }
+    @target_parameters.each { |k, v| wf.set_parameter(k, v) }
 
     expect(wf.execute).to eql(@execution_id)
   end
