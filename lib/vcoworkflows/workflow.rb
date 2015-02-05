@@ -219,46 +219,67 @@ module VcoWorkflows
     end
     # rubocop:enable LineLength
 
-    # Get the named parameter.
+    # rubocop:disable LineLength, MethodLength
+
+    # Get the parameter object named. If a value is provided, set the value
+    # and return the parameter object.
     #
     # To get a parameter value, use parameter(parameter_name).value
     #
     # @param [String] parameter_name Name of the parameter to get
-    # @return [VcoWorkflows::WorkflowParameter, nil]
-    def parameter(parameter_name)
-      @input_parameters[parameter_name]
-    end
-
-    # rubocop:disable LineLength
-
-    # Set a parameter to a value
-    # @param [String] parameter_name name of the parameter to set
-    # @param [Object] value value to set
-    def set_parameter(parameter_name, value)
+    # @param [Object, nil] parameter_value Optional value for parameter.
+    # @return [VcoWorkflows::WorkflowParameter] The resulting WorkflowParameter
+    def parameter(parameter_name, parameter_value = nil)
       if @input_parameters.key?(parameter_name)
-        @input_parameters[parameter_name].set value
+        @input_parameters[parameter_name].set parameter_value
       else
         $stderr.puts "\nAttempted to set a value for a non-existent WorkflowParameter!"
         $stderr.puts "It appears that there is no parameter \"#{parameter}\"."
         $stderr.puts "Valid parameter names are: #{@input_parameters.keys.join(', ')}"
         $stderr.puts ''
         fail(IOError, ERR[:no_such_parameter])
-      end
+      end unless parameter_value.nil?
+      @input_parameters[parameter_name]
+    end
+    # rubocop:enable LineLength, MethodLength
+
+    # Set a parameter with a WorkflowParameter object
+    # @param [VcoWorkflows::WorkflowParameter] wfparameter New parameter
+    def parameter=(wfparameter)
+      @input_parameters[wfparameter.name] = wfparameter
+    end
+
+    # Determine whether a parameter has been set
+    # @param [String] parameter_name Name of the parameter to check
+    # @return [Boolean]
+    def parameter?(parameter_name)
+      parameter(parameter_name).set?
+    end
+
+    # rubocop:disable LineLength
+
+    # Set a parameter to a value.
+    # @deprecated Use {#parameter} instead
+    # @param [String] parameter_name name of the parameter to set
+    # @param [Object] value value to set
+    # @return [VcoWorkflows::WorkflowParameter] The resulting WorkflowParameter
+    def set_parameter(parameter_name, value)
+      parameter(parameter_name, value)
     end
     # rubocop:enable LineLength
 
     # Set all input parameters using the given hash
-    # @param [Hash] parameter_data Hash of all input parameter values, keyed
-    #   by input_parameter name
-    def set_parameters(parameter_hash)
-      parameter_hash.each { |name, value| set_parameter(name, value) }
+    # @param [Hash] parameter_hash input parameter values keyed by
+    #   input_parameter name
+    def parameters(parameter_hash)
+      parameter_hash.each { |name, value| parameter(name, value) }
     end
 
     # rubocop:disable LineLength
 
     # Get the value for an input parameter
-    # @deprecated Use {#parameter} to retrive the
-    #   {VcoWorkflows::WorkflowParameter} object
+    # @deprecated Use {#parameter} to retrieve the
+    #   {VcoWorkflows::WorkflowParameter} object, instead
     # @param [String] parameter_name Name of the input parameter
     #   whose value to get
     # @return [Object]
