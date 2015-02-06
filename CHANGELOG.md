@@ -28,7 +28,7 @@ General cleanup and spit-polish. There are still a few rough spots that'll take 
     workflow.parameter? 'foo'
     ```
 
-- Add `Workflow#parameters=` to set all input parameters using a hash, instead of having to set parameter values individually. Basically, `Workflow` will do the work instead of making you do it.
+- Add `Workflow#parameters=` to set all input parameters using a hash, instead of having to set parameter values individually. Basically, `Workflow` will do the work instead of making you do it. (Resolves [#3](https://github.com/activenetwork-automation/vcoworkflows/issues/3))
   ```ruby
   input_parameters = { 'name'    => 'a string value',
                        'version' => '2',
