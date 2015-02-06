@@ -1,14 +1,14 @@
 # Vcoworkflows
 
-[![Build Status](https://travis-ci.org/ActiveSCM/vcoworkflows.svg?branch=master)][travis]
-[![Dependency Status](https://gemnasium.com/ActiveSCM/vcoworkflows.svg)][gemnasium]
-[![Coverage Status](https://coveralls.io/repos/ActiveSCM/vcoworkflows/badge.png?branch=master)][coveralls]
-[![Inline docs](http://inch-ci.org/github/ActiveSCM/vcoworkflows.png?branch=master)][inch]
+[![Build Status](https://travis-ci.org/activenetwork-automation/vcoworkflows.svg?branch=master)][travis]
+[![Dependency Status](https://gemnasium.com/activenetwork-automation/vcoworkflows.svg)][gemnasium]
+[![Coverage Status](https://coveralls.io/repos/activenetwork-automation/vcoworkflows/badge.png?branch=master)][coveralls]
+[![Inline docs](http://inch-ci.org/github/activenetwork-automation/vcoworkflows.png?branch=master)][inch]
 
-[travis]: http://travis-ci.org/ActiveSCM/vcoworkflows
-[gemnasium]: https://gemnasium.com/ActiveSCM/vcoworkflows
-[coveralls]: https://coveralls.io/r/ActiveSCM/vcoworkflows
-[inch]: http://inch-ci.org/github/ActiveSCM/vcoworkflows
+[travis]: http://travis-ci.org/activenetwork-automation/vcoworkflows
+[gemnasium]: https://gemnasium.com/activenetwork-automation/vcoworkflows
+[coveralls]: https://coveralls.io/r/activenetwork-automation/vcoworkflows
+[inch]: http://inch-ci.org/github/activenetwork-automation/vcoworkflows
 
 `vcoworkflows` provides a Ruby API for finding and executing vCenter
 Orchestrator workflows. You can search for a workflow either by name or
@@ -96,12 +96,25 @@ required), then send call `execute`. This will return an execution ID from
 vCenter Orchestrator, which identifies the run you have requested. The
 execution ID is also preserved in the `Workflow` object for simplicity.
 
+Setting parameters individually:
+
 ```ruby
-input_parameters = { 'name'    => 'a string value',
-                     'version' => '2',
-                     'words'   => %w(fe fi fo fum) }
-# ...
-input_parameters.each { |k, v| workflow.set_parameter(k, v) }
+workflow.parameter('name', 'a string value')
+worfklow.parameter('version', 2)
+workflow.parameter('words', %w(fe fi fo fum))
+```
+
+Setting parameters via a hash:
+
+```ruby
+workflow.parameters = { 'name'    => 'a string value',
+                        'version' => '2',
+                        'words'   => %w(fe fi fo fum) }
+```
+
+Then execute:
+
+```ruby
 workflow.execute
 ```
 
@@ -228,7 +241,7 @@ Workflow ID:       6e04a460-4a45-4e16-9603-db2922c24462
 State:             completed
 Start Date:        2014-12-19 13:43:46 -0800
 End Date:          2014-12-19 13:55:24 -0800
-Started By:        user@example.com
+Started By:        jdoe@example.com
 
 Input Parameters:
  coreCount = 2
@@ -252,15 +265,37 @@ Output Parameters:
  requestNumber = 326.0
  requestCompletionDetails = Request succeeded. Created vm00378.
 
-2014-12-19 13:43:46 -0800 info: gruiz-ade: Workflow 'Request Component' has started
-2014-12-19 13:43:59 -0800 info: gruiz-ade: Workflow is paused; Workflow 'Request Component' has paused while waiting on signal
-2014-12-19 13:55:23 -0800 info: gruiz-ade: Workflow 'Request Component' has resumed
-2014-12-19 13:55:24 -0800 info: gruiz-ade: Workflow 'Request Component' has completed
+2014-12-19 13:43:46 -0800 info: jdoe: Workflow 'Request Component' has started
+2014-12-19 13:43:59 -0800 info: jdoe: Workflow is paused; Workflow 'Request Component' has paused while waiting on signal
+2014-12-19 13:55:23 -0800 info: jdoe: Workflow 'Request Component' has resumed
+2014-12-19 13:55:24 -0800 info: jdoe: Workflow 'Request Component' has completed
 ```
+
+## Current limitations
+
+### General vCO REST API functionality
+
+This gem is very specifically targeted at operation of workflows within vCO.
+As such, anything that was not necessary or required to be able to operate
+workflows has not yet been included.
+
+### Cancellation / Termination of running workflows
+
+There is currently no facility to cancel a running workflow. This will be
+added at some point in the future.
+
+### Parameter Types
+
+Currently, there is no included support for complex parameter types (i.e.,
+anything other than Strings, Numerics, or Arrays of same). This is not to say
+they cannot be used, but you will need to marshall vCO object parameters into an
+appropriately-constructed `Hash` to pass as the parameter value, such that when
+the values are converted to JSON for the actual REST call, they are properly
+constructed for vCO.
 
 ## Contributing
 
-1. Fork it ( https://github.com/ActiveSCM/vcoworkflows/fork )
+1. Fork it ( https://github.com/activenetwork-automation/vcoworkflows/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
@@ -271,7 +306,7 @@ Output Parameters:
 - [Gregory Ruiz-Ade](https://github.com/gkra)
 
 ```
-Copyright 2014 Active Network, LLC
+Copyright 2014 ACTIVE Network, LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

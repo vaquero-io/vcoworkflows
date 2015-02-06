@@ -14,6 +14,20 @@ describe VcoWorkflows::Workflow, 'Workflow' do
     @param_string_json = '''{"type":"string","name":"stringparam","scope":"local","value":{"string":{"value":"squirrel!"}}}'''
     @param_array_json = '''{"type":"Array/string","name":"arrayparam","scope":"local","value":{"array":{"elements":[{"string":{"value":"a"}},{"string":{"value":"b"}},{"string":{"value":"c"}}]}}}'''
 
+    @target_parameters = {
+      'coreCount'    => 2,
+      'ramMB'        => 2048,
+      'businessUnit' => 'aw',
+      'reservation'  => 'nonprodlinux',
+      'environment'  => 'dev1',
+      'image'        => 'centos-6.6-x86_64-20141203-1',
+      'component'    => 'api',
+      'onBehalfOf'   => 'svcacct@example.com',
+      'location'     => 'us_east',
+      'runlist'      => %w(role[loc_uswest] role[base] role[api]),
+      'machineCount' => 1
+    }
+
     # Mock the WorkflowService
     @service = double('service')
     allow(@service).to receive(:get_workflow_for_id) { @workflow_json }
@@ -87,32 +101,43 @@ describe VcoWorkflows::Workflow, 'Workflow' do
     expect(wf.required_parameters.size).to eq(required_param_count)
   end
 
-  it 'should set and return a parameter value' do
+  it 'should set a parameter value' do
     wf = VcoWorkflows::Workflow.new(@workflow_name, service: @service)
 
-    expect(wf.set_parameter('coreCount', 4)).to eq(4)
+    # Set the value and check the returned parameter
+    expect(wf.parameter('coreCount', 4).value).to eq(4)
+
+    # Check the parameter value
+    expect(wf.parameter('coreCount').value).to eq(4)
+
+    # Check the parameter by reaching through input_parameters
     expect(wf.input_parameters['coreCount'].value).to eq(4)
-    expect(wf.get_parameter('coreCount')).to eql(4)
+  end
+
+  it 'should set all parameters by hash' do
+    wf = VcoWorkflows::Workflow.new(@workflow_name, service: @service)
+    wf.parameters = @target_parameters
+
+    @target_parameters.each_key do |param_name|
+      expect(wf.parameter(param_name).value).to eql(@target_parameters[param_name])
+    end
+  end
+
+  it 'should set a parameter by object' do
+    wf = VcoWorkflows::Workflow.new(@workflow_name, service: @service)
+    wfparam = VcoWorkflows::WorkflowParameter.new('coreCount', 'string', value: 2)
+    wf.parameter = wfparam
+
+    expect(wf.parameter('coreCount')).to_not eq(nil)
+    expect(wf.parameter('coreCount').type).to eql('string')
+    expect(wf.parameter('coreCount').value).to eq(2)
   end
 
   it 'should execute' do
     allow(@service).to receive(:execute_workflow) { @execution_id }
-    target_parameters = {
-      'coreCount'    => 2,
-      'ramMB'        => 2048,
-      'businessUnit' => 'aw',
-      'reservation'  => 'nonprodlinux',
-      'environment'  => 'dev1',
-      'image'        => 'centos-6.6-x86_64-20141203-1',
-      'component'    => 'api',
-      'onBehalfOf'   => 'svcacct@example.com',
-      'location'     => 'us_east',
-      'runlist'      => %w(role[loc_uswest] role[base] role[api]),
-      'machineCount' => 1
-    }
 
     wf = VcoWorkflows::Workflow.new(@workflow_name, service: @service)
-    target_parameters.each { |k, v| wf.set_parameter(k, v) }
+    wf.parameters = @target_parameters
 
     expect(wf.execute).to eql(@execution_id)
   end

@@ -30,15 +30,18 @@ module VcoWorkflows
     attr_reader :description
 
     # Workflow Input Parameters
-    # @return [VcoWorkflows::WorkflowParameter{}] Hash of WorkflowParameter objects, keyed by name
+    # @return [Hash<VcoWorkflows::WorkflowParameter>] Hash of
+    #   WorkflowParameter objects, keyed by name
     attr_reader :input_parameters
 
     # Workflow Output Parameters
-    # @return [VcoWorkflows::WorkflowParameter{}] Hash of WorkflowParameter objects, keyed by name
+    # @return [Hash<VcoWorkflows::WorkflowParameter>] Hash of
+    #   WorkflowParameter objects, keyed by name
     attr_reader :output_parameters
 
     # Workflow Service
-    # @return [VcoWorkflows::WorkflowService] The WorkflowService currently being used to interface with vCO
+    # @return [VcoWorkflows::WorkflowService] The WorkflowService
+    #   currently being used to interface with vCO
     attr_accessor :service
 
     # Workflow execution ID
@@ -101,7 +104,8 @@ module VcoWorkflows
       end
       workflow_data = JSON.parse(workflow_json)
 
-      # Set up the attributes if they exist in the data json, otherwise nil them
+      # Set up the attributes if they exist in the data json,
+      # otherwise nil them
       @id          = workflow_data.key?('id')          ? workflow_data['id']          : nil
       @name        = workflow_data.key?('name')        ? workflow_data['name']        : nil
       @version     = workflow_data.key?('version')     ? workflow_data['version']     : nil
@@ -156,7 +160,7 @@ module VcoWorkflows
     # rubocop:disable MethodLength, LineLength
 
     # Parse json parameters and return a nice hash
-    # @param [Array] parameter_data JSON document of parameters as defined
+    # @param [Array<Hash>] parameter_data Array of parameter data hashes
     # by vCO
     # @return [Hash]
     def self.parse_parameters(parameter_data = [])
@@ -192,7 +196,7 @@ module VcoWorkflows
     # rubocop:disable LineLength
 
     # Process exceptions raised in parse_parameters by bravely ignoring them
-    # and forging ahead blindly!
+    #   and forging ahead blindly!
     # @param [Exception] error
     def self.parse_failure(error)
       $stderr.puts "\nWhoops!"
@@ -206,7 +210,8 @@ module VcoWorkflows
     # rubocop:disable LineLength
 
     # Get an array of the names of all the required input parameters
-    # @return [Hash] Hash of WorkflowParameter input parameters which are required for this workflow
+    # @return [Hash] Hash of WorkflowParameter input parameters which
+    #   are required for this workflow
     def required_parameters
       required = {}
       @input_parameters.each_value { |v| required[v.name] = v if v.required? }
@@ -214,40 +219,70 @@ module VcoWorkflows
     end
     # rubocop:enable LineLength
 
-    # Get the value of a specific input parameter
-    # @param [String] parameter_name Name of the parameter whose value to get
-    # @return [VcoWorkflows::WorkflowParameter]
-    def parameter(parameter_name)
-      @input_parameters[parameter_name]
-    end
+    # rubocop:disable LineLength, MethodLength
 
-    # rubocop:disable LineLength
-
-    # Set a parameter to a value
-    # @param [String] parameter_name name of the parameter to set
-    # @param [Object] value value to set
-    def set_parameter(parameter_name, value)
+    # Get the parameter object named. If a value is provided, set the value
+    # and return the parameter object.
+    #
+    # To get a parameter value, use parameter(parameter_name).value
+    #
+    # @param [String] parameter_name Name of the parameter to get
+    # @param [Object, nil] parameter_value Optional value for parameter.
+    # @return [VcoWorkflows::WorkflowParameter] The resulting WorkflowParameter
+    def parameter(parameter_name, parameter_value = nil)
       if @input_parameters.key?(parameter_name)
-        @input_parameters[parameter_name].set value
+        @input_parameters[parameter_name].set parameter_value
       else
         $stderr.puts "\nAttempted to set a value for a non-existent WorkflowParameter!"
         $stderr.puts "It appears that there is no parameter \"#{parameter}\"."
         $stderr.puts "Valid parameter names are: #{@input_parameters.keys.join(', ')}"
         $stderr.puts ''
         fail(IOError, ERR[:no_such_parameter])
-      end
+      end unless parameter_value.nil?
+      @input_parameters[parameter_name]
     end
-    # rubocop:enable LineLength
+    # rubocop:enable LineLength, MethodLength
+
+    # Set a parameter with a WorkflowParameter object
+    # @param [VcoWorkflows::WorkflowParameter] wfparameter New parameter
+    def parameter=(wfparameter)
+      @input_parameters[wfparameter.name] = wfparameter
+    end
+
+    # Determine whether a parameter has been set
+    # @param [String] parameter_name Name of the parameter to check
+    # @return [Boolean]
+    def parameter?(parameter_name)
+      parameter(parameter_name).set?
+    end
+
+    # Set all input parameters using the given hash
+    # @param [Hash] parameter_hash input parameter values keyed by
+    #   input_parameter name
+    def parameters=(parameter_hash)
+      parameter_hash.each { |name, value| parameter(name, value) }
+    end
 
     # rubocop:disable LineLength
 
+    # Set a parameter to a value.
+    # @deprecated Use {#parameter} instead
+    # @param [String] parameter_name name of the parameter to set
+    # @param [Object] value value to set
+    # @return [VcoWorkflows::WorkflowParameter] The resulting WorkflowParameter
+    def set_parameter(parameter_name, value)
+      parameter(parameter_name, value)
+    end
+
     # Get the value for an input parameter
-    # @param [String] parameter_name Name of the input parameter whose value to get
+    # @deprecated Use {#parameter} to retrieve the
+    #   {VcoWorkflows::WorkflowParameter} object, instead
+    # @param [String] parameter_name Name of the input parameter
+    #   whose value to get
     # @return [Object]
     def get_parameter(parameter_name)
-      @input_parameters[parameter_name].value
+      parameter(parameter_name).value
     end
-    # rubocop:enable LineLength
 
     # rubocop:disable LineLength
 
