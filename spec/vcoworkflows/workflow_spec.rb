@@ -137,7 +137,7 @@ describe VcoWorkflows::Workflow, 'Workflow' do
     allow(@service).to receive(:execute_workflow) { @execution_id }
 
     wf = VcoWorkflows::Workflow.new(@workflow_name, service: @service)
-    @target_parameters.each { |k, v| wf.set_parameter(k, v) }
+    wf.parameters = @target_parameters
 
     expect(wf.execute).to eql(@execution_id)
   end
