@@ -57,7 +57,7 @@ Quick example:
 require 'vcoworkflows'
 workflow = VcoWorkflows::Workflow.new(
     'Request Component',
-    url: 'https://vco.example.com:8281/vco/api',
+    url: 'https://vco.example.com:8281/',
     username: 'jdoe',
     password: 's3cr3t'
 )
@@ -83,7 +83,7 @@ creating a new `Workflow` object:
 workflow = VcoWorkflows::Workflow.new(
     'Request Component',
     id: '6e04a460-4a45-4e16-9603-db2922c24462',
-    url: 'https://vco.example.com:8281/vco/api',
+    url: 'https://vco.example.com:8281/',
     username: 'jdoe',
     password: 's3cr3t'
 )
